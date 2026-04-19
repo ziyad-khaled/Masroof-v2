@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#0f0f0f">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Masroof">
@@ -802,7 +803,7 @@ function scheduleSync(){
   syncTimer=setTimeout(()=>syncToSupabase(true),1200);
 }
 
-{return Math.round(n).toLocaleString('en-EG');}
+function fmt(n){return Math.round(n).toLocaleString('en-EG');}
 function nowDate(){const d=new Date();return{m:d.getMonth(),y:d.getFullYear()};}
 function monthExp(m,y){return expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});}
 // Resolve needs/wants for a category emoji, respecting user override
@@ -1324,3 +1325,5 @@ function openSfEditWith(){
 </script>
 </body>
 </html>
+
+

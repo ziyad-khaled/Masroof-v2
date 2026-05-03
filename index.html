@@ -12,7 +12,7 @@
   <title>Masroof — مصروف</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
+    :root{
       --bg:#0f0f0f;--s1:#1a1a1a;--s2:#222;--s3:#2c2c2c;--s4:#363636;
       --b1:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);--b3:rgba(255,255,255,0.2);
       --t1:#f0f0f0;--t2:#aaa;--t3:#555;
@@ -34,6 +34,7 @@
     #content{flex:1;overflow-y:auto;overscroll-behavior:contain;padding-bottom:calc(60px + var(--sbot))}
     #nav{position:fixed;bottom:0;left:0;right:0;height:calc(56px + var(--sbot));padding-bottom:var(--sbot);background:var(--s1);border-top:0.5px solid var(--b1);display:flex;z-index:100}
     .page{display:none;padding:14px 15px}.page.active{display:block}
+    /* header */
     .hdr-row{display:flex;justify-content:space-between;align-items:flex-start}
     .hdr-name{font-size:20px;font-weight:600;letter-spacing:-.5px}.hdr-name span{color:var(--lime)}
     .hdr-sub{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:2px}
@@ -41,22 +42,28 @@
     .hdr-tlabel{font-size:10px;color:var(--t3)}
     .hdr-tval{font-size:22px;font-weight:600;font-family:var(--mono);color:var(--lime);letter-spacing:-.5px}
     .hdr-tcur{font-size:10px;color:var(--t3)}
+    /* nav */
     .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--t3);font-size:9px;font-family:var(--font);cursor:pointer;padding:6px 0 0;transition:color .15s}
     .nb.active{color:var(--lime)}.nb-i{font-size:19px;line-height:1}
+    /* cards */
     .card{background:var(--s1);border-radius:var(--r);padding:13px 14px;border:0.5px solid var(--b1);margin-bottom:10px}
     .card-title{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;font-weight:500;margin-bottom:10px}
+    /* stats */
     .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
     .stat{background:var(--s1);border-radius:var(--rs);padding:9px 10px;border:0.5px solid var(--b1)}
     .stat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
     .stat-v{font-size:16px;font-weight:600;font-family:var(--mono)}
+    /* budget bars */
     .bbar{margin-bottom:9px}
     .bbar-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
     .bbar-label{font-size:12px;color:var(--t2)}.bbar-val{font-size:11px;font-family:var(--mono);color:var(--t3)}
     .bbar-track{height:7px;background:var(--s3);border-radius:4px;overflow:hidden}
     .bbar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+    /* quick add */
     .quick-grid{display:flex;gap:7px;flex-wrap:wrap}
     .qbtn{background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);padding:7px 10px;font-size:12px;color:var(--t1);font-family:var(--font);cursor:pointer;white-space:nowrap}
     .qbtn:active{background:var(--s3)}
+    /* expense list */
     .exp-list{display:flex;flex-direction:column;gap:5px}
     .exp-item{background:var(--s1);border-radius:var(--rs);padding:9px 11px;display:flex;align-items:center;gap:9px;border:0.5px solid var(--b1)}
     .exp-em{font-size:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--s2);border-radius:7px;flex-shrink:0}
@@ -73,45 +80,58 @@
     .exp-del{color:var(--t3);font-size:17px;padding:3px 3px 3px 7px;cursor:pointer;flex-shrink:0}
     .exp-del:active{color:var(--red)}
     .empty{text-align:center;padding:36px 20px;color:var(--t3);font-size:13px}
+    /* forms */
     .fcard{background:var(--s1);border-radius:var(--r);padding:14px;border:0.5px solid var(--b1);margin-bottom:10px}
     .flabel{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;font-weight:500}
     .finput{width:100%;background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);padding:10px 13px;font-size:15px;color:var(--t1);font-family:var(--font);outline:none;-webkit-appearance:none;appearance:none}
     .finput:focus{border-color:var(--lime)}.finput::placeholder{color:var(--t3)}
     .frow{margin-bottom:12px}.frow2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+    /* type toggle */
     .ttog{display:flex;background:var(--s2);border-radius:var(--rs);padding:3px;margin-bottom:12px}
     .tbtn{flex:1;padding:8px;border:none;background:none;color:var(--t3);font-size:12px;font-family:var(--font);cursor:pointer;border-radius:6px;transition:all .15s}
     .tbtn.ac{background:var(--s3);color:var(--lime);font-weight:500}
     .tbtn.ad{background:var(--s3);color:var(--blue);font-weight:500}
     .tbtn.as{background:var(--s3);color:var(--purple);font-weight:500}
+    /* category grid */
     .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
-    .cbtn{background:var(--s2);border:0.5px solid var(--b1);border-radius:var(--rs);padding:8px 3px 6px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .12s}
+    .cbtn{background:var(--s2);border:0.5px solid var(--b1);border-radius:var(--rs);padding:8px 3px 6px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .12s;position:relative}
     .cbtn:active{transform:scale(.96)}.cbtn.sel{border-color:var(--lime);background:var(--lime-d)}
     .cbtn.sels{border-color:var(--purple);background:var(--purple-d)}
     .ce{font-size:19px}.cl{font-size:9px;color:var(--t3);margin-top:3px;text-align:center}
     .cbtn.sel .cl{color:var(--lime)}.cbtn.sels .cl{color:var(--purple)}
+    /* cat remove badge */
+    .cat-remove{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:10px;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
     .sub-btn{width:100%;padding:13px;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;color:#0f0f0f;font-family:var(--font);cursor:pointer;transition:opacity .15s}
     .sub-btn:active{opacity:.85}
+    /* chart bars */
     .cbar-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
     .cbar-label{font-size:17px;width:26px;text-align:center;flex-shrink:0}
     .cbar-track{flex:1;height:18px;background:var(--s2);border-radius:4px;overflow:hidden}
     .cbar-fill{height:100%;border-radius:4px;transition:width .4s ease}
     .cbar-val{font-size:11px;font-family:var(--mono);color:var(--t2);width:60px;text-align:right;flex-shrink:0}
-    .sf-center{text-align:center;padding:14px 0 8px}
+    /* sinking fund */
+    .sf-center{text-align:center;padding:14px 0 8px;cursor:pointer}
+    .sf-center:active{opacity:.8}
     .sf-big{font-size:36px;font-weight:600;font-family:var(--mono);color:var(--purple)}
     .sf-sub{font-size:11px;color:var(--t3);margin-top:3px}
+    .sf-hint{font-size:10px;color:var(--purple);margin-top:5px;opacity:.7}
     .sf-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
-    .sf-mini{background:var(--s2);border-radius:var(--rs);padding:10px 12px;text-align:center}
+    .sf-mini{background:var(--s2);border-radius:var(--rs);padding:10px 12px;text-align:center;cursor:pointer;transition:background .15s}
+    .sf-mini:active{background:var(--s3)}
     .sf-ml{font-size:10px;color:var(--t3);margin-bottom:4px}
     .sf-mv{font-size:16px;font-weight:600;font-family:var(--mono)}
+    .sf-mini-hint{font-size:9px;color:var(--t3);margin-top:3px}
+    /* goals */
     .goal-center{display:flex;flex-direction:column;align-items:center;padding:16px 0 10px}
     .goal-pct{font-size:42px;font-weight:600;font-family:var(--mono);color:var(--lime)}
-    .goal-lbl{font-size:12px;color:var(--t3);margin-top:4px}
+    .goal-lbl{font-size:12px;color:var(--t3);margin-top:4px;text-align:center}
     .goal-bar{height:10px;background:var(--s2);border-radius:5px;overflow:hidden;margin:10px 0}
     .goal-fill{height:100%;background:var(--lime);border-radius:5px;transition:width .6s ease}
+    /* section header */
     .sec-hdr{display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px}
     .sec-t{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;font-weight:500}
     .sec-a{font-size:12px;color:var(--blue);cursor:pointer}
-    .div{height:0.5px;background:var(--b1);margin:12px 0}
+    /* misc */
     .tip{background:var(--blue-d);border:0.5px solid rgba(79,158,255,.2);border-radius:var(--r);padding:12px 14px;margin-bottom:10px}
     .tip-t{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:7px}
     .tip-b{font-size:12px;color:var(--t2);line-height:1.6}
@@ -124,14 +144,7 @@
     .ibanner.show{display:flex}
     .ibanner-text{flex:1;font-size:12px;color:var(--lime)}
     .ibanner-btn{background:var(--lime);color:#0f0f0f;border:none;border-radius:6px;padding:6px 11px;font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer}
-    .flash{position:fixed;top:calc(var(--stop) + 10px);left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
-    .flash.show{opacity:1}
-    .trend-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-    .trend-lbl{font-size:11px;color:var(--t2);width:30px;text-align:right;flex-shrink:0;font-family:var(--mono)}
-    .trend-track{flex:1;height:22px;background:var(--s2);border-radius:4px;overflow:hidden}
-    .trend-fill{height:100%;border-radius:4px;transition:width .5s ease}
-    .trend-val{font-size:11px;font-family:var(--mono);color:var(--t2);width:55px;text-align:right;flex-shrink:0}
-    /* settings */
+    /* settings rows */
     .srow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:0.5px solid var(--b1)}
     .srow:last-child{border-bottom:none}
     .srow-left{flex:1}
@@ -139,7 +152,17 @@
     .srow-sub{font-size:11px;color:var(--t3);margin-top:2px}
     .srow-input{width:96px;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:14px;color:var(--t1);font-family:var(--mono);outline:none;text-align:right}
     .srow-input:focus{border-color:var(--lime)}
-    /* edit modal */
+    .save-settings-btn{width:100%;padding:12px;border:none;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--lime);color:#0f0f0f;margin-top:4px}
+    .save-settings-btn:active{opacity:.8}
+    /* allocation edit row */
+    .alloc-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+    .alloc-emoji{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+    .alloc-inputs{flex:1;display:flex;gap:6px}
+    .alloc-inp{flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);outline:none}
+    .alloc-inp:focus{border-color:var(--lime)}
+    .alloc-del{color:var(--t3);font-size:18px;cursor:pointer;padding:4px}
+    .alloc-del:active{color:var(--red)}
+    /* modal */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
     .modal-overlay.open{opacity:1;pointer-events:all}
     .modal{background:var(--s1);border-radius:var(--r) var(--r) 0 0;padding:20px 18px calc(20px + var(--sbot));width:100%;max-width:480px;transform:translateY(100%);transition:transform .25s ease}
@@ -151,30 +174,23 @@
     .modal-del-btn:active{opacity:.8}
     .modal-save-btn{width:100%;padding:12px;border:none;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--purple);color:#fff}
     .modal-save-btn:active{opacity:.8}
-    /* make sf mini cards tappable */
-    .sf-mini{cursor:pointer;transition:background .15s}
-    .sf-mini:active{background:var(--s3)}
-    .sf-mini-hint{font-size:9px;color:var(--t3);margin-top:3px}
-    /* add contribution btn */
-    .sf-contrib-btn{width:100%;padding:11px;border:0.5px solid var(--b2);border-radius:var(--rs);font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;background:var(--green-d);color:var(--green);margin-bottom:10px}
-    .sf-contrib-btn:active{opacity:.8}
-    .save-settings-btn{width:100%;padding:12px;border:none;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--lime);color:#0f0f0f;margin-top:4px}
-    .save-settings-btn:active{opacity:.8}
-    /* quick-add recommendation chip */
-    .qbtn-rec{position:relative}
-    .qbtn-dot{position:absolute;top:-3px;right:-3px;width:6px;height:6px;border-radius:50%;background:var(--lime)}
-    /* recommendation insight */
-    .insight{background:var(--amber-d);border:0.5px solid rgba(255,184,79,.2);border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;font-size:12px;color:var(--amber);line-height:1.5}
-    /* supabase status */
+    /* supabase */
     .supa-ok{background:var(--green-d);color:var(--green)}
     .supa-err{background:var(--red-d);color:var(--red)}
     .supa-info{background:var(--blue-d);color:var(--blue)}
     .sync-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
-    .sync-dot.ok{background:var(--green)}
-    .sync-dot.off{background:var(--t3)}
-    .sync-dot.spin{background:var(--amber);animation:pulse .8s infinite}
-    .sync-dot.err{background:var(--red)}
+    .sync-dot.ok{background:var(--green)}.sync-dot.off{background:var(--t3)}
+    .sync-dot.spin{background:var(--amber);animation:pulse .8s infinite}.sync-dot.err{background:var(--red)}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    /* flash */
+    .flash{position:fixed;top:calc(var(--stop) + 10px);left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+    .flash.show{opacity:1}
+    /* trend chart */
+    .trend-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .trend-lbl{font-size:11px;color:var(--t2);width:30px;text-align:right;flex-shrink:0;font-family:var(--mono)}
+    .trend-track{flex:1;height:22px;background:var(--s2);border-radius:4px;overflow:hidden}
+    .trend-fill{height:100%;border-radius:4px;transition:width .5s ease}
+    .trend-val{font-size:11px;font-family:var(--mono);color:var(--t2);width:55px;text-align:right;flex-shrink:0}
     ::-webkit-scrollbar{width:0}
   </style>
 </head>
@@ -197,7 +213,7 @@
 
   <div id="content">
 
-    <!-- HOME -->
+    <!-- ══ HOME ══ -->
     <div class="page active" id="page-home">
       <div class="ibanner" id="ibanner">
         <div class="ibanner-text">Install app on home screen</div>
@@ -225,7 +241,7 @@
       <div class="exp-list" id="exp-list"></div>
     </div>
 
-    <!-- ADD -->
+    <!-- ══ ADD ══ -->
     <div class="page" id="page-add">
       <div class="fcard">
         <div class="flabel">Type</div>
@@ -250,7 +266,7 @@
       </div>
     </div>
 
-    <!-- STATS -->
+    <!-- ══ STATS ══ -->
     <div class="page" id="page-stats">
       <div class="card">
         <div class="card-title">6-month spending trends</div>
@@ -270,55 +286,38 @@
       </div>
     </div>
 
-    <!-- SINKING FUND -->
+    <!-- ══ SINKING FUND ══ -->
     <div class="page" id="page-sinking">
       <div class="card">
-        <div class="sf-center">
+        <!-- tapping balance opens contribution/withdrawal modal -->
+        <div class="sf-center" onclick="openSfBalModal()">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Sinking Fund Balance</div>
           <div class="sf-big" id="sf-bal">0</div>
           <div class="sf-sub">EGP available</div>
+          <div class="sf-hint">tap to add contribution or withdrawal</div>
         </div>
         <div class="sf-row">
-          <div class="sf-mini" onclick="openSfEditContrib()">
+          <div class="sf-mini" onclick="openSfBalModal('contribution')">
             <div class="sf-ml">Total contributed</div>
             <div class="sf-mv" id="sf-contrib" style="color:var(--green)">0</div>
-            <div class="sf-mini-hint">tap to add / edit</div>
+            <div class="sf-mini-hint">tap to add</div>
           </div>
-          <div class="sf-mini" onclick="openSfEditWith()">
+          <div class="sf-mini" onclick="openSfBalModal('withdrawal')">
             <div class="sf-ml">Total withdrawn</div>
             <div class="sf-mv" id="sf-with" style="color:var(--red)">0</div>
-            <div class="sf-mini-hint">tap to edit</div>
+            <div class="sf-mini-hint">tap to add</div>
           </div>
         </div>
         <div class="bbar">
-          <div class="bbar-row"><div class="bbar-label" style="color:var(--purple)">This month: <span id="sf-target-lbl">3,000</span> target</div><div class="bbar-val" id="sf-prog-lbl">0 / 3,000</div></div>
+          <div class="bbar-row">
+            <div class="bbar-label" style="color:var(--purple)">This month: <span id="sf-target-lbl">3,000</span> target</div>
+            <div class="bbar-val" id="sf-prog-lbl">0 / 3,000</div>
+          </div>
           <div class="bbar-track"><div class="bbar-fill" id="sf-prog-fill" style="background:var(--purple)"></div></div>
         </div>
       </div>
-      <div class="sec-hdr"><div class="sec-t">Log Contribution</div></div>
-      <div class="fcard">
-        <div class="frow">
-          <div class="flabel">Note (optional)</div>
-          <input class="finput" type="text" id="sf-cname" placeholder="e.g. Paycheck top-up…" dir="auto">
-        </div>
-        <div class="frow">
-          <div class="flabel">Amount (EGP)</div>
-          <input class="finput" type="number" id="sf-camount" placeholder="0" inputmode="numeric">
-        </div>
-        <button class="sub-btn" style="background:var(--green);color:#0f0f0f" onclick="addSfContribution()">+ Add Contribution</button>
-      </div>
-      <div class="sec-hdr"><div class="sec-t">Log Withdrawal</div></div>
-      <div class="fcard">
-        <div class="frow">
-          <div class="flabel">Item name</div>
-          <input class="finput" type="text" id="sf-name" placeholder="e.g. Running shoes, قميص…" dir="auto">
-        </div>
-        <div class="frow">
-          <div class="flabel">Amount (EGP)</div>
-          <input class="finput" type="number" id="sf-amount" placeholder="0" inputmode="numeric">
-        </div>
-        <button class="sub-btn" style="background:var(--purple);color:#fff" onclick="addSfWithdrawal()">Log Withdrawal</button>
-      </div>
+
+      <!-- Wishlist -->
       <div class="sec-hdr">
         <div class="sec-t">Wishlist</div>
         <div class="sec-a" id="add-wish-btn">+ Add item</div>
@@ -331,19 +330,21 @@
         </div>
       </div>
       <div id="wish-list"></div>
+
+      <!-- Transaction history -->
       <div class="sec-hdr">
         <div class="sec-t">Transaction History</div>
-        <div class="sec-a" style="color:var(--t3);font-size:11px">tap any row to edit</div>
+        <div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div>
       </div>
       <div class="exp-list" id="sf-list"></div>
     </div>
 
-    <!-- GOALS -->
+    <!-- ══ GOALS ══ -->
     <div class="page" id="page-goals">
       <div class="card">
         <div class="goal-center">
           <div class="goal-pct" id="goal-pct">0%</div>
-          <div class="goal-lbl">toward 608,000 EGP — marriage &amp; house goal</div>
+          <div class="goal-lbl" id="goal-lbl">toward 608,000 EGP — marriage &amp; house goal</div>
         </div>
         <div class="goal-bar"><div class="goal-fill" id="goal-fill" style="width:0%"></div></div>
         <div class="bbar-row" style="margin-top:6px">
@@ -359,106 +360,52 @@
           <div class="bbar-val" id="goal-eta" style="color:var(--lime)">—</div>
         </div>
       </div>
+
+      <!-- Goal edit -->
       <div class="card">
-        <div class="card-title">Update Savings Balance</div>
+        <div class="card-title">Goal settings</div>
+        <div class="frow">
+          <div class="flabel">Goal name / label</div>
+          <input class="finput" type="text" id="goal-name-inp" placeholder="e.g. Marriage & house" dir="auto">
+        </div>
+        <div class="frow">
+          <div class="flabel">Target amount (EGP)</div>
+          <input class="finput" type="number" id="goal-target-inp" placeholder="608000" inputmode="numeric">
+        </div>
         <div class="frow">
           <div class="flabel">Current savings total (EGP)</div>
           <input class="finput" type="number" id="goal-inp" placeholder="e.g. 12000" inputmode="numeric">
         </div>
         <div class="frow">
           <div class="flabel">Monthly contribution (EGP)</div>
-          <input class="finput" type="number" id="goal-m-inp" value="6000" inputmode="numeric">
+          <input class="finput" type="number" id="goal-m-inp" inputmode="numeric">
         </div>
-        <button class="sub-btn" style="background:var(--lime)" onclick="saveGoal()">Save</button>
+        <button class="sub-btn" style="background:var(--lime)" onclick="saveGoal()">Save goal</button>
       </div>
+
+      <!-- Savings allocation — fully editable -->
       <div class="card">
-        <div class="card-title">Savings allocation (6,000 / month)</div>
-        <div class="cbar-row"><div class="cbar-label">🪙</div><div class="cbar-track"><div class="cbar-fill" style="width:50%;background:var(--amber)"></div></div><div class="cbar-val">3,000 Gold</div></div>
-        <div class="cbar-row"><div class="cbar-label">📈</div><div class="cbar-track"><div class="cbar-fill" style="width:20%;background:var(--blue)"></div></div><div class="cbar-val">1,200 Stocks</div></div>
-        <div class="cbar-row"><div class="cbar-label">🏦</div><div class="cbar-track"><div class="cbar-fill" style="width:30%;background:var(--green)"></div></div><div class="cbar-val">1,800 Bank</div></div>
+        <div class="card-title">Savings allocation</div>
+        <div id="alloc-list"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <input class="finput" id="alloc-new-emoji" placeholder="🪙" style="width:52px;flex:none;text-align:center;font-size:20px">
+          <input class="finput" id="alloc-new-label" placeholder="Label e.g. Gold">
+          <input class="finput" id="alloc-new-amount" type="number" placeholder="Amount" inputmode="numeric" style="width:90px;flex:none">
+        </div>
+        <button class="save-settings-btn" style="margin-top:8px" onclick="addAllocRow()">+ Add allocation</button>
+        <button class="save-settings-btn" style="background:var(--s3);color:var(--t1);margin-top:6px" onclick="saveAlloc()">Save allocation</button>
       </div>
     </div>
 
-    <!-- SETTINGS -->
-    <div class="page" id="page-settings">
-      <div class="card" id="supa-card">
-        <div class="card-title">☁️ Supabase sync</div>
-        <div class="frow">
-          <div class="flabel">Project URL</div>
-          <input class="finput" type="url" id="supa-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false">
-        </div>
-        <div class="frow">
-          <div class="flabel">Anon / public key</div>
-          <input class="finput" type="password" id="supa-key" placeholder="eyJ…" autocomplete="off" spellcheck="false">
-        </div>
-        <div style="display:flex;gap:8px;margin-bottom:4px">
-          <button class="save-settings-btn" style="flex:1;margin-top:0" onclick="saveSupaConfig()">Save &amp; connect</button>
-          <button class="save-settings-btn" style="flex:0 0 auto;width:auto;padding:12px 16px;margin-top:0;background:var(--s3);color:var(--t1)" onclick="testSupaConnection()">Test</button>
-        </div>
-        <div id="supa-status" style="font-size:12px;margin-top:10px;padding:9px 12px;border-radius:var(--rs);display:none"></div>
-        <div style="margin-top:12px;border-top:0.5px solid var(--b1);padding-top:12px;display:flex;gap:8px">
-          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--blue);color:#fff" onclick="syncToSupabase(true)">⬆ Push local → cloud</button>
-          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--s3);color:var(--t1)" onclick="pullFromSupabase()">⬇ Pull cloud → local</button>
-        </div>
-        <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6">
-          Data syncs automatically on every add/edit/delete once connected. Push/Pull let you force a full sync manually — useful when switching devices.
-        </div>
-      </div>
-        <div class="card-title">Monthly budget caps</div>
-        <div class="srow">
-          <div class="srow-left">
-            <div class="srow-label">🍗 Needs cap</div>
-            <div class="srow-sub">Food, transport, bills, care</div>
-          </div>
-          <input class="srow-input" type="number" id="set-needs" inputmode="numeric" placeholder="3500">
-        </div>
-        <div class="srow">
-          <div class="srow-left">
-            <div class="srow-label">⚡ Wants cap</div>
-            <div class="srow-sub">Coffee, snacks, gaming, misc</div>
-          </div>
-          <input class="srow-input" type="number" id="set-wants" inputmode="numeric" placeholder="2000">
-        </div>
-        <div class="srow">
-          <div class="srow-left">
-            <div class="srow-label">🐷 Sinking fund target</div>
-            <div class="srow-sub">Monthly contribution goal</div>
-          </div>
-          <input class="srow-input" type="number" id="set-sinking" inputmode="numeric" placeholder="3000">
-        </div>
-        <div style="margin-top:12px">
-          <button class="save-settings-btn" onclick="saveSettings()">Save budget caps</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Quick Add — smart recommendations</div>
-        <div id="qa-insight"></div>
-        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">
-          Ranked by frequency × recency across your last 6 months. Updates automatically as you log more entries.
-        </div>
-        <div id="qa-preview" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px"></div>
-        <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="resetQuickItems()">Refresh recommendations now</button>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Category → Needs / Wants mapping</div>
-        <div id="cat-mapping-list"></div>
-        <div style="margin-top:12px">
-          <button class="save-settings-btn" onclick="saveCatMapping()">Save mapping</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXPORT -->
+    <!-- ══ EXPORT ══ -->
     <div class="page" id="page-export">
       <div class="tip">
-        <div class="tip-t">📱 Auto-detect bank SMS (Android)</div>
+        <div class="tip-t">📱 Auto-detect bank SMS (Android — Automate app)</div>
         <div class="tip-b">
-          <div class="tip-step"><div class="tip-n">1</div><div>Install <strong>MacroDroid</strong> from Play Store (free)</div></div>
-          <div class="tip-step"><div class="tip-n">2</div><div>Trigger: SMS from CIB / NBE / Banque Misr</div></div>
-          <div class="tip-step"><div class="tip-n">3</div><div>Extract amount with regex: <code style="color:var(--blue);font-size:10px">EGP ([\d,]+\.?\d*)</code></div></div>
-          <div class="tip-step"><div class="tip-n">4</div><div>Open: <code style="color:var(--blue);font-size:10px">your-url/?amount={AMOUNT}&amp;name=Digital</code></div></div>
+          <div class="tip-step"><div class="tip-n">1</div><div>Install <strong>Automate by LlamaLab</strong> from Play Store (free, no trial)</div></div>
+          <div class="tip-step"><div class="tip-n">2</div><div>Import the <code style="color:var(--blue);font-size:10px">masroof-bank-sms.flo</code> flow file</div></div>
+          <div class="tip-step"><div class="tip-n">3</div><div>Edit the URL block → replace YOUR_APP_URL with your hosted URL</div></div>
+          <div class="tip-step"><div class="tip-n">4</div><div>Press ▶ Play — runs silently in background</div></div>
         </div>
       </div>
       <div class="card">
@@ -485,7 +432,78 @@
       </div>
     </div>
 
-  </div>
+    <!-- ══ SETTINGS ══ -->
+    <div class="page" id="page-settings">
+
+      <!-- Supabase -->
+      <div class="card">
+        <div class="card-title">☁️ Supabase sync</div>
+        <div class="frow">
+          <div class="flabel">Project URL</div>
+          <input class="finput" type="url" id="supa-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="frow">
+          <div class="flabel">Anon / public key</div>
+          <input class="finput" type="password" id="supa-key" placeholder="eyJ…" autocomplete="off" spellcheck="false">
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:4px">
+          <button class="save-settings-btn" style="flex:1;margin-top:0" onclick="saveSupaConfig()">Save &amp; connect</button>
+          <button class="save-settings-btn" style="flex:0 0 auto;width:auto;padding:12px 16px;margin-top:0;background:var(--s3);color:var(--t1)" onclick="testSupaConnection()">Test</button>
+        </div>
+        <div id="supa-status" style="font-size:12px;margin-top:10px;padding:9px 12px;border-radius:var(--rs);display:none"></div>
+        <div style="margin-top:12px;border-top:0.5px solid var(--b1);padding-top:12px;display:flex;gap:8px">
+          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--blue);color:#fff" onclick="syncToSupabase(true)">⬆ Push local → cloud</button>
+          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--s3);color:var(--t1)" onclick="pullFromSupabase()">⬇ Pull cloud → local</button>
+        </div>
+        <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6">
+          Syncs automatically on every add/edit/delete. Push/Pull for manual full sync when switching devices.
+        </div>
+      </div>
+
+      <!-- Budget caps -->
+      <div class="card">
+        <div class="card-title">Monthly budget caps</div>
+        <div class="srow">
+          <div class="srow-left"><div class="srow-label">🍗 Needs cap</div><div class="srow-sub">Food, transport, bills, care</div></div>
+          <input class="srow-input" type="number" id="set-needs" inputmode="numeric" placeholder="3500">
+        </div>
+        <div class="srow">
+          <div class="srow-left"><div class="srow-label">⚡ Wants cap</div><div class="srow-sub">Coffee, snacks, gaming, misc</div></div>
+          <input class="srow-input" type="number" id="set-wants" inputmode="numeric" placeholder="2000">
+        </div>
+        <div class="srow">
+          <div class="srow-left"><div class="srow-label">🐷 Sinking fund target</div><div class="srow-sub">Monthly contribution goal</div></div>
+          <input class="srow-input" type="number" id="set-sinking" inputmode="numeric" placeholder="3000">
+        </div>
+        <button class="save-settings-btn" onclick="saveSettings()">Save budget caps</button>
+      </div>
+
+      <!-- Categories — editable -->
+      <div class="card">
+        <div class="card-title">Categories</div>
+        <div id="cat-edit-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px"></div>
+        <div style="display:flex;gap:7px;margin-bottom:10px">
+          <input class="finput" id="new-cat-emoji" placeholder="😀" style="width:52px;flex:none;text-align:center;font-size:20px">
+          <input class="finput" id="new-cat-label" placeholder="Label">
+          <select class="finput" id="new-cat-nw" style="width:80px;flex:none;font-size:12px">
+            <option value="wants">Wants</option>
+            <option value="needs">Needs</option>
+          </select>
+        </div>
+        <button class="save-settings-btn" onclick="addCategory()">+ Add category</button>
+      </div>
+
+      <!-- Quick add preview -->
+      <div class="card">
+        <div class="card-title">Quick Add recommendations</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">Ranked by frequency × recency (last 6 months). Auto-updates as you log expenses.</div>
+        <div id="qa-preview" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px"></div>
+        <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="refreshQuickItems();renderSettings();flash('Refreshed!','var(--lime)')">Refresh recommendations</button>
+      </div>
+
+    </div>
+
+  </div><!-- /content -->
 
   <nav id="nav">
     <button class="nb active" id="nav-home" onclick="goPage('home')"><div class="nb-i">🏠</div><div>Home</div></button>
@@ -500,9 +518,56 @@
 
 <div class="flash" id="flash"></div>
 
+<!-- SF balance modal (contribution / withdrawal) -->
+<div class="modal-overlay" id="sf-bal-modal" onclick="closeSfBalModal(event)">
+  <div class="modal">
+    <div class="modal-title">Sinking Fund <span class="modal-close" onclick="closeSfBalModal()">×</span></div>
+    <div class="ttog" style="margin-bottom:14px">
+      <button class="tbtn" id="sfm-tab-contrib" onclick="sfModalTab('contribution')">📥 Contribution</button>
+      <button class="tbtn" id="sfm-tab-with" onclick="sfModalTab('withdrawal')">📤 Withdrawal</button>
+    </div>
+    <div class="frow">
+      <div class="flabel" id="sfm-note-label">Note (optional)</div>
+      <input class="finput" type="text" id="sfm-name" dir="auto" placeholder="e.g. Paycheck top-up…">
+    </div>
+    <div class="frow">
+      <div class="flabel">Amount (EGP)</div>
+      <input class="finput" type="number" id="sfm-amount" inputmode="numeric" placeholder="0">
+    </div>
+    <button class="modal-save-btn" id="sfm-save-btn" onclick="saveSfBalEntry()">Add contribution</button>
+  </div>
+</div>
+
+<!-- SF transaction edit modal -->
+<div class="modal-overlay" id="sf-edit-modal" onclick="closeSfEditModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="sf-edit-title">Edit transaction <span class="modal-close" onclick="closeSfEditModal()">×</span></div>
+    <div class="frow">
+      <div class="flabel">Name / note</div>
+      <input class="finput" type="text" id="sf-edit-name" dir="auto">
+    </div>
+    <div class="frow">
+      <div class="flabel">Amount (EGP)</div>
+      <input class="finput" type="number" id="sf-edit-amount" inputmode="numeric">
+    </div>
+    <div class="frow">
+      <div class="flabel">Date</div>
+      <input class="finput" type="date" id="sf-edit-date">
+    </div>
+    <button class="modal-save-btn" onclick="saveSfEdit()">Save changes</button>
+    <button class="modal-del-btn" onclick="deleteSfEntry()">Delete transaction</button>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const CATS=[
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Default categories — mutable, user can add/remove
+let CATS=[
   {e:'🚦',l:'Transport',nw:'needs'},{e:'🍗',l:'Groceries',nw:'needs'},
   {e:'🌍',l:'Internet',nw:'needs'},{e:'📱',l:'Mobile',nw:'needs'},
   {e:'🧴',l:'Care',nw:'needs'},{e:'☕',l:'Coffee',nw:'wants'},
@@ -512,59 +577,53 @@ const CATS=[
   {e:'🥙',l:'Food',nw:'wants'},{e:'🧊',l:'Drinks',nw:'wants'},
   {e:'❓',l:'Misc',nw:'wants'},{e:'🥛',l:'Dairy',nw:'wants'},
 ];
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const GOAL_TARGET=608000;
 
-// BUDGET is now mutable — loaded from localStorage
 let BUDGET={needs:3500,wants:2000,sinking:3000};
-// catMapping allows overriding nw per emoji
-let catMapping={};
+let GOAL_TARGET=608000;
+let GOAL_NAME='Marriage & house goal';
+// Savings allocation: array of {emoji, label, amount}
+let ALLOC=[
+  {emoji:'🪙',label:'Gold',amount:3000},
+  {emoji:'📈',label:'Stocks',amount:1200},
+  {emoji:'🏦',label:'Bank',amount:1800},
+];
 
 let expenses=[],sfLog=[],wishlist=[],goalData={saved:0,monthly:6000};
 let selCat=CATS[0],selType='cash';
+let sfBalModalType='contribution';
+let sfEditingId=null;
 
-// ── Smart Quick-Add: scored by frequency × recency over last 6 months ──
+// ── Smart Quick-Add ──
 function computeSmartQuickItems(){
   const now=new Date();
-  const cutoff=new Date(now.getFullYear(),now.getMonth()-5,1); // start of 6 months ago
+  const cutoff=new Date(now.getFullYear(),now.getMonth()-5,1);
   const recent=expenses.filter(e=>new Date(e.date)>=cutoff);
-
-  // Count freq per (name+cat+amount) key, weighted by recency
   const scores={};
   recent.forEach(e=>{
     const key=e.name+'||'+e.cat+'||'+e.amount;
     const ageMonths=(now-new Date(e.date))/(1000*60*60*24*30);
-    const recencyWeight=Math.max(0.1,1-(ageMonths/6)*0.5); // 1.0 this month → 0.5 at 6 months ago
-    if(!scores[key])scores[key]={name:e.name,amount:e.amount,cat:e.cat,catLabel:e.catLabel,nw:e.nw||catNW(e.cat),freq:0,score:0};
-    scores[key].freq++;
-    scores[key].score+=recencyWeight;
+    const w=Math.max(0.1,1-(ageMonths/6)*0.5);
+    if(!scores[key])scores[key]={name:e.name,amount:e.amount,cat:e.cat,catLabel:e.catLabel||e.cat,nw:e.nw||'wants',freq:0,score:0};
+    scores[key].freq++;scores[key].score+=w;
   });
-
-  return Object.values(scores)
-    .sort((a,b)=>b.score-a.score)
-    .slice(0,8);
+  return Object.values(scores).sort((a,b)=>b.score-a.score).slice(0,8);
 }
-
 let quickItems=[];
 function refreshQuickItems(){
   const smart=computeSmartQuickItems();
-  if(smart.length>0){
-    quickItems=smart;
-  } else {
-    // fallback seeds before enough data
+  if(smart.length>0){quickItems=smart;}
+  else{
     try{quickItems=JSON.parse(localStorage.getItem('ms_quick')||'[]');}catch(e){}
-    if(quickItems.length===0){
-      quickItems=[
-        {name:'صقر',amount:4,cat:'🚦',catLabel:'Transport',nw:'needs',freq:10,score:10},
-        {name:'فايده',amount:4,cat:'🚦',catLabel:'Transport',nw:'needs',freq:8,score:8},
-        {name:'شبس',amount:8,cat:'🥔',catLabel:'Snacks',nw:'wants',freq:6,score:6},
-      ];
-    }
+    if(!quickItems.length)quickItems=[
+      {name:'صقر',amount:4,cat:'🚦',catLabel:'Transport',nw:'needs'},
+      {name:'فايده',amount:4,cat:'🚦',catLabel:'Transport',nw:'needs'},
+      {name:'شبس',amount:8,cat:'🥔',catLabel:'Snacks',nw:'wants'},
+    ];
   }
   localStorage.setItem('ms_quick',JSON.stringify(quickItems));
 }
-refreshQuickItems();
 
+// ── Load / Save ──
 function loadState(){
   try{expenses=JSON.parse(localStorage.getItem('ms_exp')||'[]');}catch(e){expenses=[];}
   try{sfLog=JSON.parse(localStorage.getItem('ms_sf')||'[]');}catch(e){sfLog=[];}
@@ -578,7 +637,10 @@ function loadState(){
   ]));}catch(e){wishlist=[];}
   try{goalData=JSON.parse(localStorage.getItem('ms_goal')||'{"saved":0,"monthly":6000}');}catch(e){goalData={saved:0,monthly:6000};}
   try{const b=JSON.parse(localStorage.getItem('ms_budget')||'null');if(b)Object.assign(BUDGET,b);}catch(e){}
-  try{catMapping=JSON.parse(localStorage.getItem('ms_catmap')||'{}');}catch(e){catMapping={};}
+  try{const c=JSON.parse(localStorage.getItem('ms_cats')||'null');if(c&&c.length)CATS=c;}catch(e){}
+  try{const a=JSON.parse(localStorage.getItem('ms_alloc')||'null');if(a&&a.length)ALLOC=a;}catch(e){}
+  try{const g=JSON.parse(localStorage.getItem('ms_goal_meta')||'null');if(g){GOAL_TARGET=g.target||608000;GOAL_NAME=g.name||'Marriage & house goal';}}catch(e){}
+  try{quickItems=JSON.parse(localStorage.getItem('ms_quick')||'[]');}catch(e){}
 }
 function saveState(){
   localStorage.setItem('ms_exp',JSON.stringify(expenses));
@@ -587,26 +649,23 @@ function saveState(){
   localStorage.setItem('ms_goal',JSON.stringify(goalData));
   scheduleSync();
 }
+function saveCats(){localStorage.setItem('ms_cats',JSON.stringify(CATS));}
+function saveAllocs(){localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));}
 loadState();
+refreshQuickItems();
 
-// ═══════════════════════════════════════════════
-// SUPABASE SYNC ENGINE
-// ═══════════════════════════════════════════════
-let SUPA_URL='', SUPA_KEY='', SUPA_USER_ID='';
-
+// ═══════════════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════════════
+let SUPA_URL='',SUPA_KEY='',SUPA_USER_ID='';
 function supaInit(){
   SUPA_URL=(localStorage.getItem('ms_supa_url')||'').replace(/\/$/,'');
   SUPA_KEY=localStorage.getItem('ms_supa_key')||'';
-  // stable device ID — generated once, never changes
-  if(!localStorage.getItem('ms_uid')){
-    localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
-  }
+  if(!localStorage.getItem('ms_uid'))localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
   SUPA_USER_ID=localStorage.getItem('ms_uid');
 }
 supaInit();
-
 function supaReady(){return !!(SUPA_URL&&SUPA_KEY);}
-
 function setSyncStatus(state,text){
   const el=document.getElementById('sync-status');
   if(!supaReady()){el.style.display='none';return;}
@@ -614,209 +673,92 @@ function setSyncStatus(state,text){
   el.innerHTML=`<span class="sync-dot ${state}"></span>${text}`;
   el.style.color=state==='ok'?'var(--green)':state==='err'?'var(--red)':state==='spin'?'var(--amber)':'var(--t3)';
 }
-
 async function supaFetch(table,method,body,matchId){
   if(!supaReady())return null;
   let url=`${SUPA_URL}/rest/v1/${table}`;
   if(matchId!==undefined)url+=`?id=eq.${matchId}&user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`;
   else if(method==='GET')url+=`?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}&order=date.asc&limit=5000`;
-  const opts={
-    method,
-    headers:{
-      'apikey':SUPA_KEY,
-      'Authorization':'Bearer '+SUPA_KEY,
-      'Content-Type':'application/json',
-      'Prefer': method==='POST'?'resolution=merge-duplicates':'',
-    }
-  };
+  const opts={method,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'resolution=merge-duplicates':''}};
   if(body)opts.body=JSON.stringify(body);
-  try{
-    const r=await fetch(url,opts);
-    if(!r.ok){const t=await r.text();throw new Error(r.status+': '+t.slice(0,120));}
-    if(method==='GET')return await r.json();
-    return true;
-  }catch(e){
-    console.error('Supabase',method,table,e.message);
-    setSyncStatus('err','Sync error');
-    return null;
-  }
+  try{const r=await fetch(url,opts);if(!r.ok){const t=await r.text();throw new Error(r.status+': '+t.slice(0,120));}if(method==='GET')return await r.json();return true;}
+  catch(e){console.error('Supabase',method,table,e.message);setSyncStatus('err','Sync error');return null;}
 }
-
 async function supaUpsertAppState(){
   if(!supaReady())return;
-  const row={
-    user_id:SUPA_USER_ID,
-    goal_saved:goalData.saved,
-    goal_monthly:goalData.monthly,
-    budget_needs:BUDGET.needs,
-    budget_wants:BUDGET.wants,
-    budget_sinking:BUDGET.sinking,
-    cat_mapping:catMapping,
-    quick_items:quickItems,
-    updated_at:new Date().toISOString()
-  };
-  await supaFetch('app_state','POST',row);
+  await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,cat_mapping:{},quick_items:quickItems,updated_at:new Date().toISOString()});
 }
-
-// Write one expense row
-async function supaUpsertExpense(e){
-  if(!supaReady())return;
-  const row={id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date};
-  await supaFetch('expenses','POST',row);
-}
-async function supaDeleteExpense(id){
-  if(!supaReady())return;
-  await supaFetch('expenses','DELETE',null,id);
-}
-
-// Write one sf_log row
-async function supaUpsertSfLog(e){
-  if(!supaReady())return;
-  const row={id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date};
-  await supaFetch('sf_log','POST',row);
-}
-async function supaDeleteSfLog(id){
-  if(!supaReady())return;
-  await supaFetch('sf_log','DELETE',null,id);
-}
-
-// Upsert full wishlist (replace all)
+async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});}
+async function supaDeleteExpense(id){if(!supaReady())return;await supaFetch('expenses','DELETE',null,id);}
+async function supaUpsertSfLog(e){if(!supaReady())return;await supaFetch('sf_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date});}
+async function supaDeleteSfLog(id){if(!supaReady())return;await supaFetch('sf_log','DELETE',null,id);}
 async function supaUpsertWishlist(){
   if(!supaReady())return;
-  // delete all then insert fresh (wishlist is small)
-  await fetch(`${SUPA_URL}/rest/v1/wishlist?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{
-    method:'DELETE',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-  });
-  if(wishlist.length===0)return;
-  const rows=wishlist.map(w=>({id:w.id,user_id:SUPA_USER_ID,name:w.name,cost:w.cost||0,done:w.done||false}));
-  await supaFetch('wishlist','POST',rows);
+  await fetch(`${SUPA_URL}/rest/v1/wishlist?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{method:'DELETE',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+  if(wishlist.length)await supaFetch('wishlist','POST',wishlist.map(w=>({id:w.id,user_id:SUPA_USER_ID,name:w.name,cost:w.cost||0,done:w.done||false})));
 }
-
-// ── Push ALL local data to Supabase (full sync) ──
 async function syncToSupabase(silent=false){
   if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
   setSyncStatus('spin','Syncing…');
   try{
-    // Batch upsert expenses
-    if(expenses.length>0){
-      const rows=expenses.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date}));
-      await supaFetch('expenses','POST',rows);
-    }
-    // Batch upsert sf_log
-    if(sfLog.length>0){
-      const rows=sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date}));
-      await supaFetch('sf_log','POST',rows);
-    }
-    await supaUpsertWishlist();
-    await supaUpsertAppState();
+    if(expenses.length)await supaFetch('expenses','POST',expenses.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date})));
+    if(sfLog.length)await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date})));
+    await supaUpsertWishlist();await supaUpsertAppState();
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Synced '+t);
-    localStorage.setItem('ms_last_sync',new Date().toISOString());
+    setSyncStatus('ok','Synced '+t);localStorage.setItem('ms_last_sync',new Date().toISOString());
     if(!silent)flash('Pushed to Supabase ✓','var(--green)');
-  }catch(e){
-    setSyncStatus('err','Sync failed');
-    if(!silent)flash('Sync failed: '+e.message,'var(--red)');
-  }
+  }catch(e){setSyncStatus('err','Sync failed');if(!silent)flash('Sync failed: '+e.message,'var(--red)');}
 }
-
-// ── Pull ALL cloud data to local (full restore) ──
 async function pullFromSupabase(){
   if(!supaReady()){flash('Set Supabase credentials first','var(--amber)');return;}
   setSyncStatus('spin','Pulling…');
   try{
-    const [remExp,remSf,remWish,remState]=await Promise.all([
-      supaFetch('expenses','GET'),
-      supaFetch('sf_log','GET'),
-      supaFetch('wishlist','GET'),
-      fetch(`${SUPA_URL}/rest/v1/app_state?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{
-        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-      }).then(r=>r.json())
+    const[remExp,remSf,remWish,remState]=await Promise.all([
+      supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('wishlist','GET'),
+      fetch(`${SUPA_URL}/rest/v1/app_state?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}).then(r=>r.json())
     ]);
-
     if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
     if(remSf)sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,date:e.date}));
     if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));
-    if(remState&&remState[0]){
-      const s=remState[0];
-      goalData={saved:s.goal_saved||0,monthly:s.goal_monthly||6000};
-      BUDGET.needs=s.budget_needs||3500;
-      BUDGET.wants=s.budget_wants||2000;
-      BUDGET.sinking=s.budget_sinking||3000;
-      if(s.cat_mapping)catMapping=s.cat_mapping;
-      if(s.quick_items&&s.quick_items.length>0)quickItems=s.quick_items;
-    }
-    saveState();
-    localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
-    localStorage.setItem('ms_catmap',JSON.stringify(catMapping));
-    localStorage.setItem('ms_quick',JSON.stringify(quickItems));
+    if(remState&&remState[0]){const s=remState[0];goalData={saved:s.goal_saved||0,monthly:s.goal_monthly||6000};BUDGET.needs=s.budget_needs||3500;BUDGET.wants=s.budget_wants||2000;BUDGET.sinking=s.budget_sinking||3000;}
+    saveState();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Synced '+t);
-    flash('Pulled from Supabase ✓','var(--green)');
-    renderHome();
-  }catch(e){
-    setSyncStatus('err','Pull failed');
-    flash('Pull failed: '+e.message,'var(--red)');
-  }
+    setSyncStatus('ok','Synced '+t);flash('Pulled from Supabase ✓','var(--green)');renderHome();
+  }catch(e){setSyncStatus('err','Pull failed');flash('Pull failed: '+e.message,'var(--red)');}
 }
-
-// ── Test connection ──
 async function testSupaConnection(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,'');
   const key=(document.getElementById('supa-key').value||'').trim();
-  const statusEl=document.getElementById('supa-status');
-  statusEl.style.display='block';
-  statusEl.className='supa-info';statusEl.textContent='Testing connection…';
-  try{
-    const r=await fetch(`${url}/rest/v1/app_state?limit=1`,{
-      headers:{'apikey':key,'Authorization':'Bearer '+key}
-    });
-    if(r.ok){
-      statusEl.className='supa-ok';statusEl.textContent='✓ Connected successfully! Tables found.';
-    } else {
-      const t=await r.text();
-      statusEl.className='supa-err';statusEl.textContent='✗ Error '+r.status+': '+t.slice(0,100);
-    }
-  }catch(e){
-    statusEl.className='supa-err';statusEl.textContent='✗ Cannot reach URL. Check project URL and key.';
-  }
+  const el=document.getElementById('supa-status');el.style.display='block';el.className='supa-info';el.textContent='Testing…';
+  try{const r=await fetch(`${url}/rest/v1/app_state?limit=1`,{headers:{'apikey':key,'Authorization':'Bearer '+key}});
+    if(r.ok){el.className='supa-ok';el.textContent='✓ Connected successfully!';}
+    else{const t=await r.text();el.className='supa-err';el.textContent='✗ Error '+r.status+': '+t.slice(0,100);}
+  }catch(e){el.className='supa-err';el.textContent='✗ Cannot reach URL.';}
 }
-
-// ── Save Supabase config ──
 function saveSupaConfig(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,'');
   const key=(document.getElementById('supa-key').value||'').trim();
   if(!url||!key){flash('Enter both URL and key','var(--amber)');return;}
-  localStorage.setItem('ms_supa_url',url);
-  localStorage.setItem('ms_supa_key',key);
-  supaInit();
-  flash('Supabase config saved!','var(--green)');
-  setSyncStatus('ok','Ready');
-  document.getElementById('supa-status').style.display='none';
+  localStorage.setItem('ms_supa_url',url);localStorage.setItem('ms_supa_key',key);supaInit();
+  flash('Supabase config saved!','var(--green)');setSyncStatus('ok','Ready');document.getElementById('supa-status').style.display='none';
 }
-
-// ── Auto-sync wrapper: called after every write ──
 let syncTimer=null;
-function scheduleSync(){
-  if(!supaReady())return;
-  clearTimeout(syncTimer);
-  setSyncStatus('spin','Saving…');
-  syncTimer=setTimeout(()=>syncToSupabase(true),1200);
-}
+function scheduleSync(){if(!supaReady())return;clearTimeout(syncTimer);setSyncStatus('spin','Saving…');syncTimer=setTimeout(()=>syncToSupabase(true),1200);}
 
+// ═══════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════
 function fmt(n){return Math.round(n).toLocaleString('en-EG');}
 function nowDate(){const d=new Date();return{m:d.getMonth(),y:d.getFullYear()};}
 function monthExp(m,y){return expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});}
-// Resolve needs/wants for a category emoji, respecting user override
-function catNW(emoji){
-  if(catMapping[emoji])return catMapping[emoji];
-  return CATS.find(c=>c.e===emoji)?.nw||'wants';
-}
+function catNW(emoji){return CATS.find(c=>c.e===emoji)?.nw||'wants';}
 function flash(msg,color){
-  const el=document.getElementById('flash');
-  el.textContent=msg;el.style.background=color||'var(--red)';el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2500);
+  const el=document.getElementById('flash');el.textContent=msg;el.style.background=color||'var(--red)';
+  el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);
 }
 
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
 function goPage(p){
   document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(el=>el.classList.remove('active'));
@@ -830,6 +772,9 @@ function goPage(p){
   if(p==='add')setTimeout(()=>document.getElementById('inp-name').focus(),150);
 }
 
+// ═══════════════════════════════════════════════════
+// CATEGORY GRID (Add page)
+// ═══════════════════════════════════════════════════
 function buildCatGrid(){
   const g=document.getElementById('cat-grid');g.innerHTML='';
   const isSink=selType==='sinking';
@@ -845,15 +790,17 @@ buildCatGrid();
 
 function setType(t){
   selType=t;
-  document.getElementById('tbtn-cash').className='tbtn'+(t==='cash'?' ac':'');
-  document.getElementById('tbtn-digital').className='tbtn'+(t==='digital'?' ad':'');
-  document.getElementById('tbtn-sinking').className='tbtn'+(t==='sinking'?' as':'');
+  ['cash','digital','sinking'].forEach(x=>document.getElementById('tbtn-'+x).className='tbtn');
+  document.getElementById('tbtn-'+t).className='tbtn '+(t==='cash'?'ac':t==='digital'?'ad':'as');
   const btn=document.getElementById('sub-btn');
   btn.style.background=t==='cash'?'var(--lime)':t==='digital'?'var(--blue)':'var(--purple)';
   btn.style.color=t==='sinking'?'#fff':'#0f0f0f';
   buildCatGrid();
 }
 
+// ═══════════════════════════════════════════════════
+// ADD EXPENSE
+// ═══════════════════════════════════════════════════
 function addExpense(){
   const name=document.getElementById('inp-name').value.trim();
   const amount=parseFloat(document.getElementById('inp-amount').value);
@@ -863,22 +810,23 @@ function addExpense(){
     const wTotal=monthExp(m,y).filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
     if(wTotal+amount>BUDGET.wants)flash('⚠️ Over Wants budget! '+fmt(wTotal+amount)+' / '+fmt(BUDGET.wants),'var(--amber)');
   }
-  expenses.push({id:Date.now(),name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()});
-  if(selType==='sinking')sfLog.push({id:Date.now()+1,name,amount,type:'withdrawal',date:new Date().toISOString()});
-  saveState();
-  refreshQuickItems(); // recompute from actual data
+  const id=Date.now();
+  expenses.push({id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()});
+  if(selType==='sinking')sfLog.push({id:id+1,name,amount,type:'withdrawal',date:new Date().toISOString()});
+  saveState();refreshQuickItems();
   document.getElementById('inp-name').value='';document.getElementById('inp-amount').value='';
   const btn=document.getElementById('sub-btn');const orig=btn.textContent;btn.textContent='✓ Added!';
   setTimeout(()=>btn.textContent=orig,1200);
   goPage('home');
 }
 
+// ═══════════════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════════════
 function renderBBar(id,label,emoji,spent,cap,color){
   const pct=Math.min(100,(spent/cap)*100);
   const c=pct>=100?'var(--red)':pct>=80?'var(--amber)':color;
-  document.getElementById(id).innerHTML=`<div class="bbar">
-    <div class="bbar-row"><div class="bbar-label">${emoji} ${label}</div><div class="bbar-val">${fmt(spent)} / ${fmt(cap)}</div></div>
-    <div class="bbar-track"><div class="bbar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div></div>`;
+  document.getElementById(id).innerHTML=`<div class="bbar"><div class="bbar-row"><div class="bbar-label">${emoji} ${label}</div><div class="bbar-val">${fmt(spent)} / ${fmt(cap)}</div></div><div class="bbar-track"><div class="bbar-fill" style="width:${pct.toFixed(1)}%;background:${c}"></div></div></div>`;
 }
 
 function renderHome(){
@@ -901,29 +849,27 @@ function renderHome(){
   renderBBar('bb-wants','Wants','⚡',wants,BUDGET.wants,'var(--amber)');
   renderBBar('bb-sinking','Sinking','🐷',sfWith,BUDGET.sinking,'var(--purple)');
 
-  // Quick grid
+  // Quick Add — home only
   const qg=document.getElementById('quick-grid');qg.innerHTML='';
-  quickItems.slice(0,5).forEach(q=>{
+  quickItems.slice(0,6).forEach(q=>{
     const b=document.createElement('button');b.className='qbtn';
     b.textContent=q.cat+' '+q.name+' '+q.amount;
     b.onclick=()=>{
-      expenses.push({id:Date.now(),name:q.name,amount:q.amount,cat:q.cat,catLabel:q.catLabel,nw:q.nw,type:'cash',date:new Date().toISOString()});
+      const id=Date.now();
+      expenses.push({id,name:q.name,amount:q.amount,cat:q.cat,catLabel:q.catLabel,nw:q.nw,type:'cash',date:new Date().toISOString()});
       saveState();renderHome();flash('Added '+q.name+' '+q.amount+' EGP','var(--green)');
     };
     qg.appendChild(b);
   });
 
   const el=document.getElementById('exp-list');
-  if(list.length===0){el.innerHTML='<div class="empty">No expenses yet.<br>Tap + to add your first one.</div>';return;}
+  if(!list.length){el.innerHTML='<div class="empty">No expenses yet.<br>Tap + to add your first one.</div>';return;}
   el.innerHTML='';
   [...list].reverse().slice(0,60).forEach(e=>{
-    const d=new Date(e.date);
-    const div=document.createElement('div');div.className='exp-item';
+    const d=new Date(e.date);const div=document.createElement('div');div.className='exp-item';
     div.innerHTML=`<div class="exp-em">${e.cat}</div>
-      <div class="exp-info">
-        <div class="exp-name">${e.name}</div>
-        <div class="exp-meta">${e.catLabel}<span class="badge badge-${e.type}">${e.type}</span><span class="badge badge-${e.nw||'wants'}">${e.nw||'wants'}</span> · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}</div>
-      </div>
+      <div class="exp-info"><div class="exp-name">${e.name}</div>
+      <div class="exp-meta">${e.catLabel||''}<span class="badge badge-${e.type}">${e.type}</span><span class="badge badge-${e.nw||'wants'}">${e.nw||'wants'}</span> · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}</div></div>
       <div class="exp-amt">${fmt(e.amount)}</div>
       <div class="exp-del" onclick="delExp(${e.id})">×</div>`;
     el.appendChild(div);
@@ -939,56 +885,49 @@ document.getElementById('clear-btn').onclick=()=>{
   }
 };
 
+// ═══════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════
 function renderStats(){
   const{m,y}=nowDate();
   document.getElementById('cat-chart-title').textContent='Category breakdown — '+MONTHS[m];
-  // 6-month trends
-  const tms=[];
-  for(let i=5;i>=0;i--){let mm=m-i,yy=y;if(mm<0){mm+=12;yy--;}tms.push({m:mm,y:yy});}
+  const tms=[];for(let i=5;i>=0;i--){let mm=m-i,yy=y;if(mm<0){mm+=12;yy--;}tms.push({m:mm,y:yy});}
   const tmax=Math.max(...tms.map(({m:mm,y:yy})=>monthExp(mm,yy).reduce((s,e)=>s+e.amount,0)),1);
   document.getElementById('trends-chart').innerHTML=tms.map(({m:mm,y:yy})=>{
-    const t=monthExp(mm,yy).reduce((s,e)=>s+e.amount,0);
-    const isCur=mm===m&&yy===y;
+    const t=monthExp(mm,yy).reduce((s,e)=>s+e.amount,0);const isCur=mm===m&&yy===y;
     return`<div class="trend-row"><div class="trend-lbl">${MONTHS[mm].slice(0,3)}</div>
       <div class="trend-track"><div class="trend-fill" style="width:${(t/tmax*100).toFixed(1)}%;background:${isCur?'var(--lime)':'var(--s4)'}"></div></div>
       <div class="trend-val">${fmt(t)}</div></div>`;}).join('');
-  // split
   const list=monthExp(m,y);
   const needs=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0);
   const wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
   const sunk=list.filter(e=>e.type==='sinking').reduce((s,e)=>s+e.amount,0);
   const smax=Math.max(needs,wants,sunk,1);
-  document.getElementById('split-chart').innerHTML=[
-    {l:'Needs',v:needs,c:'var(--green)',cap:BUDGET.needs},
-    {l:'Wants',v:wants,c:'var(--amber)',cap:BUDGET.wants},
-    {l:'Sinking',v:sunk,c:'var(--purple)',cap:BUDGET.sinking},
-  ].map(r=>`<div class="cbar-row">
-    <div class="cbar-label" style="font-size:11px;color:var(--t2);width:48px;text-align:right">${r.l}</div>
-    <div class="cbar-track"><div class="cbar-fill" style="width:${(r.v/smax*100).toFixed(1)}%;background:${r.c}"></div></div>
-    <div class="cbar-val">${fmt(r.v)} / ${fmt(r.cap)}</div></div>`).join('');
-  // cats
+  document.getElementById('split-chart').innerHTML=[{l:'Needs',v:needs,c:'var(--green)',cap:BUDGET.needs},{l:'Wants',v:wants,c:'var(--amber)',cap:BUDGET.wants},{l:'Sinking',v:sunk,c:'var(--purple)',cap:BUDGET.sinking}]
+    .map(r=>`<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t2);width:48px;text-align:right">${r.l}</div>
+      <div class="cbar-track"><div class="cbar-fill" style="width:${(r.v/smax*100).toFixed(1)}%;background:${r.c}"></div></div>
+      <div class="cbar-val">${fmt(r.v)} / ${fmt(r.cap)}</div></div>`).join('');
   const totals={};list.forEach(e=>{totals[e.cat]=(totals[e.cat]||0)+e.amount;});
-  const sorted=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-  const cmax=sorted[0]?.[1]||1;
-  document.getElementById('cat-chart').innerHTML=sorted.length===0?'<div class="empty">No data yet</div>'
-    :sorted.map(([em,v])=>`<div class="cbar-row"><div class="cbar-label">${em}</div>
-      <div class="cbar-track"><div class="cbar-fill" style="width:${(v/cmax*100).toFixed(1)}%;background:var(--lime)"></div></div>
-      <div class="cbar-val">${fmt(v)}</div></div>`).join('');
-  // daily
+  const sorted=Object.entries(totals).sort((a,b)=>b[1]-a[1]);const cmax=sorted[0]?.[1]||1;
+  document.getElementById('cat-chart').innerHTML=sorted.length?sorted.map(([em,v])=>`<div class="cbar-row"><div class="cbar-label">${em}</div>
+    <div class="cbar-track"><div class="cbar-fill" style="width:${(v/cmax*100).toFixed(1)}%;background:var(--lime)"></div></div>
+    <div class="cbar-val">${fmt(v)}</div></div>`).join(''):'<div class="empty">No data yet</div>';
   const daily={};list.forEach(e=>{const d=new Date(e.date).getDate();daily[d]=(daily[d]||0)+e.amount;});
-  const dkeys=Object.keys(daily).sort((a,b)=>a-b);
-  const dmax=Math.max(...Object.values(daily),1);
-  document.getElementById('daily-chart').innerHTML=dkeys.length===0?'<div class="empty">No data</div>'
-    :dkeys.map(d=>`<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t3);font-family:var(--mono)">${d}</div>
-      <div class="cbar-track"><div class="cbar-fill" style="width:${(daily[d]/dmax*100).toFixed(1)}%;background:var(--blue)"></div></div>
-      <div class="cbar-val">${fmt(daily[d])}</div></div>`).join('');
+  const dkeys=Object.keys(daily).sort((a,b)=>a-b);const dmax=Math.max(...Object.values(daily),1);
+  document.getElementById('daily-chart').innerHTML=dkeys.length?dkeys.map(d=>`<div class="cbar-row">
+    <div class="cbar-label" style="font-size:11px;color:var(--t3);font-family:var(--mono)">${d}</div>
+    <div class="cbar-track"><div class="cbar-fill" style="width:${(daily[d]/dmax*100).toFixed(1)}%;background:var(--blue)"></div></div>
+    <div class="cbar-val">${fmt(daily[d])}</div></div>`).join(''):'<div class="empty">No data</div>';
 }
 
-// Sinking fund
+// ═══════════════════════════════════════════════════
+// SINKING FUND
+// ═══════════════════════════════════════════════════
+// Auto-seed monthly contribution if missing
 (function seedContrib(){
   const{m,y}=nowDate();
   const exists=sfLog.some(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';});
-  if(!exists){sfLog.push({id:Date.now(),name:'Monthly contribution',amount:BUDGET.sinking,type:'contribution',date:new Date(y,m,1).toISOString()});saveState();}
+  if(!exists){const e={id:Date.now(),name:'Monthly contribution',amount:BUDGET.sinking,type:'contribution',date:new Date(y,m,1).toISOString()};sfLog.push(e);saveState();}
 })();
 
 function renderSinking(){
@@ -1005,33 +944,41 @@ function renderSinking(){
   document.getElementById('sf-prog-lbl').textContent=fmt(contrib)+' / '+fmt(BUDGET.sinking);
   document.getElementById('sf-prog-fill').style.width=pct.toFixed(1)+'%';
 
-  document.getElementById('wish-list').innerHTML=wishlist.length===0?'<div class="empty">No wishlist items</div>'
-    :wishlist.map(w=>`<div class="exp-item" style="opacity:${w.done?0.4:1}">
-      <div class="exp-em" style="font-size:14px;cursor:pointer" onclick="toggleWish(${w.id})">${w.done?'✅':'⬜'}</div>
-      <div class="exp-info"><div class="exp-name" style="${w.done?'text-decoration:line-through':''}">${w.name}</div>
-      <div class="exp-meta">${w.cost?fmt(w.cost)+' EGP est.':''}</div></div>
-      <div class="exp-del" onclick="delWish(${w.id})">×</div></div>`).join('');
+  // Wishlist — checking triggers withdrawal
+  document.getElementById('wish-list').innerHTML=wishlist.length?wishlist.map(w=>`<div class="exp-item" style="opacity:${w.done?0.4:1}">
+    <div class="exp-em" style="font-size:14px;cursor:pointer" onclick="toggleWish(${w.id})">${w.done?'✅':'⬜'}</div>
+    <div class="exp-info"><div class="exp-name" style="${w.done?'text-decoration:line-through':''}">${w.name}</div>
+    <div class="exp-meta">${w.cost?fmt(w.cost)+' EGP est.':''}</div></div>
+    <div class="exp-del" onclick="delWish(${w.id})">×</div></div>`).join(''):'<div class="empty">No wishlist items</div>';
 
   document.getElementById('sf-list').innerHTML=[...sfLog].reverse().slice(0,30).map(e=>{
     const d=new Date(e.date);const isW=e.type==='withdrawal';
-    return`<div class="exp-item" style="cursor:pointer" onclick="openSfModal(${e.id})">
+    return`<div class="exp-item" style="cursor:pointer" onclick="openSfEditModal(${e.id})">
       <div class="exp-em">${isW?'📤':'📥'}</div>
-      <div class="exp-info">
-        <div class="exp-name">${e.name||e.type}</div>
-        <div class="exp-meta">${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()} · tap to edit</div>
-      </div>
-      <div class="exp-amt" style="color:${isW?'var(--red)':'var(--green)'}">${isW?'-':'+'} ${fmt(e.amount)}</div>
-    </div>`;}).join('')||'<div class="empty">No transactions yet</div>';
+      <div class="exp-info"><div class="exp-name">${e.name||e.type}</div>
+      <div class="exp-meta">${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()} · tap to edit</div></div>
+      <div class="exp-amt" style="color:${isW?'var(--red)':'var(--green)'}">${isW?'-':'+'} ${fmt(e.amount)}</div></div>`;
+  }).join('')||'<div class="empty">No transactions yet</div>';
 }
 
-function addSfWithdrawal(){
-  const name=document.getElementById('sf-name').value.trim();
-  const amount=parseFloat(document.getElementById('sf-amount').value);
-  if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter name and amount');return;}
-  sfLog.push({id:Date.now(),name,amount,type:'withdrawal',date:new Date().toISOString()});
-  saveState();document.getElementById('sf-name').value='';document.getElementById('sf-amount').value='';
-  flash('Withdrawal logged!','var(--purple)');renderSinking();
+// ── Wishlist: toggling DONE creates a withdrawal transaction ──
+function toggleWish(id){
+  const w=wishlist.find(x=>x.id===id);if(!w)return;
+  w.done=!w.done;
+  if(w.done&&w.cost>0){
+    // create withdrawal transaction automatically
+    const entry={id:Date.now(),name:w.name,amount:w.cost,type:'withdrawal',date:new Date().toISOString()};
+    sfLog.push(entry);supaUpsertSfLog(entry);
+    flash('✓ Logged withdrawal: '+w.name+' '+fmt(w.cost)+' EGP','var(--purple)');
+  }
+  if(!w.done){
+    // unchecking — remove the auto withdrawal if it exists (within last 10s)
+    const now=Date.now();sfLog=sfLog.filter(e=>!(e.name===w.name&&e.type==='withdrawal'&&(now-new Date(e.date).getTime())<15000));
+  }
+  saveState();supaUpsertWishlist();renderSinking();
 }
+function delWish(id){wishlist=wishlist.filter(x=>x.id!==id);saveState();supaUpsertWishlist();renderSinking();}
+
 document.getElementById('add-wish-btn').onclick=()=>{
   const el=document.getElementById('wish-add');el.style.display=el.style.display==='none'?'block':'none';
 };
@@ -1039,13 +986,81 @@ function addWishItem(){
   const name=document.getElementById('wish-inp').value.trim();
   const cost=parseFloat(document.getElementById('wish-cost').value)||0;
   if(!name){flash('Enter item name');return;}
-  wishlist.push({id:Date.now(),name,cost,done:false});saveState();
+  wishlist.push({id:Date.now(),name,cost,done:false});
+  saveState();supaUpsertWishlist();
   document.getElementById('wish-inp').value='';document.getElementById('wish-cost').value='';
   document.getElementById('wish-add').style.display='none';renderSinking();
 }
-function toggleWish(id){const w=wishlist.find(x=>x.id===id);if(w)w.done=!w.done;saveState();renderSinking();}
-function delWish(id){wishlist=wishlist.filter(x=>x.id!==id);saveState();renderSinking();}
 
+// ── SF Balance modal (Contribution / Withdrawal) ──
+function openSfBalModal(defaultTab){
+  sfModalTab(defaultTab||'contribution');
+  document.getElementById('sfm-name').value='';document.getElementById('sfm-amount').value='';
+  document.getElementById('sf-bal-modal').classList.add('open');
+}
+function closeSfBalModal(e){
+  if(e&&e.target!==document.getElementById('sf-bal-modal'))return;
+  document.getElementById('sf-bal-modal').classList.remove('open');
+}
+function sfModalTab(t){
+  sfBalModalType=t;
+  document.getElementById('sfm-tab-contrib').className='tbtn'+(t==='contribution'?' ac':'');
+  document.getElementById('sfm-tab-with').className='tbtn'+(t==='withdrawal'?' as':'');
+  document.getElementById('sfm-note-label').textContent=t==='contribution'?'Note (optional)':'Item name';
+  const btn=document.getElementById('sfm-save-btn');
+  btn.textContent=t==='contribution'?'Add contribution':'Log withdrawal';
+  btn.style.background=t==='contribution'?'var(--green)':'var(--purple)';
+  document.getElementById('sfm-name').placeholder=t==='contribution'?'e.g. Paycheck top-up…':'e.g. Running shoes…';
+}
+function saveSfBalEntry(){
+  const name=document.getElementById('sfm-name').value.trim()||(sfBalModalType==='contribution'?'Contribution':'Withdrawal');
+  const amount=parseFloat(document.getElementById('sfm-amount').value);
+  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
+  const entry={id:Date.now(),name,amount,type:sfBalModalType,date:new Date().toISOString()};
+  sfLog.push(entry);saveState();supaUpsertSfLog(entry);
+  flash((sfBalModalType==='contribution'?'Contribution':'Withdrawal')+' added!',sfBalModalType==='contribution'?'var(--green)':'var(--purple)');
+  document.getElementById('sf-bal-modal').classList.remove('open');
+  renderSinking();
+}
+
+// ── SF Transaction edit modal ──
+function openSfEditModal(id){
+  const entry=sfLog.find(e=>e.id===id);if(!entry)return;
+  sfEditingId=id;
+  const isW=entry.type==='withdrawal';
+  document.getElementById('sf-edit-title').innerHTML=(isW?'Edit withdrawal':'Edit contribution')+' <span class="modal-close" onclick="closeSfEditModal()">×</span>';
+  document.getElementById('sf-edit-name').value=entry.name||'';
+  document.getElementById('sf-edit-amount').value=entry.amount||'';
+  document.getElementById('sf-edit-date').value=entry.date?entry.date.slice(0,10):'';
+  document.getElementById('sf-edit-modal').classList.add('open');
+}
+function closeSfEditModal(e){
+  if(e&&e.target!==document.getElementById('sf-edit-modal'))return;
+  document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;
+}
+function saveSfEdit(){
+  if(!sfEditingId)return;
+  const idx=sfLog.findIndex(e=>e.id===sfEditingId);if(idx<0)return;
+  const name=document.getElementById('sf-edit-name').value.trim();
+  const amount=parseFloat(document.getElementById('sf-edit-amount').value);
+  const date=document.getElementById('sf-edit-date').value;
+  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
+  sfLog[idx].name=name||sfLog[idx].name;sfLog[idx].amount=amount;
+  if(date)sfLog[idx].date=new Date(date).toISOString();
+  saveState();supaUpsertSfLog(sfLog[idx]);
+  document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;
+  flash('Transaction updated!','var(--green)');renderSinking();
+}
+function deleteSfEntry(){
+  if(!sfEditingId)return;if(!confirm('Delete this transaction?'))return;
+  supaDeleteSfLog(sfEditingId);sfLog=sfLog.filter(e=>e.id!==sfEditingId);
+  saveState();document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;
+  flash('Transaction deleted','var(--red)');renderSinking();
+}
+
+// ═══════════════════════════════════════════════════
+// GOALS
+// ═══════════════════════════════════════════════════
 function renderGoals(){
   const pct=Math.min(100,(goalData.saved/GOAL_TARGET)*100);
   const rem=Math.max(0,GOAL_TARGET-goalData.saved);
@@ -1053,27 +1068,121 @@ function renderGoals(){
   const eta=new Date();eta.setMonth(eta.getMonth()+months);
   document.getElementById('goal-pct').textContent=pct.toFixed(1)+'%';
   document.getElementById('goal-fill').style.width=pct.toFixed(1)+'%';
+  document.getElementById('goal-lbl').textContent='toward '+fmt(GOAL_TARGET)+' EGP — '+GOAL_NAME;
   document.getElementById('goal-saved-lbl').textContent=fmt(goalData.saved)+' EGP';
   document.getElementById('goal-rem').textContent=fmt(rem)+' EGP';
   document.getElementById('goal-eta').textContent=months>0?MONTHS[eta.getMonth()]+' '+eta.getFullYear()+' (~'+months+' months)':'🎉 Reached!';
+  // pre-fill inputs
+  document.getElementById('goal-name-inp').value=GOAL_NAME;
+  document.getElementById('goal-target-inp').value=GOAL_TARGET;
   document.getElementById('goal-inp').value=goalData.saved||'';
   document.getElementById('goal-m-inp').value=goalData.monthly||6000;
-}
-function saveGoal(){
-  goalData={saved:parseFloat(document.getElementById('goal-inp').value)||0,monthly:parseFloat(document.getElementById('goal-m-inp').value)||6000};
-  saveState();
-  supaUpsertAppState();
-  renderGoals();flash('Goal updated!','var(--green)');
+
+  // Allocation display
+  const al=document.getElementById('alloc-list');al.innerHTML='';
+  const total=ALLOC.reduce((s,a)=>s+a.amount,0)||1;
+  ALLOC.forEach((a,i)=>{
+    const pct2=(a.amount/total*100).toFixed(1);
+    const colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'];
+    const c=colors[i%colors.length];
+    al.innerHTML+=`<div class="cbar-row">
+      <div class="cbar-label">${a.emoji}</div>
+      <div class="cbar-track"><div class="cbar-fill" style="width:${pct2}%;background:${c}"></div></div>
+      <div class="cbar-val">${fmt(a.amount)} ${a.label}</div></div>`;
+  });
 }
 
-// Export
+function saveGoal(){
+  const name=document.getElementById('goal-name-inp').value.trim()||GOAL_NAME;
+  const target=parseFloat(document.getElementById('goal-target-inp').value)||GOAL_TARGET;
+  const saved=parseFloat(document.getElementById('goal-inp').value)||0;
+  const monthly=parseFloat(document.getElementById('goal-m-inp').value)||6000;
+  GOAL_NAME=name;GOAL_TARGET=target;goalData={saved,monthly};
+  localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
+  saveState();supaUpsertAppState();renderGoals();flash('Goal updated!','var(--green)');
+}
+
+// ── Allocation editing (in Goals page) ──
+function addAllocRow(){
+  const emoji=document.getElementById('alloc-new-emoji').value.trim()||'💰';
+  const label=document.getElementById('alloc-new-label').value.trim()||'Savings';
+  const amount=parseFloat(document.getElementById('alloc-new-amount').value)||0;
+  if(!amount){flash('Enter an amount');return;}
+  ALLOC.push({emoji,label,amount});saveAllocs();
+  document.getElementById('alloc-new-emoji').value='';document.getElementById('alloc-new-label').value='';document.getElementById('alloc-new-amount').value='';
+  renderGoals();flash('Allocation added!','var(--green)');
+}
+function saveAlloc(){saveAllocs();flash('Allocation saved!','var(--green)');renderGoals();}
+
+// ═══════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════
+function renderSettings(){
+  document.getElementById('supa-url').value=localStorage.getItem('ms_supa_url')||'';
+  document.getElementById('supa-key').value=localStorage.getItem('ms_supa_key')||'';
+  document.getElementById('set-needs').value=BUDGET.needs;
+  document.getElementById('set-wants').value=BUDGET.wants;
+  document.getElementById('set-sinking').value=BUDGET.sinking;
+
+  // Editable category grid
+  const g=document.getElementById('cat-edit-grid');g.innerHTML='';
+  CATS.forEach((c,i)=>{
+    const div=document.createElement('div');
+    div.className='cbtn';div.style.cursor='default';
+    div.innerHTML=`<div class="cat-remove" onclick="removeCat(${i})">×</div>
+      <div class="ce">${c.e}</div>
+      <div class="cl">${c.l}</div>
+      <div class="cl" style="color:${c.nw==='needs'?'var(--green)':'var(--amber)'}">${c.nw}</div>`;
+    g.appendChild(div);
+  });
+
+  // Quick add preview
+  refreshQuickItems();
+  const qp=document.getElementById('qa-preview');qp.innerHTML='';
+  quickItems.slice(0,6).forEach(q=>{
+    const b=document.createElement('div');b.className='qbtn';
+    b.textContent=q.cat+' '+q.name+' '+q.amount;qp.appendChild(b);
+  });
+}
+
+function saveSettings(){
+  const n=parseFloat(document.getElementById('set-needs').value);
+  const w=parseFloat(document.getElementById('set-wants').value);
+  const s=parseFloat(document.getElementById('set-sinking').value);
+  if(!n||!w||!s||isNaN(n)||isNaN(w)||isNaN(s)){flash('Enter valid numbers for all caps');return;}
+  BUDGET.needs=n;BUDGET.wants=w;BUDGET.sinking=s;
+  localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
+  supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
+}
+
+function addCategory(){
+  const emoji=document.getElementById('new-cat-emoji').value.trim();
+  const label=document.getElementById('new-cat-label').value.trim();
+  const nw=document.getElementById('new-cat-nw').value;
+  if(!emoji||!label){flash('Enter emoji and label');return;}
+  if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}
+  CATS.push({e:emoji,l:label,nw});saveCats();
+  document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';
+  selCat=CATS[0];buildCatGrid();renderSettings();flash('Category added!','var(--green)');
+}
+
+function removeCat(idx){
+  if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}
+  if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;
+  CATS.splice(idx,1);saveCats();
+  if(!CATS.find(c=>c.e===selCat.e))selCat=CATS[0];
+  buildCatGrid();renderSettings();flash('Category removed','var(--red)');
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════
 (function(){const{m,y}=nowDate();document.getElementById('exp-month').value=m;document.getElementById('exp-year').value=y;})();
 
 function exportXLSX(){
   const m=parseInt(document.getElementById('exp-month').value);
   const y=parseInt(document.getElementById('exp-year').value);
-  const list=monthExp(m,y);
-  if(list.length===0){flash('No expenses for '+MONTHS[m]+' '+y);return;}
+  const list=monthExp(m,y);if(!list.length){flash('No expenses for '+MONTHS[m]+' '+y);return;}
   const rows=[['main','cost','name','category','type','needs_wants','date']];
   list.forEach(e=>rows.push([e.amount+' '+e.name+' '+e.cat,e.amount,e.name,e.cat,e.type,e.nw||'',e.date.slice(0,10)]));
   const catT={};CATS.forEach(c=>{catT[c.e]={label:c.l,total:0};});
@@ -1094,14 +1203,13 @@ function exportXLSX(){
 function exportCSV(){
   const m=parseInt(document.getElementById('exp-month').value);
   const y=parseInt(document.getElementById('exp-year').value);
-  const list=monthExp(m,y);
-  if(list.length===0){flash('No expenses found');return;}
+  const list=monthExp(m,y);if(!list.length){flash('No expenses found');return;}
   const csv='date,name,amount,category,type,needs_wants\n'+list.map(e=>`${e.date.slice(0,10)},${JSON.stringify(e.name)},${e.amount},${e.catLabel},${e.type},${e.nw||''}`).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download=MONTHS[m]+'_expenses.csv';a.click();
 }
 function backupJSON(){
-  const data={expenses,sfLog,wishlist,goalData,quickItems,exportedAt:new Date().toISOString()};
+  const data={expenses,sfLog,wishlist,goalData,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
 }
@@ -1113,217 +1221,42 @@ function restoreJSON(ev){
       const d=JSON.parse(e.target.result);
       if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;
       if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;
-      if(d.quickItems){quickItems=d.quickItems;localStorage.setItem('ms_quick',JSON.stringify(quickItems));}
-      saveState();flash('Restored!','var(--green)');renderHome();
+      if(d.CATS&&d.CATS.length)CATS=d.CATS;
+      if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;
+      if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);
+      if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;
+      if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;
+      if(d.quickItems)quickItems=d.quickItems;
+      saveState();saveCats();saveAllocs();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
+      localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
+      flash('Restored!','var(--green)');renderHome();
     }catch(err){flash('Restore failed: '+err.message);}
   };r.readAsText(file);
 }
 
-// ── SETTINGS ──
-function renderSettings(){
-  document.getElementById('set-needs').value=BUDGET.needs;
-  document.getElementById('set-wants').value=BUDGET.wants;
-  document.getElementById('set-sinking').value=BUDGET.sinking;
-  // pre-fill Supabase fields
-  document.getElementById('supa-url').value=localStorage.getItem('ms_supa_url')||'';
-  document.getElementById('supa-key').value=localStorage.getItem('ms_supa_key')||'';
-
-  // QA preview
-  refreshQuickItems();
-  const qp=document.getElementById('qa-preview');qp.innerHTML='';
-  quickItems.slice(0,6).forEach(q=>{
-    const b=document.createElement('div');
-    b.className='qbtn';
-    b.innerHTML=q.cat+' '+q.name+' <strong>'+q.amount+'</strong>';
-    qp.appendChild(b);
-  });
-
-  // Insight: top category over-spending
-  const{m,y}=nowDate();
-  const list=monthExp(m,y);
-  const wTotal=list.filter(e=>catNW(e.cat)==='wants').reduce((s,e)=>s+e.amount,0);
-  const ins=document.getElementById('qa-insight');
-  if(expenses.length<5){
-    ins.innerHTML='<div class="insight">💡 Add at least 5 expenses to unlock personalised recommendations. Right now showing default seeds.</div>';
-  } else {
-    const sixMonths=computeSmartQuickItems();
-    const topCat={};
-    const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-5);
-    expenses.filter(e=>new Date(e.date)>=cutoff).forEach(e=>{
-      topCat[e.cat]=(topCat[e.cat]||0)+1;
-    });
-    const topEntry=Object.entries(topCat).sort((a,b)=>b[1]-a[1])[0];
-    const topCatInfo=CATS.find(c=>c.e===topEntry?.[0]);
-    ins.innerHTML=topEntry?`<div class="insight">📊 Your most frequent category over 6 months is ${topEntry[0]} <strong>${topCatInfo?.l||''}</strong> (${topEntry[1]} times) — it's pre-pinned in Quick Add.</div>`:'';
-  }
-
-  // Cat mapping
-  const cml=document.getElementById('cat-mapping-list');cml.innerHTML='';
-  CATS.forEach(c=>{
-    const current=catMapping[c.e]||c.nw;
-    const row=document.createElement('div');row.className='srow';
-    row.innerHTML=`<div class="srow-left"><div class="srow-label">${c.e} ${c.l}</div></div>
-      <select class="srow-input" id="cmap-${c.e}" style="width:80px;padding:7px 6px;font-size:12px">
-        <option value="needs"${current==='needs'?' selected':''}>Needs</option>
-        <option value="wants"${current==='wants'?' selected':''}>Wants</option>
-      </select>`;
-    cml.appendChild(row);
-  });
-}
-
-function saveSettings(){
-  const n=parseFloat(document.getElementById('set-needs').value);
-  const w=parseFloat(document.getElementById('set-wants').value);
-  const s=parseFloat(document.getElementById('set-sinking').value);
-  if(!n||!w||!s||isNaN(n)||isNaN(w)||isNaN(s)){flash('Enter valid numbers for all caps');return;}
-  BUDGET.needs=n;BUDGET.wants=w;BUDGET.sinking=s;
-  localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
-  supaUpsertAppState();
-  flash('Budget caps saved!','var(--green)');
-  renderSettings();
-}
-
-function saveCatMapping(){
-  CATS.forEach(c=>{
-    const el=document.getElementById('cmap-'+c.e);
-    if(el)catMapping[c.e]=el.value;
-  });
-  localStorage.setItem('ms_catmap',JSON.stringify(catMapping));
-  supaUpsertAppState();
-  flash('Category mapping saved!','var(--green)');
-}
-
-function resetQuickItems(){
-  refreshQuickItems();
-  renderSettings();
-  flash('Recommendations refreshed!','var(--lime)');
-}
-
-// PWA
+// ═══════════════════════════════════════════════════
+// PWA + URL PARAMS
+// ═══════════════════════════════════════════════════
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('ibanner').classList.add('show');});
 document.getElementById('ibtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;if(outcome==='accepted')document.getElementById('ibanner').classList.remove('show');deferredPrompt=null;};
 window.addEventListener('appinstalled',()=>document.getElementById('ibanner').classList.remove('show'));
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-// URL params (MacroDroid)
 const up=new URLSearchParams(window.location.search);
 if(up.get('amount')){
   document.getElementById('inp-amount').value=up.get('amount');
   if(up.get('name'))document.getElementById('inp-name').value=up.get('name');
-  setType('digital');goPage('add');
+  const t=up.get('type')||'digital';setType(t==='income'?'digital':t);goPage('add');
 }
 
+// ── Init ──
 renderHome();
-// Init sync status indicator
 if(supaReady()){
   const last=localStorage.getItem('ms_last_sync');
-  if(last){
-    const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Last sync '+t);
-  }else{
-    setSyncStatus('off','Not synced yet');
-  }
-}
-</script>
-
-<!-- SF EDIT MODAL -->
-<div class="modal-overlay" id="sf-modal" onclick="closeSfModal(event)">
-  <div class="modal">
-    <div class="modal-title" id="sf-modal-title">Edit transaction <span class="modal-close" onclick="closeSfModal()">×</span></div>
-    <div class="frow">
-      <div class="flabel">Name / note</div>
-      <input class="finput" type="text" id="sf-edit-name" dir="auto">
-    </div>
-    <div class="frow">
-      <div class="flabel">Amount (EGP)</div>
-      <input class="finput" type="number" id="sf-edit-amount" inputmode="numeric">
-    </div>
-    <div class="frow">
-      <div class="flabel">Date</div>
-      <input class="finput" type="date" id="sf-edit-date">
-    </div>
-    <button class="modal-save-btn" onclick="saveSfEdit()">Save changes</button>
-    <button class="modal-del-btn" onclick="deleteSfEntry()">Delete transaction</button>
-  </div>
-</div>
-
-<script>
-let sfEditingId=null;
-
-function openSfModal(id){
-  const entry=sfLog.find(e=>e.id===id);
-  if(!entry)return;
-  sfEditingId=id;
-  const isW=entry.type==='withdrawal';
-  document.getElementById('sf-modal-title').innerHTML=(isW?'Edit withdrawal':'Edit contribution')+' <span class="modal-close" onclick="closeSfModal()">×</span>';
-  document.getElementById('sf-edit-name').value=entry.name||'';
-  document.getElementById('sf-edit-amount').value=entry.amount||'';
-  document.getElementById('sf-edit-date').value=entry.date?entry.date.slice(0,10):'';
-  document.getElementById('sf-modal').classList.add('open');
-}
-
-function closeSfModal(e){
-  if(e&&e.target!==document.getElementById('sf-modal'))return;
-  document.getElementById('sf-modal').classList.remove('open');
-  sfEditingId=null;
-}
-
-function saveSfEdit(){
-  if(!sfEditingId)return;
-  const idx=sfLog.findIndex(e=>e.id===sfEditingId);
-  if(idx<0)return;
-  const name=document.getElementById('sf-edit-name').value.trim();
-  const amount=parseFloat(document.getElementById('sf-edit-amount').value);
-  const date=document.getElementById('sf-edit-date').value;
-  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
-  sfLog[idx].name=name||sfLog[idx].name;
-  sfLog[idx].amount=amount;
-  if(date)sfLog[idx].date=new Date(date).toISOString();
-  saveState();
-  supaUpsertSfLog(sfLog[idx]);
-  document.getElementById('sf-modal').classList.remove('open');
-  sfEditingId=null;
-  flash('Transaction updated!','var(--green)');
-  renderSinking();
-}
-
-function deleteSfEntry(){
-  if(!sfEditingId)return;
-  if(!confirm('Delete this transaction?'))return;
-  supaDeleteSfLog(sfEditingId);
-  sfLog=sfLog.filter(e=>e.id!==sfEditingId);
-  saveState();
-  document.getElementById('sf-modal').classList.remove('open');
-  sfEditingId=null;
-  flash('Transaction deleted','var(--red)');
-  renderSinking();
-}
-
-function addSfContribution(){
-  const name=document.getElementById('sf-cname').value.trim()||'Contribution';
-  const amount=parseFloat(document.getElementById('sf-camount').value);
-  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
-  sfLog.push({id:Date.now(),name,amount,type:'contribution',date:new Date().toISOString()});
-  saveState();
-  document.getElementById('sf-cname').value='';
-  document.getElementById('sf-camount').value='';
-  flash('Contribution added!','var(--green)');
-  renderSinking();
-}
-
-// Quick jumps from tapping the stat cards
-function openSfEditContrib(){
-  // Open a quick-add contribution form by scrolling to it
-  document.getElementById('sf-cname').focus();
-  document.getElementById('sf-cname').scrollIntoView({behavior:'smooth',block:'center'});
-}
-function openSfEditWith(){
-  document.getElementById('sf-name').focus();
-  document.getElementById('sf-name').scrollIntoView({behavior:'smooth',block:'center'});
+  if(last){const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Last sync '+t);}
+  else setSyncStatus('off','Not synced yet');
 }
 </script>
 </body>
 </html>
-
-

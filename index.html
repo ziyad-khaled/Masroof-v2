@@ -799,7 +799,6 @@ async function supaUpsertAppState(){
     updated_at:new Date().toISOString()
   });
 }
-}
 
 async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});}
 async function supaDeleteExpense(id){if(!supaReady())return;await supaFetch('expenses','DELETE',null,id);}

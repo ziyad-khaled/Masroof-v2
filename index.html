@@ -213,6 +213,9 @@
     .income-amt{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--green);flex-shrink:0}
     .income-del{color:var(--t3);font-size:17px;padding:3px 3px 3px 7px;cursor:pointer;flex-shrink:0}
     .income-del:active{color:var(--red)}
+    /* transfer */
+    .transfer-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:0.5px dashed var(--b3);border-radius:var(--rs);background:transparent;color:var(--t2);font-size:13px;font-family:var(--font);cursor:pointer;margin-top:8px}
+    .transfer-btn:active{background:var(--s2)}
     ::-webkit-scrollbar{width:0}
   </style>
 </head>
@@ -1195,6 +1198,7 @@ function renderSinking(){
     <div class="exp-em" style="font-size:14px;cursor:pointer" onclick="toggleWish(${w.id})">${w.done?'✅':'⬜'}</div>
     <div class="exp-info"><div class="exp-name" style="${w.done?'text-decoration:line-through':''}">${w.name}</div>
     <div class="exp-meta">${w.cost?fmt(w.cost)+' EGP est.':''}</div></div>
+    <div class="exp-del" style="color:var(--blue);font-size:15px" onclick="openWishEdit(${w.id})">✎</div>
     <div class="exp-del" onclick="delWish(${w.id})">×</div></div>`).join(''):'<div class="empty">No wishlist items</div>';
 
   document.getElementById('sf-list').innerHTML=[...sfLog].reverse().slice(0,30).map(e=>{
@@ -1324,17 +1328,27 @@ function renderGoals(){
   document.getElementById('goal-inp').value=goalData.saved||'';
   document.getElementById('goal-m-inp').value=goalData.monthly||6000;
 
-  // Allocation display
+  // Allocation — inline editable rows
   const al=document.getElementById('alloc-list');al.innerHTML='';
   const total=ALLOC.reduce((s,a)=>s+a.amount,0)||1;
   ALLOC.forEach((a,i)=>{
     const pct2=(a.amount/total*100).toFixed(1);
     const colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'];
     const c=colors[i%colors.length];
-    al.innerHTML+=`<div class="cbar-row">
+    const row=document.createElement('div');
+    row.style.cssText='margin-bottom:10px';
+    row.innerHTML=`<div class="cbar-row" style="margin-bottom:5px">
       <div class="cbar-label">${a.emoji}</div>
       <div class="cbar-track"><div class="cbar-fill" style="width:${pct2}%;background:${c}"></div></div>
-      <div class="cbar-val">${fmt(a.amount)} ${a.label}</div></div>`;
+      <div class="cbar-val">${fmt(a.amount)}</div>
+      <div class="exp-del" onclick="removeAllocRow(${i})" style="margin-left:4px">×</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <input value="${a.emoji}" oninput="ALLOC[${i}].emoji=this.value;renderGoals()" style="width:44px;flex:none;text-align:center;font-size:18px;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:6px;color:var(--t1);outline:none">
+      <input value="${a.label}" oninput="ALLOC[${i}].label=this.value" placeholder="Label" style="flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--t1);outline:none">
+      <input type="number" value="${a.amount}" oninput="ALLOC[${i}].amount=parseFloat(this.value)||0;renderGoals()" inputmode="numeric" style="width:88px;flex:none;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);outline:none;text-align:right">
+    </div>`;
+    al.appendChild(row);
   });
 }
 

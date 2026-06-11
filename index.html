@@ -788,15 +788,17 @@ async function supaUpsertAppState(){
     user_id:SUPA_USER_ID,
     goal_saved:goalData.saved,
     goal_monthly:goalData.monthly,
+    goal_target:GOAL_TARGET,
+    goal_name:GOAL_NAME,
     budget_needs:BUDGET.needs,
     budget_wants:BUDGET.wants,
     budget_sinking:BUDGET.sinking,
-    cat_mapping:{},
-    quick_items:quickItems,
+    cats_json:CATS,
     alloc_json:ALLOC,
-    goal_meta_json:{target:GOAL_TARGET,name:GOAL_NAME},
+    quick_items:quickItems,
     updated_at:new Date().toISOString()
   });
+}
 }
 
 async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});}

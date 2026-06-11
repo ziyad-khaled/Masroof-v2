@@ -842,6 +842,9 @@ async function pullFromSupabase(silent=false){
       supaFetch('incomes','GET'),
       fetch(`${SUPA_URL}/rest/v1/app_state?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}).then(r=>r.json())
     ]);
+    console.log('Pull result – expenses:', remExp);
+    console.log('Pull result – incomes:', remInc);
+    console.log('Pull result – sfLog:', remSf);
     if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
     if(remSf)sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,date:e.date}));
     if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));

@@ -191,6 +191,28 @@
     .trend-track{flex:1;height:22px;background:var(--s2);border-radius:4px;overflow:hidden}
     .trend-fill{height:100%;border-radius:4px;transition:width .5s ease}
     .trend-val{font-size:11px;font-family:var(--mono);color:var(--t2);width:55px;text-align:right;flex-shrink:0}
+    /* income */
+    .balance-card{background:var(--s1);border-radius:var(--r);padding:14px;border:0.5px solid var(--b1);margin-bottom:10px}
+    .balance-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .balance-main{flex:1}
+    .balance-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+    .balance-val{font-size:28px;font-weight:600;font-family:var(--mono);letter-spacing:-.5px}
+    .balance-val.pos{color:var(--green)}.balance-val.neg{color:var(--red)}.balance-val.zero{color:var(--t3)}
+    .balance-add-btn{background:var(--green-d);border:0.5px solid rgba(79,216,138,.25);border-radius:var(--rs);padding:8px 12px;font-size:12px;color:var(--green);font-family:var(--font);cursor:pointer;white-space:nowrap}
+    .balance-add-btn:active{opacity:.8}
+    .income-split{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .income-mini{background:var(--s2);border-radius:var(--rs);padding:9px 11px}
+    .income-mini-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+    .income-mini-v{font-size:15px;font-weight:600;font-family:var(--mono);color:var(--green)}
+    .income-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:0.5px solid var(--b1)}
+    .income-item:last-child{border-bottom:none}
+    .income-em{font-size:18px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--green-d);border-radius:6px;flex-shrink:0}
+    .income-info{flex:1;min-width:0}
+    .income-name{font-size:13px;font-weight:500}
+    .income-meta{font-size:10px;color:var(--t3);margin-top:1px}
+    .income-amt{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--green);flex-shrink:0}
+    .income-del{color:var(--t3);font-size:17px;padding:3px 3px 3px 7px;cursor:pointer;flex-shrink:0}
+    .income-del:active{color:var(--red)}
     ::-webkit-scrollbar{width:0}
   </style>
 </head>
@@ -204,9 +226,9 @@
         <div id="sync-status" style="font-size:10px;margin-top:3px;display:none"></div>
       </div>
       <div class="hdr-total">
-        <div class="hdr-tlabel">Wants spent</div>
-        <div class="hdr-tval" id="hdr-total">0</div>
-        <div class="hdr-tcur" id="hdr-cap-lbl">of 2,000 EGP</div>
+        <div class="hdr-tlabel">Net balance</div>
+        <div class="hdr-tval" id="hdr-total" style="color:var(--green)">0</div>
+        <div class="hdr-tcur" id="hdr-cap-lbl">EGP this month</div>
       </div>
     </div>
   </div>
@@ -219,6 +241,30 @@
         <div class="ibanner-text">Install app on home screen</div>
         <button class="ibanner-btn" id="ibtn">Install</button>
       </div>
+
+      <!-- Balance card -->
+      <div class="balance-card">
+        <div class="balance-row">
+          <div class="balance-main">
+            <div class="balance-label">Net balance this month</div>
+            <div class="balance-val zero" id="bal-net">0</div>
+          </div>
+          <button class="balance-add-btn" onclick="openIncomeModal()">+ Income</button>
+        </div>
+        <div class="income-split">
+          <div class="income-mini">
+            <div class="income-mini-l">💵 Cash in hand</div>
+            <div class="income-mini-v" id="bal-cash-in">0</div>
+            <div style="font-size:9px;color:var(--t3);margin-top:2px">in · <span id="bal-cash-out" style="color:var(--red)">0</span> out</div>
+          </div>
+          <div class="income-mini">
+            <div class="income-mini-l">💳 Visa / Digital</div>
+            <div class="income-mini-v" id="bal-visa-in">0</div>
+            <div style="font-size:9px;color:var(--t3);margin-top:2px">in · <span id="bal-visa-out" style="color:var(--red)">0</span> out</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title">Budget Status — this month</div>
         <div id="bb-needs"></div>
@@ -231,11 +277,11 @@
       </div>
       <div class="stat-row">
         <div class="stat"><div class="stat-l">Entries</div><div class="stat-v" id="s-count" style="color:var(--lime)">0</div></div>
-        <div class="stat"><div class="stat-l">Cash</div><div class="stat-v" id="s-cash">0</div></div>
-        <div class="stat"><div class="stat-l">Digital</div><div class="stat-v" id="s-digital">0</div></div>
+        <div class="stat"><div class="stat-l">Total in</div><div class="stat-v" id="s-income" style="color:var(--green)">0</div></div>
+        <div class="stat"><div class="stat-l">Total out</div><div class="stat-v" id="s-spent">0</div></div>
       </div>
       <div class="sec-hdr">
-        <div class="sec-t">Recent</div>
+        <div class="sec-t">All transactions</div>
         <div class="sec-a" id="clear-btn">Clear month</div>
       </div>
       <div class="exp-list" id="exp-list"></div>
@@ -559,6 +605,51 @@
   </div>
 </div>
 
+<!-- Income modal -->
+<div class="modal-overlay" id="income-modal" onclick="closeIncomeModal(event)">
+  <div class="modal">
+    <div class="modal-title">Add Income <span class="modal-close" onclick="closeIncomeModal()">×</span></div>
+    <div class="ttog" style="margin-bottom:14px">
+      <button class="tbtn ac" id="inc-tab-cash" onclick="incTab('cash')">💵 Cash</button>
+      <button class="tbtn" id="inc-tab-visa" onclick="incTab('visa')">💳 Visa / Digital</button>
+    </div>
+    <div class="frow">
+      <div class="flabel">Source</div>
+      <input class="finput" type="text" id="inc-name" dir="auto" placeholder="e.g. Salary, Freelance, Gift…">
+    </div>
+    <div class="frow">
+      <div class="flabel">Amount (EGP)</div>
+      <input class="finput" type="number" id="inc-amount" inputmode="numeric" placeholder="0">
+    </div>
+    <div class="frow">
+      <div class="flabel">Date (optional)</div>
+      <input class="finput" type="date" id="inc-date">
+    </div>
+    <button class="modal-save-btn" style="background:var(--green)" onclick="saveIncome()">Add Income</button>
+  </div>
+</div>
+
+<!-- Income edit modal -->
+<div class="modal-overlay" id="income-edit-modal" onclick="closeIncomeEditModal(event)">
+  <div class="modal">
+    <div class="modal-title">Edit Income <span class="modal-close" onclick="closeIncomeEditModal()">×</span></div>
+    <div class="frow">
+      <div class="flabel">Source</div>
+      <input class="finput" type="text" id="inc-edit-name" dir="auto">
+    </div>
+    <div class="frow">
+      <div class="flabel">Amount (EGP)</div>
+      <input class="finput" type="number" id="inc-edit-amount" inputmode="numeric">
+    </div>
+    <div class="frow">
+      <div class="flabel">Date</div>
+      <input class="finput" type="date" id="inc-edit-date">
+    </div>
+    <button class="modal-save-btn" style="background:var(--green)" onclick="saveIncomeEdit()">Save changes</button>
+    <button class="modal-del-btn" onclick="deleteIncome()">Delete</button>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════
@@ -588,10 +679,12 @@ let ALLOC=[
   {emoji:'🏦',label:'Bank',amount:1800},
 ];
 
-let expenses=[],sfLog=[],wishlist=[],goalData={saved:0,monthly:6000};
+let expenses=[],sfLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[];
 let selCat=CATS[0],selType='cash';
 let sfBalModalType='contribution';
 let sfEditingId=null;
+let incModalType='cash';
+let incEditingId=null;
 
 // ── Smart Quick-Add ──
 function computeSmartQuickItems(){
@@ -636,6 +729,7 @@ function loadState(){
     {id:6,name:'Weights set',cost:900,done:false},
   ]));}catch(e){wishlist=[];}
   try{goalData=JSON.parse(localStorage.getItem('ms_goal')||'{"saved":0,"monthly":6000}');}catch(e){goalData={saved:0,monthly:6000};}
+  try{incomes=JSON.parse(localStorage.getItem('ms_inc')||'[]');}catch(e){incomes=[];}
   try{const b=JSON.parse(localStorage.getItem('ms_budget')||'null');if(b)Object.assign(BUDGET,b);}catch(e){}
   try{const c=JSON.parse(localStorage.getItem('ms_cats')||'null');if(c&&c.length)CATS=c;}catch(e){}
   try{const a=JSON.parse(localStorage.getItem('ms_alloc')||'null');if(a&&a.length)ALLOC=a;}catch(e){}
@@ -647,6 +741,7 @@ function saveState(){
   localStorage.setItem('ms_sf',JSON.stringify(sfLog));
   localStorage.setItem('ms_wish',JSON.stringify(wishlist));
   localStorage.setItem('ms_goal',JSON.stringify(goalData));
+  localStorage.setItem('ms_inc',JSON.stringify(incomes));
   scheduleSync();
 }
 function saveCats(){localStorage.setItem('ms_cats',JSON.stringify(CATS));}
@@ -661,6 +756,15 @@ let SUPA_URL='',SUPA_KEY='',SUPA_USER_ID='';
 function supaInit(){
   SUPA_URL=(localStorage.getItem('ms_supa_url')||'').replace(/\/$/,'');
   SUPA_KEY=localStorage.getItem('ms_supa_key')||'';
+  // Fallback: if primary keys wiped, try the backup keys
+  if(!SUPA_URL||!SUPA_KEY){
+    const bk=localStorage.getItem('ms_supa_bk');
+    if(bk){try{const p=JSON.parse(bk);SUPA_URL=p.u||'';SUPA_KEY=p.k||'';
+      // Restore primary keys from backup
+      if(SUPA_URL)localStorage.setItem('ms_supa_url',SUPA_URL);
+      if(SUPA_KEY)localStorage.setItem('ms_supa_key',SUPA_KEY);
+    }catch(e){}}
+  }
   if(!localStorage.getItem('ms_uid'))localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
   SUPA_USER_ID=localStorage.getItem('ms_uid');
 }
@@ -696,34 +800,48 @@ async function supaUpsertWishlist(){
   await fetch(`${SUPA_URL}/rest/v1/wishlist?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{method:'DELETE',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
   if(wishlist.length)await supaFetch('wishlist','POST',wishlist.map(w=>({id:w.id,user_id:SUPA_USER_ID,name:w.name,cost:w.cost||0,done:w.done||false})));
 }
+async function supaUpsertIncome(e){
+  if(!supaReady())return;
+  await supaFetch('incomes','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date});
+}
+async function supaDeleteIncome(id){
+  if(!supaReady())return;
+  await supaFetch('incomes','DELETE',null,id);
+}
 async function syncToSupabase(silent=false){
   if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
   setSyncStatus('spin','Syncing…');
   try{
     if(expenses.length)await supaFetch('expenses','POST',expenses.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date})));
     if(sfLog.length)await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date})));
+    if(incomes.length)await supaFetch('incomes','POST',incomes.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date})));
     await supaUpsertWishlist();await supaUpsertAppState();
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Synced '+t);localStorage.setItem('ms_last_sync',new Date().toISOString());
     if(!silent)flash('Pushed to Supabase ✓','var(--green)');
   }catch(e){setSyncStatus('err','Sync failed');if(!silent)flash('Sync failed: '+e.message,'var(--red)');}
 }
-async function pullFromSupabase(){
-  if(!supaReady()){flash('Set Supabase credentials first','var(--amber)');return;}
-  setSyncStatus('spin','Pulling…');
+async function pullFromSupabase(silent=false){
+  if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
+  setSyncStatus('spin',silent?'Restoring…':'Pulling…');
   try{
-    const[remExp,remSf,remWish,remState]=await Promise.all([
+    const[remExp,remSf,remWish,remInc,remState]=await Promise.all([
       supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('wishlist','GET'),
+      supaFetch('incomes','GET'),
       fetch(`${SUPA_URL}/rest/v1/app_state?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}).then(r=>r.json())
     ]);
     if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
     if(remSf)sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,date:e.date}));
     if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));
+    if(remInc)incomes=remInc.map(e=>({id:e.id,name:e.name,amount:e.amount,payType:e.pay_type,date:e.date}));
     if(remState&&remState[0]){const s=remState[0];goalData={saved:s.goal_saved||0,monthly:s.goal_monthly||6000};BUDGET.needs=s.budget_needs||3500;BUDGET.wants=s.budget_wants||2000;BUDGET.sinking=s.budget_sinking||3000;}
     saveState();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Synced '+t);flash('Pulled from Supabase ✓','var(--green)');renderHome();
-  }catch(e){setSyncStatus('err','Pull failed');flash('Pull failed: '+e.message,'var(--red)');}
+    localStorage.setItem('ms_last_sync',new Date().toISOString());
+    setSyncStatus('ok','Synced '+t);
+    if(!silent)flash('Pulled from Supabase ✓','var(--green)');
+    renderHome();
+  }catch(e){setSyncStatus('err','Pull failed');if(!silent)flash('Pull failed: '+e.message,'var(--red)');}
 }
 async function testSupaConnection(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,'');
@@ -738,7 +856,11 @@ function saveSupaConfig(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,'');
   const key=(document.getElementById('supa-key').value||'').trim();
   if(!url||!key){flash('Enter both URL and key','var(--amber)');return;}
-  localStorage.setItem('ms_supa_url',url);localStorage.setItem('ms_supa_key',key);supaInit();
+  localStorage.setItem('ms_supa_url',url);
+  localStorage.setItem('ms_supa_key',key);
+  // Backup copy — survives most clears since it's a different key
+  localStorage.setItem('ms_supa_bk',JSON.stringify({u:url,k:key}));
+  supaInit();
   flash('Supabase config saved!','var(--green)');setSyncStatus('ok','Ready');document.getElementById('supa-status').style.display='none';
 }
 let syncTimer=null;
@@ -834,16 +956,41 @@ function renderHome(){
   const list=monthExp(m,y);
   const needs=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0);
   const wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
-  const cash=list.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
-  const digital=list.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+  const totalSpent=list.filter(e=>e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
   const sfWith=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='withdrawal';}).reduce((s,e)=>s+e.amount,0);
 
+  // Income this month
+  const monthInc=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});
+  const cashIn=monthInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
+  const visaIn=monthInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
+  const totalIn=cashIn+visaIn;
+
+  // Out split by cash vs digital
+  const cashOut=list.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
+  const visaOut=list.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+
+  const net=totalIn-totalSpent;
+
+  // Header
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
-  document.getElementById('hdr-total').textContent=fmt(wants);
-  document.getElementById('hdr-cap-lbl').textContent='of '+fmt(BUDGET.wants)+' EGP';
-  document.getElementById('s-count').textContent=list.length;
-  document.getElementById('s-cash').textContent=fmt(cash);
-  document.getElementById('s-digital').textContent=fmt(digital);
+  const hdrVal=document.getElementById('hdr-total');
+  hdrVal.textContent=(net>=0?'+':'')+fmt(net);
+  hdrVal.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
+  document.getElementById('hdr-cap-lbl').textContent='EGP this month';
+
+  // Balance card
+  const balEl=document.getElementById('bal-net');
+  balEl.textContent=(net>=0?'+':'')+fmt(net)+' EGP';
+  balEl.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');
+  document.getElementById('bal-cash-in').textContent=fmt(cashIn);
+  document.getElementById('bal-visa-in').textContent=fmt(visaIn);
+  document.getElementById('bal-cash-out').textContent=fmt(cashOut);
+  document.getElementById('bal-visa-out').textContent=fmt(visaOut);
+
+  // Stats row
+  document.getElementById('s-count').textContent=list.length+monthInc.length;
+  document.getElementById('s-income').textContent=fmt(totalIn);
+  document.getElementById('s-spent').textContent=fmt(totalSpent);
 
   renderBBar('bb-needs','Needs','🍗',needs,BUDGET.needs,'var(--green)');
   renderBBar('bb-wants','Wants','⚡',wants,BUDGET.wants,'var(--amber)');
@@ -862,16 +1009,36 @@ function renderHome(){
     qg.appendChild(b);
   });
 
+  // Unified transaction list — expenses + incomes merged and sorted by date
   const el=document.getElementById('exp-list');
-  if(!list.length){el.innerHTML='<div class="empty">No expenses yet.<br>Tap + to add your first one.</div>';return;}
+  const allTx=[
+    ...list.map(e=>({...e,_kind:'expense'})),
+    ...monthInc.map(e=>({...e,_kind:'income'})),
+  ].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  if(!allTx.length){el.innerHTML='<div class="empty">No transactions yet.<br>Tap + to add an expense or income.</div>';return;}
   el.innerHTML='';
-  [...list].reverse().slice(0,60).forEach(e=>{
-    const d=new Date(e.date);const div=document.createElement('div');div.className='exp-item';
-    div.innerHTML=`<div class="exp-em">${e.cat}</div>
-      <div class="exp-info"><div class="exp-name">${e.name}</div>
-      <div class="exp-meta">${e.catLabel||''}<span class="badge badge-${e.type}">${e.type}</span><span class="badge badge-${e.nw||'wants'}">${e.nw||'wants'}</span> · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}</div></div>
-      <div class="exp-amt">${fmt(e.amount)}</div>
-      <div class="exp-del" onclick="delExp(${e.id})">×</div>`;
+  allTx.slice(0,80).forEach(e=>{
+    const d=new Date(e.date);
+    const isIncome=e._kind==='income';
+    const div=document.createElement('div');div.className='exp-item';
+    if(isIncome){
+      div.innerHTML=`<div class="exp-em" style="background:var(--green-d);font-size:16px">${e.payType==='visa'?'💳':'💵'}</div>
+        <div class="exp-info">
+          <div class="exp-name">${e.name}</div>
+          <div class="exp-meta"><span class="badge" style="background:var(--green-d);color:var(--green)">income</span><span class="badge" style="background:var(--green-d);color:var(--green)">${e.payType==='visa'?'visa':'cash'}</span> · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}</div>
+        </div>
+        <div class="exp-amt" style="color:var(--green)">+${fmt(e.amount)}</div>
+        <div class="exp-del" onclick="openIncomeEdit(${e.id})">✎</div>`;
+    } else {
+      div.innerHTML=`<div class="exp-em">${e.cat}</div>
+        <div class="exp-info">
+          <div class="exp-name">${e.name}</div>
+          <div class="exp-meta">${e.catLabel||''}<span class="badge badge-${e.type}">${e.type}</span><span class="badge badge-${e.nw||'wants'}">${e.nw||'wants'}</span> · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}</div>
+        </div>
+        <div class="exp-amt">-${fmt(e.amount)}</div>
+        <div class="exp-del" onclick="delExp(${e.id})">×</div>`;
+    }
     el.appendChild(div);
   });
 }
@@ -879,11 +1046,90 @@ function renderHome(){
 function delExp(id){supaDeleteExpense(id);expenses=expenses.filter(e=>e.id!==id);saveState();renderHome();}
 document.getElementById('clear-btn').onclick=()=>{
   const{m,y}=nowDate();
-  if(confirm('Clear all expenses for '+MONTHS[m]+'?')){
+  if(confirm('Clear all expenses AND income for '+MONTHS[m]+'?')){
     expenses=expenses.filter(e=>{const d=new Date(e.date);return!(d.getMonth()===m&&d.getFullYear()===y);});
+    incomes=incomes.filter(e=>{const d=new Date(e.date);return!(d.getMonth()===m&&d.getFullYear()===y);});
     saveState();renderHome();
   }
 };
+
+// ═══════════════════════════════════════════════════
+// INCOME
+// ═══════════════════════════════════════════════════
+function incTab(t){
+  incModalType=t;
+  document.getElementById('inc-tab-cash').className='tbtn'+(t==='cash'?' ac':'');
+  document.getElementById('inc-tab-visa').className='tbtn'+(t==='visa'?' ad':'');
+}
+
+function openIncomeModal(){
+  incModalType='cash';
+  incTab('cash');
+  document.getElementById('inc-name').value='';
+  document.getElementById('inc-amount').value='';
+  document.getElementById('inc-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('income-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('inc-name').focus(),200);
+}
+function closeIncomeModal(e){
+  if(e&&e.target!==document.getElementById('income-modal'))return;
+  document.getElementById('income-modal').classList.remove('open');
+}
+
+function saveIncome(){
+  const name=document.getElementById('inc-name').value.trim();
+  const amount=parseFloat(document.getElementById('inc-amount').value);
+  const dateVal=document.getElementById('inc-date').value;
+  if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter source and amount');return;}
+  const entry={
+    id:Date.now(),
+    name,
+    amount,
+    payType:incModalType,
+    date:dateVal?new Date(dateVal).toISOString():new Date().toISOString(),
+  };
+  incomes.push(entry);
+  saveState();
+  supaUpsertIncome(entry);
+  document.getElementById('income-modal').classList.remove('open');
+  flash('Income added: +'+fmt(amount)+' EGP','var(--green)');
+  renderHome();
+}
+
+function openIncomeEdit(id){
+  const entry=incomes.find(e=>e.id===id);if(!entry)return;
+  incEditingId=id;
+  document.getElementById('inc-edit-name').value=entry.name||'';
+  document.getElementById('inc-edit-amount').value=entry.amount||'';
+  document.getElementById('inc-edit-date').value=entry.date?entry.date.slice(0,10):'';
+  document.getElementById('income-edit-modal').classList.add('open');
+}
+function closeIncomeEditModal(e){
+  if(e&&e.target!==document.getElementById('income-edit-modal'))return;
+  document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;
+}
+function saveIncomeEdit(){
+  if(!incEditingId)return;
+  const idx=incomes.findIndex(e=>e.id===incEditingId);if(idx<0)return;
+  const name=document.getElementById('inc-edit-name').value.trim();
+  const amount=parseFloat(document.getElementById('inc-edit-amount').value);
+  const date=document.getElementById('inc-edit-date').value;
+  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
+  incomes[idx].name=name||incomes[idx].name;
+  incomes[idx].amount=amount;
+  if(date)incomes[idx].date=new Date(date).toISOString();
+  saveState();supaUpsertIncome(incomes[idx]);
+  document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;
+  flash('Income updated!','var(--green)');renderHome();
+}
+function deleteIncome(){
+  if(!incEditingId)return;
+  if(!confirm('Delete this income entry?'))return;
+  supaDeleteIncome(incEditingId);
+  incomes=incomes.filter(e=>e.id!==incEditingId);
+  saveState();document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;
+  flash('Income deleted','var(--red)');renderHome();
+}
 
 // ═══════════════════════════════════════════════════
 // STATS
@@ -1209,7 +1455,7 @@ function exportCSV(){
   a.download=MONTHS[m]+'_expenses.csv';a.click();
 }
 function backupJSON(){
-  const data={expenses,sfLog,wishlist,goalData,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};
+  const data={expenses,sfLog,wishlist,goalData,incomes,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
 }
@@ -1221,6 +1467,7 @@ function restoreJSON(ev){
       const d=JSON.parse(e.target.result);
       if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;
       if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;
+      if(d.incomes)incomes=d.incomes;
       if(d.CATS&&d.CATS.length)CATS=d.CATS;
       if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;
       if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);
@@ -1254,8 +1501,19 @@ if(up.get('amount')){
 renderHome();
 if(supaReady()){
   const last=localStorage.getItem('ms_last_sync');
-  if(last){const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Last sync '+t);}
-  else setSyncStatus('off','Not synced yet');
+  // Auto-pull if Supabase configured but localStorage has no expenses
+  // This recovers data automatically after a new deployment or browser clear
+  if(expenses.length===0&&incomes.length===0){
+    setSyncStatus('spin','Restoring data…');
+    pullFromSupabase(true).then(()=>{
+      setSyncStatus('ok','Restored from cloud');
+    });
+  } else if(last){
+    const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Last sync '+t);
+  } else {
+    setSyncStatus('off','Not synced yet');
+  }
 }
 </script>
 </body>

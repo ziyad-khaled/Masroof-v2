@@ -533,15 +533,33 @@
         </div>
         <button class="save-settings-btn" onclick="addCategory()">+ Add category</button>
       </div>
-
-      <div class="card">
+            <div class="card">
         <div class="card-title">Quick Add recommendations</div>
         <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">Ranked by frequency × recency (last 6 months). Auto-updates as you log expenses.</div>
         <div id="qa-preview" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px"></div>
         <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="refreshQuickItems();renderSettings();flash('Refreshed!','var(--lime)')">Refresh recommendations</button>
       </div>
 
-    </div>
+            <div class="card">
+        <div class="card-title">🆔 Sync User ID</div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:12px">
+          Set the same User ID on all your devices to share data.<br>
+          Leave empty to keep a device‑specific ID.
+        </div>
+        <div class="frow">
+          <div class="flabel">Your User ID</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input class="finput" type="text" id="custom-user-id" placeholder="e.g. ziyad or your email" dir="auto" autocomplete="off">
+            <button class="save-settings-btn" style="width:auto;padding:10px 16px;margin:0" onclick="saveCustomUserId()">Save</button>
+          </div>
+        </div>
+        <div class="frow" style="margin-top:8px">
+          <div class="flabel" style="font-size:10px;color:var(--t3)">Current ID: <span id="current-uid-display" style="font-family:var(--mono)"></span></div>
+          <button class="save-settings-btn" style="background:var(--s3);color:var(--t1);width:auto;padding:8px 14px;font-size:11px" onclick="copyCurrentUserId()">📋 Copy current ID</button>
+        </div>
+      </div>
+
+    </div><!-- /page-settings -->
 
   </div><!-- /content -->
 
@@ -744,8 +762,7 @@ refreshQuickItems();
 // ═══════════════════════════════════════════════════
 // SUPABASE
 // ═══════════════════════════════════════════════════
-let SUPA_URL='',SUPA_KEY='',SUPA_USER_ID='';
-function supaInit(){
+  function supaInit(){
   SUPA_URL=(localStorage.getItem('ms_supa_url')||'').replace(/\/$/,'');
   SUPA_KEY=localStorage.getItem('ms_supa_key')||'';
   if(!SUPA_URL||!SUPA_KEY){
@@ -755,8 +772,17 @@ function supaInit(){
       if(SUPA_KEY)localStorage.setItem('ms_supa_key',SUPA_KEY);
     }catch(e){}}
   }
-  if(!localStorage.getItem('ms_uid'))localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
-  SUPA_USER_ID=localStorage.getItem('ms_uid');
+
+  // Use custom user ID if set, otherwise fallback to device ID
+  const customId = localStorage.getItem('ms_custom_uid');
+  if (customId && customId.trim()) {
+    SUPA_USER_ID = customId.trim();
+  } else {
+    if(!localStorage.getItem('ms_uid')){
+      localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
+    }
+    SUPA_USER_ID=localStorage.getItem('ms_uid');
+  }
 }
 supaInit();
 function supaReady(){return !!(SUPA_URL&&SUPA_KEY);}
@@ -855,10 +881,8 @@ async function pullFromSupabase(silent=false){
       BUDGET.needs=s.budget_needs||3500;BUDGET.wants=s.budget_wants||2000;BUDGET.sinking=s.budget_sinking||3000;
       // ── FIX: restore ALLOC and goal meta from cloud ──
       if(s.alloc_json&&s.alloc_json.length)ALLOC=s.alloc_json;
-      if(s.goal_meta_json&&s.goal_meta_json.target){
-        GOAL_TARGET=s.goal_meta_json.target;
-        GOAL_NAME=s.goal_meta_json.name||GOAL_NAME;
-      }
+      if (s.goal_target != null) GOAL_TARGET = Number(s.goal_target) || GOAL_TARGET;
+      if (s.goal_name != null) GOAL_NAME = s.goal_name || GOAL_NAME;
     }
     _pulling=false;
     saveState();
@@ -1381,7 +1405,10 @@ function renderSettings(){
   document.getElementById('set-needs').value=BUDGET.needs;
   document.getElementById('set-wants').value=BUDGET.wants;
   document.getElementById('set-sinking').value=BUDGET.sinking;
-
+  // Show current user ID
+  const customId = localStorage.getItem('ms_custom_uid')||'';
+  document.getElementById('custom-user-id').value = customId;
+  document.getElementById('current-uid-display').textContent = SUPA_USER_ID || '(device)';
   const g=document.getElementById('cat-edit-grid');g.innerHTML='';
   CATS.forEach((c,i)=>{
     const div=document.createElement('div');
@@ -1521,6 +1548,26 @@ if(supaReady()){
     setSyncStatus('off','Not synced yet');
   }
 }
+function saveCustomUserId(){
+  const val = document.getElementById('custom-user-id').value.trim();
+  localStorage.setItem('ms_custom_uid', val || '');
+  supaInit(); // re‑read the user ID
+  flash('User ID saved! Syncing now under: '+(SUPA_USER_ID||'(device)'),'var(--green)');
+  renderSettings();
+  // Optionally push current data under new ID
+  if (val) syncToSupabase(true);
+}
+
+function copyCurrentUserId(){
+  const id = SUPA_USER_ID || '';
+  if (!id) return flash('No user ID','var(--amber)');
+  navigator.clipboard.writeText(id).then(()=>{
+    flash('Copied: '+id,'var(--green)');
+  }).catch(()=>{
+    // Fallback: show in an alert if clipboard blocked
+    prompt('Copy this ID:', id);
+  });
+}  
 </script>
 </body>
 </html>

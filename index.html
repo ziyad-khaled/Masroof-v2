@@ -34,7 +34,6 @@
     #content{flex:1;overflow-y:auto;overscroll-behavior:contain;padding-bottom:calc(60px + var(--sbot))}
     #nav{position:fixed;bottom:0;left:0;right:0;height:calc(56px + var(--sbot));padding-bottom:var(--sbot);background:var(--s1);border-top:0.5px solid var(--b1);display:flex;z-index:100}
     .page{display:none;padding:14px 15px}.page.active{display:block}
-    /* header */
     .hdr-row{display:flex;justify-content:space-between;align-items:flex-start}
     .hdr-name{font-size:20px;font-weight:600;letter-spacing:-.5px}.hdr-name span{color:var(--lime)}
     .hdr-sub{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:2px}
@@ -42,28 +41,22 @@
     .hdr-tlabel{font-size:10px;color:var(--t3)}
     .hdr-tval{font-size:22px;font-weight:600;font-family:var(--mono);color:var(--lime);letter-spacing:-.5px}
     .hdr-tcur{font-size:10px;color:var(--t3)}
-    /* nav */
     .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--t3);font-size:9px;font-family:var(--font);cursor:pointer;padding:6px 0 0;transition:color .15s}
     .nb.active{color:var(--lime)}.nb-i{font-size:19px;line-height:1}
-    /* cards */
     .card{background:var(--s1);border-radius:var(--r);padding:13px 14px;border:0.5px solid var(--b1);margin-bottom:10px}
     .card-title{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;font-weight:500;margin-bottom:10px}
-    /* stats */
     .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
     .stat{background:var(--s1);border-radius:var(--rs);padding:9px 10px;border:0.5px solid var(--b1)}
     .stat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
     .stat-v{font-size:16px;font-weight:600;font-family:var(--mono)}
-    /* budget bars */
     .bbar{margin-bottom:9px}
     .bbar-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
     .bbar-label{font-size:12px;color:var(--t2)}.bbar-val{font-size:11px;font-family:var(--mono);color:var(--t3)}
     .bbar-track{height:7px;background:var(--s3);border-radius:4px;overflow:hidden}
     .bbar-fill{height:100%;border-radius:4px;transition:width .4s ease}
-    /* quick add */
     .quick-grid{display:flex;gap:7px;flex-wrap:wrap}
     .qbtn{background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);padding:7px 10px;font-size:12px;color:var(--t1);font-family:var(--font);cursor:pointer;white-space:nowrap}
     .qbtn:active{background:var(--s3)}
-    /* expense list */
     .exp-list{display:flex;flex-direction:column;gap:5px}
     .exp-item{background:var(--s1);border-radius:var(--rs);padding:9px 11px;display:flex;align-items:center;gap:9px;border:0.5px solid var(--b1)}
     .exp-em{font-size:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--s2);border-radius:7px;flex-shrink:0}
@@ -80,36 +73,30 @@
     .exp-del{color:var(--t3);font-size:17px;padding:3px 3px 3px 7px;cursor:pointer;flex-shrink:0}
     .exp-del:active{color:var(--red)}
     .empty{text-align:center;padding:36px 20px;color:var(--t3);font-size:13px}
-    /* forms */
     .fcard{background:var(--s1);border-radius:var(--r);padding:14px;border:0.5px solid var(--b1);margin-bottom:10px}
     .flabel{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;font-weight:500}
     .finput{width:100%;background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);padding:10px 13px;font-size:15px;color:var(--t1);font-family:var(--font);outline:none;-webkit-appearance:none;appearance:none}
     .finput:focus{border-color:var(--lime)}.finput::placeholder{color:var(--t3)}
     .frow{margin-bottom:12px}.frow2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-    /* type toggle */
     .ttog{display:flex;background:var(--s2);border-radius:var(--rs);padding:3px;margin-bottom:12px}
     .tbtn{flex:1;padding:8px;border:none;background:none;color:var(--t3);font-size:12px;font-family:var(--font);cursor:pointer;border-radius:6px;transition:all .15s}
     .tbtn.ac{background:var(--s3);color:var(--lime);font-weight:500}
     .tbtn.ad{background:var(--s3);color:var(--blue);font-weight:500}
     .tbtn.as{background:var(--s3);color:var(--purple);font-weight:500}
-    /* category grid */
     .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
     .cbtn{background:var(--s2);border:0.5px solid var(--b1);border-radius:var(--rs);padding:8px 3px 6px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .12s;position:relative}
     .cbtn:active{transform:scale(.96)}.cbtn.sel{border-color:var(--lime);background:var(--lime-d)}
     .cbtn.sels{border-color:var(--purple);background:var(--purple-d)}
     .ce{font-size:19px}.cl{font-size:9px;color:var(--t3);margin-top:3px;text-align:center}
     .cbtn.sel .cl{color:var(--lime)}.cbtn.sels .cl{color:var(--purple)}
-    /* cat remove badge */
     .cat-remove{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:10px;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
     .sub-btn{width:100%;padding:13px;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;color:#0f0f0f;font-family:var(--font);cursor:pointer;transition:opacity .15s}
     .sub-btn:active{opacity:.85}
-    /* chart bars */
     .cbar-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
     .cbar-label{font-size:17px;width:26px;text-align:center;flex-shrink:0}
     .cbar-track{flex:1;height:18px;background:var(--s2);border-radius:4px;overflow:hidden}
     .cbar-fill{height:100%;border-radius:4px;transition:width .4s ease}
     .cbar-val{font-size:11px;font-family:var(--mono);color:var(--t2);width:60px;text-align:right;flex-shrink:0}
-    /* sinking fund */
     .sf-center{text-align:center;padding:14px 0 8px;cursor:pointer}
     .sf-center:active{opacity:.8}
     .sf-big{font-size:36px;font-weight:600;font-family:var(--mono);color:var(--purple)}
@@ -121,17 +108,14 @@
     .sf-ml{font-size:10px;color:var(--t3);margin-bottom:4px}
     .sf-mv{font-size:16px;font-weight:600;font-family:var(--mono)}
     .sf-mini-hint{font-size:9px;color:var(--t3);margin-top:3px}
-    /* goals */
     .goal-center{display:flex;flex-direction:column;align-items:center;padding:16px 0 10px}
     .goal-pct{font-size:42px;font-weight:600;font-family:var(--mono);color:var(--lime)}
     .goal-lbl{font-size:12px;color:var(--t3);margin-top:4px;text-align:center}
     .goal-bar{height:10px;background:var(--s2);border-radius:5px;overflow:hidden;margin:10px 0}
     .goal-fill{height:100%;background:var(--lime);border-radius:5px;transition:width .6s ease}
-    /* section header */
     .sec-hdr{display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px}
     .sec-t{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;font-weight:500}
     .sec-a{font-size:12px;color:var(--blue);cursor:pointer}
-    /* misc */
     .tip{background:var(--blue-d);border:0.5px solid rgba(79,158,255,.2);border-radius:var(--r);padding:12px 14px;margin-bottom:10px}
     .tip-t{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:7px}
     .tip-b{font-size:12px;color:var(--t2);line-height:1.6}
@@ -144,7 +128,6 @@
     .ibanner.show{display:flex}
     .ibanner-text{flex:1;font-size:12px;color:var(--lime)}
     .ibanner-btn{background:var(--lime);color:#0f0f0f;border:none;border-radius:6px;padding:6px 11px;font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer}
-    /* settings rows */
     .srow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:0.5px solid var(--b1)}
     .srow:last-child{border-bottom:none}
     .srow-left{flex:1}
@@ -154,15 +137,6 @@
     .srow-input:focus{border-color:var(--lime)}
     .save-settings-btn{width:100%;padding:12px;border:none;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--lime);color:#0f0f0f;margin-top:4px}
     .save-settings-btn:active{opacity:.8}
-    /* allocation edit row */
-    .alloc-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-    .alloc-emoji{font-size:22px;width:32px;text-align:center;flex-shrink:0}
-    .alloc-inputs{flex:1;display:flex;gap:6px}
-    .alloc-inp{flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);outline:none}
-    .alloc-inp:focus{border-color:var(--lime)}
-    .alloc-del{color:var(--t3);font-size:18px;cursor:pointer;padding:4px}
-    .alloc-del:active{color:var(--red)}
-    /* modal */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
     .modal-overlay.open{opacity:1;pointer-events:all}
     .modal{background:var(--s1);border-radius:var(--r) var(--r) 0 0;padding:20px 18px calc(20px + var(--sbot));width:100%;max-width:480px;transform:translateY(100%);transition:transform .25s ease}
@@ -174,7 +148,6 @@
     .modal-del-btn:active{opacity:.8}
     .modal-save-btn{width:100%;padding:12px;border:none;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--purple);color:#fff}
     .modal-save-btn:active{opacity:.8}
-    /* supabase */
     .supa-ok{background:var(--green-d);color:var(--green)}
     .supa-err{background:var(--red-d);color:var(--red)}
     .supa-info{background:var(--blue-d);color:var(--blue)}
@@ -182,16 +155,13 @@
     .sync-dot.ok{background:var(--green)}.sync-dot.off{background:var(--t3)}
     .sync-dot.spin{background:var(--amber);animation:pulse .8s infinite}.sync-dot.err{background:var(--red)}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-    /* flash */
     .flash{position:fixed;top:calc(var(--stop) + 10px);left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
     .flash.show{opacity:1}
-    /* trend chart */
     .trend-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
     .trend-lbl{font-size:11px;color:var(--t2);width:30px;text-align:right;flex-shrink:0;font-family:var(--mono)}
     .trend-track{flex:1;height:22px;background:var(--s2);border-radius:4px;overflow:hidden}
     .trend-fill{height:100%;border-radius:4px;transition:width .5s ease}
     .trend-val{font-size:11px;font-family:var(--mono);color:var(--t2);width:55px;text-align:right;flex-shrink:0}
-    /* income */
     .balance-card{background:var(--s1);border-radius:var(--r);padding:14px;border:0.5px solid var(--b1);margin-bottom:10px}
     .balance-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
     .balance-main{flex:1}
@@ -204,16 +174,6 @@
     .income-mini{background:var(--s2);border-radius:var(--rs);padding:9px 11px}
     .income-mini-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;display:flex;align-items:center;gap:4px}
     .income-mini-v{font-size:15px;font-weight:600;font-family:var(--mono);color:var(--green)}
-    .income-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:0.5px solid var(--b1)}
-    .income-item:last-child{border-bottom:none}
-    .income-em{font-size:18px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--green-d);border-radius:6px;flex-shrink:0}
-    .income-info{flex:1;min-width:0}
-    .income-name{font-size:13px;font-weight:500}
-    .income-meta{font-size:10px;color:var(--t3);margin-top:1px}
-    .income-amt{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--green);flex-shrink:0}
-    .income-del{color:var(--t3);font-size:17px;padding:3px 3px 3px 7px;cursor:pointer;flex-shrink:0}
-    .income-del:active{color:var(--red)}
-    /* transfer */
     .transfer-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:0.5px dashed var(--b3);border-radius:var(--rs);background:transparent;color:var(--t2);font-size:13px;font-family:var(--font);cursor:pointer;margin-top:8px}
     .transfer-btn:active{background:var(--s2)}
     ::-webkit-scrollbar{width:0}
@@ -238,14 +198,12 @@
 
   <div id="content">
 
-    <!-- ══ HOME ══ -->
+    <!-- HOME -->
     <div class="page active" id="page-home">
       <div class="ibanner" id="ibanner">
         <div class="ibanner-text">Install app on home screen</div>
         <button class="ibanner-btn" id="ibtn">Install</button>
       </div>
-
-      <!-- Balance card -->
       <div class="balance-card">
         <div class="balance-row">
           <div class="balance-main">
@@ -254,20 +212,22 @@
           </div>
           <button class="balance-add-btn" onclick="openIncomeModal()">+ Income</button>
         </div>
-        <div class="income-split">
+        <button class="transfer-btn" onclick="openTransferModal()">⇄ Transfer between Cash ↔ Visa</button>
+        <div class="income-split" style="margin-top:8px">
           <div class="income-mini">
             <div class="income-mini-l">💵 Cash in hand</div>
             <div class="income-mini-v" id="bal-cash-in">0</div>
             <div style="font-size:9px;color:var(--t3);margin-top:2px">in · <span id="bal-cash-out" style="color:var(--red)">0</span> out</div>
+            <div style="font-size:9px;color:var(--t2);margin-top:2px">Net: <span id="bal-cash-net" style="color:var(--t1)">0</span></div>
           </div>
           <div class="income-mini">
             <div class="income-mini-l">💳 Visa / Digital</div>
             <div class="income-mini-v" id="bal-visa-in">0</div>
             <div style="font-size:9px;color:var(--t3);margin-top:2px">in · <span id="bal-visa-out" style="color:var(--red)">0</span> out</div>
+            <div style="font-size:9px;color:var(--t2);margin-top:2px">Net: <span id="bal-visa-net" style="color:var(--t1)">0</span></div>
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-title">Budget Status — this month</div>
         <div id="bb-needs"></div>
@@ -290,7 +250,7 @@
       <div class="exp-list" id="exp-list"></div>
     </div>
 
-    <!-- ══ ADD ══ -->
+    <!-- ADD -->
     <div class="page" id="page-add">
       <div class="fcard">
         <div class="flabel">Type</div>
@@ -315,27 +275,15 @@
       </div>
     </div>
 
-    <!-- ══ STATS ══ -->
+    <!-- STATS -->
     <div class="page" id="page-stats">
-      <div class="card">
-        <div class="card-title">6-month spending trends</div>
-        <div id="trends-chart"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Needs / Wants / Sinking split</div>
-        <div id="split-chart"></div>
-      </div>
-      <div class="card">
-        <div class="card-title" id="cat-chart-title">Category breakdown</div>
-        <div id="cat-chart"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Daily spending</div>
-        <div id="daily-chart"></div>
-      </div>
+      <div class="card"><div class="card-title">6-month spending trends</div><div id="trends-chart"></div></div>
+      <div class="card"><div class="card-title">Needs / Wants / Sinking split</div><div id="split-chart"></div></div>
+      <div class="card"><div class="card-title" id="cat-chart-title">Category breakdown</div><div id="cat-chart"></div></div>
+      <div class="card"><div class="card-title">Daily spending</div><div id="daily-chart"></div></div>
     </div>
 
-    <!-- ══ SINKING FUND ══ -->
+    <!-- SINKING FUND -->
     <div class="page" id="page-sinking">
       <div class="card">
         <div class="sf-center" onclick="openSfBalModal()">
@@ -364,7 +312,6 @@
           <div class="bbar-track"><div class="bbar-fill" id="sf-prog-fill" style="background:var(--purple)"></div></div>
         </div>
       </div>
-
       <div class="sec-hdr">
         <div class="sec-t">Wishlist</div>
         <div class="sec-a" id="add-wish-btn">+ Add item</div>
@@ -377,7 +324,6 @@
         </div>
       </div>
       <div id="wish-list"></div>
-
       <div class="sec-hdr">
         <div class="sec-t">Transaction History</div>
         <div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div>
@@ -385,7 +331,7 @@
       <div class="exp-list" id="sf-list"></div>
     </div>
 
-    <!-- ══ GOALS ══ -->
+    <!-- GOALS -->
     <div class="page" id="page-goals">
       <div class="card">
         <div class="goal-center">
@@ -406,28 +352,14 @@
           <div class="bbar-val" id="goal-eta" style="color:var(--lime)">—</div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-title">Goal settings</div>
-        <div class="frow">
-          <div class="flabel">Goal name / label</div>
-          <input class="finput" type="text" id="goal-name-inp" placeholder="e.g. Marriage & house" dir="auto">
-        </div>
-        <div class="frow">
-          <div class="flabel">Target amount (EGP)</div>
-          <input class="finput" type="number" id="goal-target-inp" placeholder="608000" inputmode="numeric">
-        </div>
-        <div class="frow">
-          <div class="flabel">Current savings total (EGP)</div>
-          <input class="finput" type="number" id="goal-inp" placeholder="e.g. 12000" inputmode="numeric">
-        </div>
-        <div class="frow">
-          <div class="flabel">Monthly contribution (EGP)</div>
-          <input class="finput" type="number" id="goal-m-inp" inputmode="numeric">
-        </div>
+        <div class="frow"><div class="flabel">Goal name / label</div><input class="finput" type="text" id="goal-name-inp" placeholder="e.g. Marriage & house" dir="auto"></div>
+        <div class="frow"><div class="flabel">Target amount (EGP)</div><input class="finput" type="number" id="goal-target-inp" placeholder="608000" inputmode="numeric"></div>
+        <div class="frow"><div class="flabel">Current savings total (EGP)</div><input class="finput" type="number" id="goal-inp" placeholder="e.g. 12000" inputmode="numeric"></div>
+        <div class="frow"><div class="flabel">Monthly contribution (EGP)</div><input class="finput" type="number" id="goal-m-inp" inputmode="numeric"></div>
         <button class="sub-btn" style="background:var(--lime)" onclick="saveGoal()">Save goal</button>
       </div>
-
       <div class="card">
         <div class="card-title">Savings allocation</div>
         <div id="alloc-list"></div>
@@ -441,12 +373,12 @@
       </div>
     </div>
 
-    <!-- ══ EXPORT ══ -->
+    <!-- EXPORT -->
     <div class="page" id="page-export">
       <div class="tip">
         <div class="tip-t">📱 Auto-detect bank SMS (Android — Automate app)</div>
         <div class="tip-b">
-          <div class="tip-step"><div class="tip-n">1</div><div>Install <strong>Automate by LlamaLab</strong> from Play Store (free, no trial)</div></div>
+          <div class="tip-step"><div class="tip-n">1</div><div>Install <strong>Automate by LlamaLab</strong> from Play Store</div></div>
           <div class="tip-step"><div class="tip-n">2</div><div>Import the <code style="color:var(--blue);font-size:10px">masroof-bank-sms.flo</code> flow file</div></div>
           <div class="tip-step"><div class="tip-n">3</div><div>Edit the URL block → replace YOUR_APP_URL with your hosted URL</div></div>
           <div class="tip-step"><div class="tip-n">4</div><div>Press ▶ Play — runs silently in background</div></div>
@@ -476,19 +408,12 @@
       </div>
     </div>
 
-    <!-- ══ SETTINGS ══ -->
+    <!-- SETTINGS -->
     <div class="page" id="page-settings">
-
       <div class="card">
         <div class="card-title">☁️ Supabase sync</div>
-        <div class="frow">
-          <div class="flabel">Project URL</div>
-          <input class="finput" type="url" id="supa-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false">
-        </div>
-        <div class="frow">
-          <div class="flabel">Anon / public key</div>
-          <input class="finput" type="password" id="supa-key" placeholder="eyJ…" autocomplete="off" spellcheck="false">
-        </div>
+        <div class="frow"><div class="flabel">Project URL</div><input class="finput" type="url" id="supa-url" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false"></div>
+        <div class="frow"><div class="flabel">Anon / public key</div><input class="finput" type="password" id="supa-key" placeholder="eyJ…" autocomplete="off" spellcheck="false"></div>
         <div style="display:flex;gap:8px;margin-bottom:4px">
           <button class="save-settings-btn" style="flex:1;margin-top:0" onclick="saveSupaConfig()">Save &amp; connect</button>
           <button class="save-settings-btn" style="flex:0 0 auto;width:auto;padding:12px 16px;margin-top:0;background:var(--s3);color:var(--t1)" onclick="testSupaConnection()">Test</button>
@@ -498,28 +423,30 @@
           <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--blue);color:#fff" onclick="syncToSupabase(true)">⬆ Push local → cloud</button>
           <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--s3);color:var(--t1)" onclick="pullFromSupabase()">⬇ Pull cloud → local</button>
         </div>
-        <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6">
-          Syncs automatically on every add/edit/delete. Push/Pull for manual full sync when switching devices.
+        <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6">Syncs automatically on every add/edit/delete.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🆔 Sync User ID</div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:12px">Set the same User ID on all your devices to share data.</div>
+        <div class="frow">
+          <div class="flabel">Your User ID</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input class="finput" type="text" id="custom-user-id" placeholder="e.g. ziyad or your email" dir="auto" autocomplete="off">
+            <button class="save-settings-btn" style="width:auto;padding:10px 16px;margin:0" onclick="saveCustomUserId()">Save</button>
+          </div>
+        </div>
+        <div class="frow" style="margin-top:8px">
+          <div class="flabel" style="font-size:10px;color:var(--t3)">Current ID: <span id="current-uid-display" style="font-family:var(--mono)"></span></div>
+          <button class="save-settings-btn" style="background:var(--s3);color:var(--t1);width:auto;padding:8px 14px;font-size:11px" onclick="copyCurrentUserId()">📋 Copy current ID</button>
         </div>
       </div>
-
       <div class="card">
         <div class="card-title">Monthly budget caps</div>
-        <div class="srow">
-          <div class="srow-left"><div class="srow-label">🍗 Needs cap</div><div class="srow-sub">Food, transport, bills, care</div></div>
-          <input class="srow-input" type="number" id="set-needs" inputmode="numeric" placeholder="3500">
-        </div>
-        <div class="srow">
-          <div class="srow-left"><div class="srow-label">⚡ Wants cap</div><div class="srow-sub">Coffee, snacks, gaming, misc</div></div>
-          <input class="srow-input" type="number" id="set-wants" inputmode="numeric" placeholder="2000">
-        </div>
-        <div class="srow">
-          <div class="srow-left"><div class="srow-label">🐷 Sinking fund target</div><div class="srow-sub">Monthly contribution goal</div></div>
-          <input class="srow-input" type="number" id="set-sinking" inputmode="numeric" placeholder="3000">
-        </div>
+        <div class="srow"><div class="srow-left"><div class="srow-label">🍗 Needs cap</div><div class="srow-sub">Food, transport, bills, care</div></div><input class="srow-input" type="number" id="set-needs" inputmode="numeric" placeholder="3500"></div>
+        <div class="srow"><div class="srow-left"><div class="srow-label">⚡ Wants cap</div><div class="srow-sub">Coffee, snacks, gaming, misc</div></div><input class="srow-input" type="number" id="set-wants" inputmode="numeric" placeholder="2000"></div>
+        <div class="srow"><div class="srow-left"><div class="srow-label">🐷 Sinking fund target</div><div class="srow-sub">Monthly contribution goal</div></div><input class="srow-input" type="number" id="set-sinking" inputmode="numeric" placeholder="3000"></div>
         <button class="save-settings-btn" onclick="saveSettings()">Save budget caps</button>
       </div>
-
       <div class="card">
         <div class="card-title">Categories</div>
         <div id="cat-edit-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px"></div>
@@ -533,33 +460,13 @@
         </div>
         <button class="save-settings-btn" onclick="addCategory()">+ Add category</button>
       </div>
-            <div class="card">
+      <div class="card">
         <div class="card-title">Quick Add recommendations</div>
-        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">Ranked by frequency × recency (last 6 months). Auto-updates as you log expenses.</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">Ranked by frequency × recency (last 6 months).</div>
         <div id="qa-preview" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px"></div>
         <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="refreshQuickItems();renderSettings();flash('Refreshed!','var(--lime)')">Refresh recommendations</button>
       </div>
-
-            <div class="card">
-        <div class="card-title">🆔 Sync User ID</div>
-        <div style="font-size:12px;color:var(--t2);margin-bottom:12px">
-          Set the same User ID on all your devices to share data.<br>
-          Leave empty to keep a device‑specific ID.
-        </div>
-        <div class="frow">
-          <div class="flabel">Your User ID</div>
-          <div style="display:flex;gap:6px;align-items:center">
-            <input class="finput" type="text" id="custom-user-id" placeholder="e.g. ziyad or your email" dir="auto" autocomplete="off">
-            <button class="save-settings-btn" style="width:auto;padding:10px 16px;margin:0" onclick="saveCustomUserId()">Save</button>
-          </div>
-        </div>
-        <div class="frow" style="margin-top:8px">
-          <div class="flabel" style="font-size:10px;color:var(--t3)">Current ID: <span id="current-uid-display" style="font-family:var(--mono)"></span></div>
-          <button class="save-settings-btn" style="background:var(--s3);color:var(--t1);width:auto;padding:8px 14px;font-size:11px" onclick="copyCurrentUserId()">📋 Copy current ID</button>
-        </div>
-      </div>
-
-    </div><!-- /page-settings -->
+    </div>
 
   </div><!-- /content -->
 
@@ -576,6 +483,30 @@
 
 <div class="flash" id="flash"></div>
 
+<!-- Transfer modal -->
+<div class="modal-overlay" id="transfer-modal" onclick="closeTransferModal(event)">
+  <div class="modal">
+    <div class="modal-title">Transfer Money <span class="modal-close" onclick="closeTransferModal()">×</span></div>
+    <div class="frow">
+      <div class="flabel">From</div>
+      <div class="ttog" style="margin-bottom:0">
+        <button class="tbtn ac" id="tf-from-cash" onclick="setTransferFrom('cash')">💵 Cash</button>
+        <button class="tbtn" id="tf-from-visa" onclick="setTransferFrom('visa')">💳 Visa</button>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="flabel">To</div>
+      <div class="ttog" style="margin-bottom:0">
+        <button class="tbtn" id="tf-to-cash" onclick="setTransferTo('cash')">💵 Cash</button>
+        <button class="tbtn ad" id="tf-to-visa" onclick="setTransferTo('visa')">💳 Visa</button>
+      </div>
+    </div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="tf-amount" placeholder="0" inputmode="numeric"></div>
+    <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="tf-date"></div>
+    <button class="modal-save-btn" style="background:var(--blue)" onclick="saveTransfer()">Transfer</button>
+  </div>
+</div>
+
 <!-- SF balance modal -->
 <div class="modal-overlay" id="sf-bal-modal" onclick="closeSfBalModal(event)">
   <div class="modal">
@@ -584,14 +515,8 @@
       <button class="tbtn" id="sfm-tab-contrib" onclick="sfModalTab('contribution')">📥 Contribution</button>
       <button class="tbtn" id="sfm-tab-with" onclick="sfModalTab('withdrawal')">📤 Withdrawal</button>
     </div>
-    <div class="frow">
-      <div class="flabel" id="sfm-note-label">Note (optional)</div>
-      <input class="finput" type="text" id="sfm-name" dir="auto" placeholder="e.g. Paycheck top-up…">
-    </div>
-    <div class="frow">
-      <div class="flabel">Amount (EGP)</div>
-      <input class="finput" type="number" id="sfm-amount" inputmode="numeric" placeholder="0">
-    </div>
+    <div class="frow"><div class="flabel" id="sfm-note-label">Note (optional)</div><input class="finput" type="text" id="sfm-name" dir="auto" placeholder="e.g. Paycheck top-up…"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="sfm-amount" inputmode="numeric" placeholder="0"></div>
     <button class="modal-save-btn" id="sfm-save-btn" onclick="saveSfBalEntry()">Add contribution</button>
   </div>
 </div>
@@ -600,18 +525,9 @@
 <div class="modal-overlay" id="sf-edit-modal" onclick="closeSfEditModal(event)">
   <div class="modal">
     <div class="modal-title" id="sf-edit-title">Edit transaction <span class="modal-close" onclick="closeSfEditModal()">×</span></div>
-    <div class="frow">
-      <div class="flabel">Name / note</div>
-      <input class="finput" type="text" id="sf-edit-name" dir="auto">
-    </div>
-    <div class="frow">
-      <div class="flabel">Amount (EGP)</div>
-      <input class="finput" type="number" id="sf-edit-amount" inputmode="numeric">
-    </div>
-    <div class="frow">
-      <div class="flabel">Date</div>
-      <input class="finput" type="date" id="sf-edit-date">
-    </div>
+    <div class="frow"><div class="flabel">Name / note</div><input class="finput" type="text" id="sf-edit-name" dir="auto"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="sf-edit-amount" inputmode="numeric"></div>
+    <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="sf-edit-date"></div>
     <button class="modal-save-btn" onclick="saveSfEdit()">Save changes</button>
     <button class="modal-del-btn" onclick="deleteSfEntry()">Delete transaction</button>
   </div>
@@ -625,18 +541,15 @@
       <button class="tbtn ac" id="inc-tab-cash" onclick="incTab('cash')">💵 Cash</button>
       <button class="tbtn" id="inc-tab-visa" onclick="incTab('visa')">💳 Visa / Digital</button>
     </div>
-    <div class="frow">
-      <div class="flabel">Source</div>
-      <input class="finput" type="text" id="inc-name" dir="auto" placeholder="e.g. Salary, Freelance, Gift…">
+    <div class="frow"><div class="flabel">Source</div><input class="finput" type="text" id="inc-name" dir="auto" placeholder="e.g. Salary, Freelance, Gift…"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="inc-amount" inputmode="numeric" placeholder="0"></div>
+    <div class="frow" style="display:flex;align-items:center;gap:8px">
+      <input type="checkbox" id="inc-sf-save" style="width:auto;accent-color:var(--purple)">
+      <label for="inc-sf-save" style="color:var(--t2);font-size:13px">Save % to sinking fund</label>
+      <input class="finput" type="number" id="inc-sf-pct" value="10" min="0" max="100" style="width:60px;text-align:center" inputmode="numeric">
+      <span style="color:var(--t3);font-size:12px">%</span>
     </div>
-    <div class="frow">
-      <div class="flabel">Amount (EGP)</div>
-      <input class="finput" type="number" id="inc-amount" inputmode="numeric" placeholder="0">
-    </div>
-    <div class="frow">
-      <div class="flabel">Date (optional)</div>
-      <input class="finput" type="date" id="inc-date">
-    </div>
+    <div class="frow"><div class="flabel">Date (optional)</div><input class="finput" type="date" id="inc-date"></div>
     <button class="modal-save-btn" style="background:var(--green)" onclick="saveIncome()">Add Income</button>
   </div>
 </div>
@@ -645,18 +558,9 @@
 <div class="modal-overlay" id="income-edit-modal" onclick="closeIncomeEditModal(event)">
   <div class="modal">
     <div class="modal-title">Edit Income <span class="modal-close" onclick="closeIncomeEditModal()">×</span></div>
-    <div class="frow">
-      <div class="flabel">Source</div>
-      <input class="finput" type="text" id="inc-edit-name" dir="auto">
-    </div>
-    <div class="frow">
-      <div class="flabel">Amount (EGP)</div>
-      <input class="finput" type="number" id="inc-edit-amount" inputmode="numeric">
-    </div>
-    <div class="frow">
-      <div class="flabel">Date</div>
-      <input class="finput" type="date" id="inc-edit-date">
-    </div>
+    <div class="frow"><div class="flabel">Source</div><input class="finput" type="text" id="inc-edit-name" dir="auto"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="inc-edit-amount" inputmode="numeric"></div>
+    <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="inc-edit-date"></div>
     <button class="modal-save-btn" style="background:var(--green)" onclick="saveIncomeEdit()">Save changes</button>
     <button class="modal-del-btn" onclick="deleteIncome()">Delete</button>
   </div>
@@ -689,12 +593,12 @@ let ALLOC=[
   {emoji:'🏦',label:'Bank',amount:1800},
 ];
 
-let expenses=[],sfLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[];
+let expenses=[],sfLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[];
 let selCat=CATS[0],selType='cash';
-let sfBalModalType='contribution';
-let sfEditingId=null;
-let incModalType='cash';
-let incEditingId=null;
+let sfBalModalType='contribution',sfEditingId=null;
+let incModalType='cash',incEditingId=null;
+// FIX: transfer direction state at global scope
+let tfFrom='cash',tfTo='visa';
 
 // ── Smart Quick-Add ──
 function computeSmartQuickItems(){
@@ -740,6 +644,7 @@ function loadState(){
   ]));}catch(e){wishlist=[];}
   try{goalData=JSON.parse(localStorage.getItem('ms_goal')||'{"saved":0,"monthly":6000}');}catch(e){goalData={saved:0,monthly:6000};}
   try{incomes=JSON.parse(localStorage.getItem('ms_inc')||'[]');}catch(e){incomes=[];}
+  try{transfers=JSON.parse(localStorage.getItem('ms_tf')||'[]');}catch(e){transfers=[];}
   try{const b=JSON.parse(localStorage.getItem('ms_budget')||'null');if(b)Object.assign(BUDGET,b);}catch(e){}
   try{const c=JSON.parse(localStorage.getItem('ms_cats')||'null');if(c&&c.length)CATS=c;}catch(e){}
   try{const a=JSON.parse(localStorage.getItem('ms_alloc')||'null');if(a&&a.length)ALLOC=a;}catch(e){}
@@ -752,6 +657,7 @@ function saveState(){
   localStorage.setItem('ms_wish',JSON.stringify(wishlist));
   localStorage.setItem('ms_goal',JSON.stringify(goalData));
   localStorage.setItem('ms_inc',JSON.stringify(incomes));
+  localStorage.setItem('ms_tf',JSON.stringify(transfers));
   scheduleSync();
 }
 function saveCats(){localStorage.setItem('ms_cats',JSON.stringify(CATS));}
@@ -762,7 +668,10 @@ refreshQuickItems();
 // ═══════════════════════════════════════════════════
 // SUPABASE
 // ═══════════════════════════════════════════════════
-  function supaInit(){
+// FIX: declare vars BEFORE supaInit so they exist at global scope
+let SUPA_URL='',SUPA_KEY='',SUPA_USER_ID='';
+
+function supaInit(){
   SUPA_URL=(localStorage.getItem('ms_supa_url')||'').replace(/\/$/,'');
   SUPA_KEY=localStorage.getItem('ms_supa_key')||'';
   if(!SUPA_URL||!SUPA_KEY){
@@ -772,20 +681,18 @@ refreshQuickItems();
       if(SUPA_KEY)localStorage.setItem('ms_supa_key',SUPA_KEY);
     }catch(e){}}
   }
-
-  // Use custom user ID if set, otherwise fallback to device ID
-  const customId = localStorage.getItem('ms_custom_uid');
-  if (customId && customId.trim()) {
-    SUPA_USER_ID = customId.trim();
+  const customId=localStorage.getItem('ms_custom_uid');
+  if(customId&&customId.trim()){
+    SUPA_USER_ID=customId.trim();
   } else {
-    if(!localStorage.getItem('ms_uid')){
-      localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
-    }
+    if(!localStorage.getItem('ms_uid'))localStorage.setItem('ms_uid','uid_'+Math.random().toString(36).slice(2)+Date.now().toString(36));
     SUPA_USER_ID=localStorage.getItem('ms_uid');
   }
 }
 supaInit();
+
 function supaReady(){return !!(SUPA_URL&&SUPA_KEY);}
+
 function setSyncStatus(state,text){
   const el=document.getElementById('sync-status');
   if(!supaReady()){el.style.display='none';return;}
@@ -793,137 +700,203 @@ function setSyncStatus(state,text){
   el.innerHTML=`<span class="sync-dot ${state}"></span>${text}`;
   el.style.color=state==='ok'?'var(--green)':state==='err'?'var(--red)':state==='spin'?'var(--amber)':'var(--t3)';
 }
+
+// FIX: tables without a date column skip order=date.asc
+const SUPA_NO_DATE_TABLES=['wishlist','app_state','transfers'];
+
 async function supaFetch(table,method,body,matchId){
   if(!supaReady())return null;
   let url=`${SUPA_URL}/rest/v1/${table}`;
-  if(matchId!==undefined)url+=`?id=eq.${matchId}&user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`;
-  else if(method==='GET')url+=`?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}&order=date.asc&limit=5000`;
-  const opts={method,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'resolution=merge-duplicates':''}};
+  if(matchId!==undefined){
+    url+=`?id=eq.${matchId}&user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`;
+  } else if(method==='GET'){
+    const hasDate=!SUPA_NO_DATE_TABLES.includes(table);
+    url+=`?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}${hasDate?'&order=date.asc':''}&limit=5000`;
+  }
+  const opts={
+    method,
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'resolution=merge-duplicates':''}
+  };
   if(body)opts.body=JSON.stringify(body);
-  try{const r=await fetch(url,opts);if(!r.ok){const t=await r.text();throw new Error(r.status+': '+t.slice(0,120));}if(method==='GET')return await r.json();return true;}
-  catch(e){console.error('Supabase',method,table,e.message);setSyncStatus('err','Sync error');return null;}
+  try{
+    const r=await fetch(url,opts);
+    if(!r.ok){const t=await r.text();throw new Error(r.status+': '+t.slice(0,120));}
+    if(method==='GET')return await r.json();
+    return true;
+  }catch(e){console.error('Supabase',method,table,e.message);setSyncStatus('err','Sync error');return null;}
 }
 
-// ── FIX: supaUpsertAppState now includes alloc_json + goal_meta_json ──
-// Requires SQL migration: ALTER TABLE app_state
-//   ADD COLUMN IF NOT EXISTS alloc_json jsonb DEFAULT '[]'::jsonb,
-//   ADD COLUMN IF NOT EXISTS goal_meta_json jsonb DEFAULT '{}'::jsonb;
+// FIX: dedicated app_state fetcher — no date/order column issue
+async function supaFetchAppState(){
+  if(!supaReady())return null;
+  const url=`${SUPA_URL}/rest/v1/app_state?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}&limit=1`;
+  try{
+    const r=await fetch(url,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+    if(!r.ok)throw new Error(r.status+': '+(await r.text()).slice(0,100));
+    return await r.json();
+  }catch(e){console.error('Supabase GET app_state',e.message);return null;}
+}
+
 async function supaUpsertAppState(){
   if(!supaReady())return;
   await supaFetch('app_state','POST',{
     user_id:SUPA_USER_ID,
-    goal_saved:goalData.saved,
-    goal_monthly:goalData.monthly,
-    goal_target:GOAL_TARGET,
-    goal_name:GOAL_NAME,
-    budget_needs:BUDGET.needs,
-    budget_wants:BUDGET.wants,
-    budget_sinking:BUDGET.sinking,
-    cats_json:CATS,
-    alloc_json:ALLOC,
-    quick_items:quickItems,
+    goal_saved:goalData.saved,goal_monthly:goalData.monthly,
+    goal_target:GOAL_TARGET,goal_name:GOAL_NAME,
+    budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,
+    cats_json:CATS,alloc_json:ALLOC,quick_items:quickItems,
     updated_at:new Date().toISOString()
   });
 }
 
-async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});}
+async function supaUpsertExpense(e){
+  if(!supaReady())return;
+  await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});
+}
 async function supaDeleteExpense(id){if(!supaReady())return;await supaFetch('expenses','DELETE',null,id);}
-async function supaUpsertSfLog(e){if(!supaReady())return;await supaFetch('sf_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date});}
+
+async function supaUpsertSfLog(e){
+  if(!supaReady())return;
+  await supaFetch('sf_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date});
+}
 async function supaDeleteSfLog(id){if(!supaReady())return;await supaFetch('sf_log','DELETE',null,id);}
+
 async function supaUpsertWishlist(){
   if(!supaReady())return;
   await fetch(`${SUPA_URL}/rest/v1/wishlist?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{method:'DELETE',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
   if(wishlist.length)await supaFetch('wishlist','POST',wishlist.map(w=>({id:w.id,user_id:SUPA_USER_ID,name:w.name,cost:w.cost||0,done:w.done||false})));
 }
+
 async function supaUpsertIncome(e){
   if(!supaReady())return;
   await supaFetch('incomes','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date});
 }
-async function supaDeleteIncome(id){
+async function supaDeleteIncome(id){if(!supaReady())return;await supaFetch('incomes','DELETE',null,id);}
+
+// FIX: supaUpsertTransfer and supaDeleteTransfer are at GLOBAL scope — not inside supaInit
+async function supaUpsertTransfer(t){
   if(!supaReady())return;
-  await supaFetch('incomes','DELETE',null,id);
+  await supaFetch('transfers','POST',{id:t.id,user_id:SUPA_USER_ID,from_type:t.from,to_type:t.to,amount:t.amount,date:t.date});
 }
+async function supaDeleteTransfer(id){if(!supaReady())return;await supaFetch('transfers','DELETE',null,id);}
+
 async function syncToSupabase(silent=false){
   if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
   setSyncStatus('spin','Syncing…');
   try{
     if(expenses.length)await supaFetch('expenses','POST',expenses.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date})));
-    if(sfLog.length)await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date})));
-    if(incomes.length)await supaFetch('incomes','POST',incomes.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date})));
-    await supaUpsertWishlist();await supaUpsertAppState();
+    if(sfLog.length)   await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,date:e.date})));
+    if(incomes.length) await supaFetch('incomes','POST',incomes.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date})));
+    if(transfers.length)await supaFetch('transfers','POST',transfers.map(t=>({id:t.id,user_id:SUPA_USER_ID,from_type:t.from,to_type:t.to,amount:t.amount,date:t.date})));
+    await supaUpsertWishlist();
+    await supaUpsertAppState();
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Synced '+t);localStorage.setItem('ms_last_sync',new Date().toISOString());
     if(!silent)flash('Pushed to Supabase ✓','var(--green)');
   }catch(e){setSyncStatus('err','Sync failed');if(!silent)flash('Sync failed: '+e.message,'var(--red)');}
 }
 
-// ── FIX: _pulling flag prevents scheduleSync cascade during pull ──
+// FIX: _pulling flag prevents scheduleSync cascade; transfers pulled OUTSIDE app_state block
+let syncTimer=null,_pulling=false;
+function scheduleSync(){
+  if(!supaReady()||_pulling)return;
+  clearTimeout(syncTimer);setSyncStatus('spin','Saving…');
+  syncTimer=setTimeout(()=>syncToSupabase(true),1200);
+}
+
 async function pullFromSupabase(silent=false){
   if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
   _pulling=true;
   setSyncStatus('spin',silent?'Restoring…':'Pulling…');
   try{
-    const[remExp,remSf,remWish,remInc,remState]=await Promise.all([
-      supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('wishlist','GET'),
+    // FIX: use supaFetchAppState() for app_state — avoids order=date.asc crash
+    const [remExp,remSf,remWish,remInc,remState,remTf]=await Promise.all([
+      supaFetch('expenses','GET'),
+      supaFetch('sf_log','GET'),
+      supaFetch('wishlist','GET'),
       supaFetch('incomes','GET'),
-      fetch(`${SUPA_URL}/rest/v1/app_state?user_id=eq.${encodeURIComponent(SUPA_USER_ID)}`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}).then(r=>r.json())
+      supaFetchAppState(),
+      supaFetch('transfers','GET'),  // FIX: fetched outside app_state block
     ]);
-    console.log('Pull result – expenses:', remExp);
-    console.log('Pull result – incomes:', remInc);
-    console.log('Pull result – sfLog:', remSf);
-    if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
-    if(remSf)sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,date:e.date}));
-    if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));
-    if(remInc)incomes=remInc.map(e=>({id:e.id,name:e.name,amount:e.amount,payType:e.pay_type,date:e.date}));
+
+    if(remExp)  expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
+    if(remSf)   sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,date:e.date}));
+    if(remWish) wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));
+    if(remInc)  incomes=remInc.map(e=>({id:e.id,name:e.name,amount:e.amount,payType:e.pay_type,date:e.date}));
+    // FIX: transfers outside app_state block
+    if(remTf)   transfers=remTf.map(t=>({id:t.id,from:t.from_type,to:t.to_type,amount:t.amount,date:t.date}));
+
     if(remState&&remState[0]){
       const s=remState[0];
       goalData={saved:s.goal_saved||0,monthly:s.goal_monthly||6000};
+      GOAL_TARGET=Number(s.goal_target)||608000;
+      GOAL_NAME=s.goal_name||'Marriage & house goal';
       BUDGET.needs=s.budget_needs||3500;BUDGET.wants=s.budget_wants||2000;BUDGET.sinking=s.budget_sinking||3000;
-      // ── FIX: restore ALLOC and goal meta from cloud ──
-      if(s.alloc_json&&s.alloc_json.length)ALLOC=s.alloc_json;
-      if (s.goal_target != null) GOAL_TARGET = Number(s.goal_target) || GOAL_TARGET;
-      if (s.goal_name != null) GOAL_NAME = s.goal_name || GOAL_NAME;
+      if(s.cats_json&&Array.isArray(s.cats_json)&&s.cats_json.length)  CATS=s.cats_json;
+      if(s.alloc_json&&Array.isArray(s.alloc_json)&&s.alloc_json.length) ALLOC=s.alloc_json;
+      if(s.quick_items&&Array.isArray(s.quick_items)) quickItems=s.quick_items;
     }
+
     _pulling=false;
-    saveState();
+    saveState();saveCats();saveAllocs();
     localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
     localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));
     localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
+    localStorage.setItem('ms_quick',JSON.stringify(quickItems));
+
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
     localStorage.setItem('ms_last_sync',new Date().toISOString());
     setSyncStatus('ok','Synced '+t);
     if(!silent)flash('Pulled from Supabase ✓','var(--green)');
+
+    // FIX: re-render active page too, not just home
     renderHome();
-  }catch(e){_pulling=false;setSyncStatus('err','Pull failed');if(!silent)flash('Pull failed: '+e.message,'var(--red)');}
+    const cur=document.querySelector('.page.active')?.id;
+    if(cur==='page-stats')    renderStats();
+    if(cur==='page-sinking')  renderSinking();
+    if(cur==='page-goals')    renderGoals();
+    if(cur==='page-settings') renderSettings();
+
+  }catch(e){
+    _pulling=false;
+    setSyncStatus('err','Pull failed');
+    if(!silent)flash('Pull failed: '+e.message,'var(--red)');
+  }
 }
 
 async function testSupaConnection(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,'');
   const key=(document.getElementById('supa-key').value||'').trim();
   const el=document.getElementById('supa-status');el.style.display='block';el.className='supa-info';el.textContent='Testing…';
-  try{const r=await fetch(`${url}/rest/v1/app_state?limit=1`,{headers:{'apikey':key,'Authorization':'Bearer '+key}});
+  try{
+    const r=await fetch(`${url}/rest/v1/app_state?limit=1`,{headers:{'apikey':key,'Authorization':'Bearer '+key}});
     if(r.ok){el.className='supa-ok';el.textContent='✓ Connected successfully!';}
     else{const t=await r.text();el.className='supa-err';el.textContent='✗ Error '+r.status+': '+t.slice(0,100);}
   }catch(e){el.className='supa-err';el.textContent='✗ Cannot reach URL.';}
 }
+
 function saveSupaConfig(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,'');
   const key=(document.getElementById('supa-key').value||'').trim();
   if(!url||!key){flash('Enter both URL and key','var(--amber)');return;}
-  localStorage.setItem('ms_supa_url',url);
-  localStorage.setItem('ms_supa_key',key);
+  localStorage.setItem('ms_supa_url',url);localStorage.setItem('ms_supa_key',key);
   localStorage.setItem('ms_supa_bk',JSON.stringify({u:url,k:key}));
-  supaInit();
-  flash('Supabase config saved!','var(--green)');setSyncStatus('ok','Ready');document.getElementById('supa-status').style.display='none';
+  supaInit();flash('Supabase config saved!','var(--green)');setSyncStatus('ok','Ready');
+  document.getElementById('supa-status').style.display='none';
 }
 
-// ── FIX: _pulling flag blocks scheduleSync during pullFromSupabase ──
-let syncTimer=null,_pulling=false;
-function scheduleSync(){
-  if(!supaReady()||_pulling)return;
-  clearTimeout(syncTimer);
-  setSyncStatus('spin','Saving…');
-  syncTimer=setTimeout(()=>syncToSupabase(true),1200);
+function saveCustomUserId(){
+  const val=document.getElementById('custom-user-id').value.trim();
+  localStorage.setItem('ms_custom_uid',val||'');
+  supaInit();
+  flash('User ID saved! Now syncing as: '+(SUPA_USER_ID||'(device)'),'var(--green)');
+  renderSettings();
+  if(val)syncToSupabase(true);
+}
+function copyCurrentUserId(){
+  const id=SUPA_USER_ID||'';
+  if(!id)return flash('No user ID','var(--amber)');
+  navigator.clipboard.writeText(id).then(()=>flash('Copied: '+id,'var(--green)')).catch(()=>prompt('Copy this ID:',id));
 }
 
 // ═══════════════════════════════════════════════════
@@ -981,6 +954,43 @@ function setType(t){
 }
 
 // ═══════════════════════════════════════════════════
+// TRANSFER
+// ═══════════════════════════════════════════════════
+function openTransferModal(){
+  tfFrom='cash';tfTo='visa';updateTfUI();
+  document.getElementById('tf-amount').value='';
+  document.getElementById('tf-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('transfer-modal').classList.add('open');
+}
+function closeTransferModal(e){
+  if(e&&e.target!==document.getElementById('transfer-modal'))return;
+  document.getElementById('transfer-modal').classList.remove('open');
+}
+function setTransferFrom(type){
+  tfFrom=type;if(tfTo===type)tfTo=type==='cash'?'visa':'cash';updateTfUI();
+}
+function setTransferTo(type){
+  tfTo=type;if(tfFrom===type)tfFrom=type==='cash'?'visa':'cash';updateTfUI();
+}
+function updateTfUI(){
+  document.getElementById('tf-from-cash').className='tbtn'+(tfFrom==='cash'?' ac':'');
+  document.getElementById('tf-from-visa').className='tbtn'+(tfFrom==='visa'?' ad':'');
+  document.getElementById('tf-to-cash').className='tbtn'+(tfTo==='cash'?' ac':'');
+  document.getElementById('tf-to-visa').className='tbtn'+(tfTo==='visa'?' ad':'');
+}
+function saveTransfer(){
+  const amount=parseFloat(document.getElementById('tf-amount').value);
+  if(!amount||amount<=0){flash('Enter a valid amount');return;}
+  const dateVal=document.getElementById('tf-date').value||new Date().toISOString().slice(0,10);
+  const entry={id:Date.now(),from:tfFrom,to:tfTo,amount,date:new Date(dateVal).toISOString()};
+  transfers.push(entry);
+  saveState();supaUpsertTransfer(entry);
+  flash('Transferred '+fmt(amount)+' EGP from '+tfFrom+' to '+tfTo,'var(--blue)');
+  document.getElementById('transfer-modal').classList.remove('open');
+  renderHome();
+}
+
+// ═══════════════════════════════════════════════════
 // ADD EXPENSE
 // ═══════════════════════════════════════════════════
 function addExpense(){
@@ -993,9 +1003,10 @@ function addExpense(){
     if(wTotal+amount>BUDGET.wants)flash('⚠️ Over Wants budget! '+fmt(wTotal+amount)+' / '+fmt(BUDGET.wants),'var(--amber)');
   }
   const id=Date.now();
-  expenses.push({id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()});
+  const entry={id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()};
+  expenses.push(entry);
   if(selType==='sinking')sfLog.push({id:id+1,name,amount,type:'withdrawal',date:new Date().toISOString()});
-  saveState();refreshQuickItems();
+  saveState();supaUpsertExpense(entry);refreshQuickItems();
   document.getElementById('inp-name').value='';document.getElementById('inp-amount').value='';
   const btn=document.getElementById('sub-btn');const orig=btn.textContent;btn.textContent='✓ Added!';
   setTimeout(()=>btn.textContent=orig,1200);
@@ -1020,27 +1031,43 @@ function renderHome(){
   const sfWith=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='withdrawal';}).reduce((s,e)=>s+e.amount,0);
 
   const monthInc=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});
+  // FIX: cashIn / visaIn MUST come before cashOut/visaOut — they were missing in prior version
   const cashIn=monthInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
   const visaIn=monthInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
   const totalIn=cashIn+visaIn;
 
+  // FIX: cashOut / visaOut definitions (were missing, broke transfer calcs)
   const cashOut=list.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
   const visaOut=list.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+
+  // Transfer effects this month
+  const tfThisMonth=transfers.filter(t=>{const d=new Date(t.date);return d.getMonth()===m&&d.getFullYear()===y;});
+  const cashTfIn =tfThisMonth.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
+  const cashTfOut=tfThisMonth.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
+  const visaTfIn =tfThisMonth.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
+  const visaTfOut=tfThisMonth.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+
+  const netCash=cashIn-cashOut+cashTfIn-cashTfOut;
+  const netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
   const net=totalIn-totalSpent;
 
+  // Header
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hdrVal=document.getElementById('hdr-total');
   hdrVal.textContent=(net>=0?'+':'')+fmt(net);
   hdrVal.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
-  document.getElementById('hdr-cap-lbl').textContent='EGP this month';
 
+  // Balance card
   const balEl=document.getElementById('bal-net');
   balEl.textContent=(net>=0?'+':'')+fmt(net)+' EGP';
   balEl.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');
   document.getElementById('bal-cash-in').textContent=fmt(cashIn);
-  document.getElementById('bal-visa-in').textContent=fmt(visaIn);
   document.getElementById('bal-cash-out').textContent=fmt(cashOut);
+  document.getElementById('bal-visa-in').textContent=fmt(visaIn);
   document.getElementById('bal-visa-out').textContent=fmt(visaOut);
+  // Net per wallet (reflects transfers)
+  document.getElementById('bal-cash-net').textContent=fmt(netCash)+' EGP';
+  document.getElementById('bal-visa-net').textContent=fmt(netVisa)+' EGP';
 
   document.getElementById('s-count').textContent=list.length+monthInc.length;
   document.getElementById('s-income').textContent=fmt(totalIn);
@@ -1056,8 +1083,9 @@ function renderHome(){
     b.textContent=q.cat+' '+q.name+' '+q.amount;
     b.onclick=()=>{
       const id=Date.now();
-      expenses.push({id,name:q.name,amount:q.amount,cat:q.cat,catLabel:q.catLabel,nw:q.nw,type:'cash',date:new Date().toISOString()});
-      saveState();renderHome();flash('Added '+q.name+' '+q.amount+' EGP','var(--green)');
+      const entry={id,name:q.name,amount:q.amount,cat:q.cat,catLabel:q.catLabel,nw:q.nw,type:'cash',date:new Date().toISOString()};
+      expenses.push(entry);saveState();supaUpsertExpense(entry);renderHome();
+      flash('Added '+q.name+' '+q.amount+' EGP','var(--green)');
     };
     qg.appendChild(b);
   });
@@ -1066,15 +1094,15 @@ function renderHome(){
   const allTx=[
     ...list.map(e=>({...e,_kind:'expense'})),
     ...monthInc.map(e=>({...e,_kind:'income'})),
+    ...tfThisMonth.map(t=>({...t,_kind:'transfer'})),
   ].sort((a,b)=>new Date(b.date)-new Date(a.date));
 
   if(!allTx.length){el.innerHTML='<div class="empty">No transactions yet.<br>Tap + to add an expense or income.</div>';return;}
   el.innerHTML='';
   allTx.slice(0,80).forEach(e=>{
     const d=new Date(e.date);
-    const isIncome=e._kind==='income';
     const div=document.createElement('div');div.className='exp-item';
-    if(isIncome){
+    if(e._kind==='income'){
       div.innerHTML=`<div class="exp-em" style="background:var(--green-d);font-size:16px">${e.payType==='visa'?'💳':'💵'}</div>
         <div class="exp-info">
           <div class="exp-name">${e.name}</div>
@@ -1082,6 +1110,14 @@ function renderHome(){
         </div>
         <div class="exp-amt" style="color:var(--green)">+${fmt(e.amount)}</div>
         <div class="exp-del" onclick="openIncomeEdit(${e.id})">✎</div>`;
+    } else if(e._kind==='transfer'){
+      div.innerHTML=`<div class="exp-em" style="background:var(--blue-d);font-size:16px">⇄</div>
+        <div class="exp-info">
+          <div class="exp-name">Transfer: ${e.from} → ${e.to}</div>
+          <div class="exp-meta"><span class="badge" style="background:var(--blue-d);color:var(--blue)">transfer</span> · ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}</div>
+        </div>
+        <div class="exp-amt" style="color:var(--blue)">${fmt(e.amount)}</div>
+        <div class="exp-del" onclick="delTransfer(${e.id})">×</div>`;
     } else {
       div.innerHTML=`<div class="exp-em">${e.cat}</div>
         <div class="exp-info">
@@ -1096,11 +1132,14 @@ function renderHome(){
 }
 
 function delExp(id){supaDeleteExpense(id);expenses=expenses.filter(e=>e.id!==id);saveState();renderHome();}
+function delTransfer(id){supaDeleteTransfer(id);transfers=transfers.filter(t=>t.id!==id);saveState();renderHome();}
+
 document.getElementById('clear-btn').onclick=()=>{
   const{m,y}=nowDate();
   if(confirm('Clear all expenses AND income for '+MONTHS[m]+'?')){
     expenses=expenses.filter(e=>{const d=new Date(e.date);return!(d.getMonth()===m&&d.getFullYear()===y);});
     incomes=incomes.filter(e=>{const d=new Date(e.date);return!(d.getMonth()===m&&d.getFullYear()===y);});
+    transfers=transfers.filter(t=>{const d=new Date(t.date);return!(d.getMonth()===m&&d.getFullYear()===y);});
     saveState();renderHome();
   }
 };
@@ -1115,7 +1154,10 @@ function incTab(t){
 }
 function openIncomeModal(){
   incModalType='cash';incTab('cash');
-  document.getElementById('inc-name').value='';document.getElementById('inc-amount').value='';
+  document.getElementById('inc-name').value='';
+  document.getElementById('inc-amount').value='';
+  document.getElementById('inc-sf-save').checked=false;
+  document.getElementById('inc-sf-pct').value='10';
   document.getElementById('inc-date').value=new Date().toISOString().slice(0,10);
   document.getElementById('income-modal').classList.add('open');
   setTimeout(()=>document.getElementById('inc-name').focus(),200);
@@ -1124,16 +1166,38 @@ function closeIncomeModal(e){
   if(e&&e.target!==document.getElementById('income-modal'))return;
   document.getElementById('income-modal').classList.remove('open');
 }
+// FIX: saveIncome now correctly reads name, amount, dateVal before using them
 function saveIncome(){
   const name=document.getElementById('inc-name').value.trim();
   const amount=parseFloat(document.getElementById('inc-amount').value);
   const dateVal=document.getElementById('inc-date').value;
+
   if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter source and amount');return;}
-  const entry={id:Date.now(),name,amount,payType:incModalType,date:dateVal?new Date(dateVal).toISOString():new Date().toISOString()};
-  incomes.push(entry);saveState();supaUpsertIncome(entry);
+
+  const entry={
+    id:Date.now(),name,amount,
+    payType:incModalType,
+    date:dateVal?new Date(dateVal).toISOString():new Date().toISOString()
+  };
+  incomes.push(entry);
+
+  // Auto-sinking fund contribution
+  const doSave=document.getElementById('inc-sf-save').checked;
+  if(doSave){
+    const pct=parseFloat(document.getElementById('inc-sf-pct').value)||0;
+    const sfAmount=Math.round(amount*pct/100);
+    if(sfAmount>0){
+      const sfEntry={id:Date.now()+1,name:'Auto-save: '+name,amount:sfAmount,type:'contribution',date:entry.date};
+      sfLog.push(sfEntry);supaUpsertSfLog(sfEntry);
+    }
+  }
+
+  saveState();supaUpsertIncome(entry);
   document.getElementById('income-modal').classList.remove('open');
-  flash('Income added: +'+fmt(amount)+' EGP','var(--green)');renderHome();
+  flash('Income added: +'+fmt(amount)+' EGP','var(--green)');
+  renderHome();
 }
+
 function openIncomeEdit(id){
   const entry=incomes.find(e=>e.id===id);if(!entry)return;
   incEditingId=id;
@@ -1228,7 +1292,6 @@ function renderSinking(){
     <div class="exp-em" style="font-size:14px;cursor:pointer" onclick="toggleWish(${w.id})">${w.done?'✅':'⬜'}</div>
     <div class="exp-info"><div class="exp-name" style="${w.done?'text-decoration:line-through':''}">${w.name}</div>
     <div class="exp-meta">${w.cost?fmt(w.cost)+' EGP est.':''}</div></div>
-    <div class="exp-del" style="color:var(--blue);font-size:15px" onclick="openWishEdit(${w.id})">✎</div>
     <div class="exp-del" onclick="delWish(${w.id})">×</div></div>`).join(''):'<div class="empty">No wishlist items</div>';
 
   document.getElementById('sf-list').innerHTML=[...sfLog].reverse().slice(0,30).map(e=>{
@@ -1255,10 +1318,7 @@ function toggleWish(id){
   saveState();supaUpsertWishlist();renderSinking();
 }
 function delWish(id){wishlist=wishlist.filter(x=>x.id!==id);saveState();supaUpsertWishlist();renderSinking();}
-
-document.getElementById('add-wish-btn').onclick=()=>{
-  const el=document.getElementById('wish-add');el.style.display=el.style.display==='none'?'block':'none';
-};
+document.getElementById('add-wish-btn').onclick=()=>{const el=document.getElementById('wish-add');el.style.display=el.style.display==='none'?'block':'none';};
 function addWishItem(){
   const name=document.getElementById('wish-inp').value.trim();
   const cost=parseFloat(document.getElementById('wish-cost').value)||0;
@@ -1297,7 +1357,6 @@ function saveSfBalEntry(){
   flash((sfBalModalType==='contribution'?'Contribution':'Withdrawal')+' added!',sfBalModalType==='contribution'?'var(--green)':'var(--purple)');
   document.getElementById('sf-bal-modal').classList.remove('open');renderSinking();
 }
-
 function openSfEditModal(id){
   const entry=sfLog.find(e=>e.id===id);if(!entry)return;
   sfEditingId=id;
@@ -1357,8 +1416,7 @@ function renderGoals(){
     const pct2=(a.amount/total*100).toFixed(1);
     const colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'];
     const c=colors[i%colors.length];
-    const row=document.createElement('div');
-    row.style.cssText='margin-bottom:10px';
+    const row=document.createElement('div');row.style.cssText='margin-bottom:10px';
     row.innerHTML=`<div class="cbar-row" style="margin-bottom:5px">
       <div class="cbar-label">${a.emoji}</div>
       <div class="cbar-track"><div class="cbar-fill" style="width:${pct2}%;background:${c}"></div></div>
@@ -1373,7 +1431,7 @@ function renderGoals(){
     al.appendChild(row);
   });
 }
-
+function removeAllocRow(i){ALLOC.splice(i,1);saveAllocs();renderGoals();}
 function saveGoal(){
   const name=document.getElementById('goal-name-inp').value.trim()||GOAL_NAME;
   const target=parseFloat(document.getElementById('goal-target-inp').value)||GOAL_TARGET;
@@ -1383,7 +1441,6 @@ function saveGoal(){
   localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
   saveState();supaUpsertAppState();renderGoals();flash('Goal updated!','var(--green)');
 }
-
 function addAllocRow(){
   const emoji=document.getElementById('alloc-new-emoji').value.trim()||'💰';
   const label=document.getElementById('alloc-new-label').value.trim()||'Savings';
@@ -1393,7 +1450,6 @@ function addAllocRow(){
   document.getElementById('alloc-new-emoji').value='';document.getElementById('alloc-new-label').value='';document.getElementById('alloc-new-amount').value='';
   renderGoals();flash('Allocation added!','var(--green)');
 }
-function removeAllocRow(i){ALLOC.splice(i,1);saveAllocs();renderGoals();}
 function saveAlloc(){saveAllocs();supaUpsertAppState();flash('Allocation saved!','var(--green)');renderGoals();}
 
 // ═══════════════════════════════════════════════════
@@ -1405,29 +1461,21 @@ function renderSettings(){
   document.getElementById('set-needs').value=BUDGET.needs;
   document.getElementById('set-wants').value=BUDGET.wants;
   document.getElementById('set-sinking').value=BUDGET.sinking;
-  // Show current user ID
-  const customId = localStorage.getItem('ms_custom_uid')||'';
-  document.getElementById('custom-user-id').value = customId;
-  document.getElementById('current-uid-display').textContent = SUPA_USER_ID || '(device)';
+  const customId=localStorage.getItem('ms_custom_uid')||'';
+  document.getElementById('custom-user-id').value=customId;
+  document.getElementById('current-uid-display').textContent=SUPA_USER_ID||'(device)';
   const g=document.getElementById('cat-edit-grid');g.innerHTML='';
   CATS.forEach((c,i)=>{
-    const div=document.createElement('div');
-    div.className='cbtn';div.style.cursor='default';
+    const div=document.createElement('div');div.className='cbtn';div.style.cursor='default';
     div.innerHTML=`<div class="cat-remove" onclick="removeCat(${i})">×</div>
-      <div class="ce">${c.e}</div>
-      <div class="cl">${c.l}</div>
+      <div class="ce">${c.e}</div><div class="cl">${c.l}</div>
       <div class="cl" style="color:${c.nw==='needs'?'var(--green)':'var(--amber)'}">${c.nw}</div>`;
     g.appendChild(div);
   });
-
   refreshQuickItems();
   const qp=document.getElementById('qa-preview');qp.innerHTML='';
-  quickItems.slice(0,6).forEach(q=>{
-    const b=document.createElement('div');b.className='qbtn';
-    b.textContent=q.cat+' '+q.name+' '+q.amount;qp.appendChild(b);
-  });
+  quickItems.slice(0,6).forEach(q=>{const b=document.createElement('div');b.className='qbtn';b.textContent=q.cat+' '+q.name+' '+q.amount;qp.appendChild(b);});
 }
-
 function saveSettings(){
   const n=parseFloat(document.getElementById('set-needs').value);
   const w=parseFloat(document.getElementById('set-wants').value);
@@ -1437,22 +1485,20 @@ function saveSettings(){
   localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
   supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
 }
-
 function addCategory(){
   const emoji=document.getElementById('new-cat-emoji').value.trim();
   const label=document.getElementById('new-cat-label').value.trim();
   const nw=document.getElementById('new-cat-nw').value;
   if(!emoji||!label){flash('Enter emoji and label');return;}
   if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}
-  CATS.push({e:emoji,l:label,nw});saveCats();
+  CATS.push({e:emoji,l:label,nw});saveCats();supaUpsertAppState();
   document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';
   selCat=CATS[0];buildCatGrid();renderSettings();flash('Category added!','var(--green)');
 }
-
 function removeCat(idx){
   if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}
   if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;
-  CATS.splice(idx,1);saveCats();
+  CATS.splice(idx,1);saveCats();supaUpsertAppState();
   if(!CATS.find(c=>c.e===selCat.e))selCat=CATS[0];
   buildCatGrid();renderSettings();flash('Category removed','var(--red)');
 }
@@ -1461,7 +1507,6 @@ function removeCat(idx){
 // EXPORT
 // ═══════════════════════════════════════════════════
 (function(){const{m,y}=nowDate();document.getElementById('exp-month').value=m;document.getElementById('exp-year').value=y;})();
-
 function exportXLSX(){
   const m=parseInt(document.getElementById('exp-month').value);
   const y=parseInt(document.getElementById('exp-year').value);
@@ -1492,7 +1537,7 @@ function exportCSV(){
   a.download=MONTHS[m]+'_expenses.csv';a.click();
 }
 function backupJSON(){
-  const data={expenses,sfLog,wishlist,goalData,incomes,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};
+  const data={expenses,sfLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
 }
@@ -1504,14 +1549,13 @@ function restoreJSON(ev){
       const d=JSON.parse(e.target.result);
       if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;
       if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;
-      if(d.incomes)incomes=d.incomes;
-      if(d.CATS&&d.CATS.length)CATS=d.CATS;
-      if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;
+      if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;
+      if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;
       if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);
-      if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;
-      if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;
+      if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;
       if(d.quickItems)quickItems=d.quickItems;
-      saveState();saveCats();saveAllocs();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
+      saveState();saveCats();saveAllocs();
+      localStorage.setItem('ms_budget',JSON.stringify(BUDGET));
       localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
       flash('Restored!','var(--green)');renderHome();
     }catch(err){flash('Restore failed: '+err.message);}
@@ -1519,7 +1563,7 @@ function restoreJSON(ev){
 }
 
 // ═══════════════════════════════════════════════════
-// PWA + URL PARAMS
+// PWA
 // ═══════════════════════════════════════════════════
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('ibanner').classList.add('show');});
@@ -1540,7 +1584,7 @@ if(supaReady()){
   const last=localStorage.getItem('ms_last_sync');
   if(expenses.length===0&&incomes.length===0){
     setSyncStatus('spin','Restoring data…');
-    pullFromSupabase(true).then(()=>{setSyncStatus('ok','Restored from cloud');});
+    pullFromSupabase(true).then(()=>setSyncStatus('ok','Restored from cloud'));
   } else if(last){
     const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Last sync '+t);
@@ -1548,26 +1592,6 @@ if(supaReady()){
     setSyncStatus('off','Not synced yet');
   }
 }
-function saveCustomUserId(){
-  const val = document.getElementById('custom-user-id').value.trim();
-  localStorage.setItem('ms_custom_uid', val || '');
-  supaInit(); // re‑read the user ID
-  flash('User ID saved! Syncing now under: '+(SUPA_USER_ID||'(device)'),'var(--green)');
-  renderSettings();
-  // Optionally push current data under new ID
-  if (val) syncToSupabase(true);
-}
-
-function copyCurrentUserId(){
-  const id = SUPA_USER_ID || '';
-  if (!id) return flash('No user ID','var(--amber)');
-  navigator.clipboard.writeText(id).then(()=>{
-    flash('Copied: '+id,'var(--green)');
-  }).catch(()=>{
-    // Fallback: show in an alert if clipboard blocked
-    prompt('Copy this ID:', id);
-  });
-}  
 </script>
 </body>
 </html>

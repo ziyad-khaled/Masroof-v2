@@ -234,7 +234,7 @@
         </div>
         <div class="liquid-note">
           <div class="liquid-dot"></div>
-          <span>Sinking fund: <span id="bal-sf-note" style="color:var(--purple)">0 EGP</span> saved this month &mdash; excluded from liquid balance</span>
+          <span>Sinking fund: <span id="bal-sf-note" style="color:var(--purple)">0 EGP</span> · Savings: <span id="bal-save-note" style="color:var(--blue)">0 EGP</span> saved this month — excluded from liquid balance</span>
         </div>
       </div>
       <div class="card">
@@ -249,9 +249,9 @@
         <div class="quick-grid" id="quick-grid"></div>
       </div>
       <div class="stat-row">
-        <div class="stat"><div class="stat-l">Entries</div><div class="stat-v" id="s-count" style="color:var(--lime)">0</div></div>
-        <div class="stat"><div class="stat-l">Total in</div><div class="stat-v" id="s-income" style="color:var(--green)">0</div></div>
-        <div class="stat"><div class="stat-l">Total out</div><div class="stat-v" id="s-spent">0</div></div>
+        <div class="stat"><div class="stat-l">Available</div><div class="stat-v" id="s-available" style="color:var(--lime)">0</div></div>
+        <div class="stat"><div class="stat-l">Income</div><div class="stat-v" id="s-income" style="color:var(--green)">0</div></div>
+        <div class="stat"><div class="stat-l">Saved</div><div class="stat-v" id="s-saved" style="color:var(--blue)">0</div></div>
       </div>
       <div class="sec-hdr">
         <div class="sec-t">All transactions</div>
@@ -331,9 +331,42 @@
       <div class="exp-list" id="sf-list"></div>
     </div>
 
+    <!-- SAVINGS (new) -->
+    <div class="page" id="page-savings">
+      <div class="card">
+        <div class="sf-center" onclick="openSaveBalModal()">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Total Savings</div>
+          <div class="sf-big" id="save-bal" style="color:var(--blue)">0</div>
+          <div class="sf-sub">EGP accumulated</div>
+          <div class="sf-hint">tap to add contribution or withdrawal</div>
+        </div>
+        <div class="sf-row">
+          <div class="sf-mini" onclick="openSaveBalModal('contribution')">
+            <div class="sf-ml">Total contributed</div>
+            <div class="sf-mv" id="save-contrib" style="color:var(--green)">0</div>
+            <div class="sf-mini-hint">tap to add</div>
+          </div>
+          <div class="sf-mini" onclick="openSaveBalModal('withdrawal')">
+            <div class="sf-ml">Total withdrawn</div>
+            <div class="sf-mv" id="save-with" style="color:var(--red)">0</div>
+            <div class="sf-mini-hint">tap to add</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Holdings allocation</div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.5">Auto‑calculated from contributions. Tap to edit labels.</div>
+        <div id="alloc-chart"></div>
+        <div style="margin-top:12px">
+          <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="editAllocation()">Edit allocation</button>
+        </div>
+      </div>
+      <div class="sec-hdr"><div class="sec-t">Transaction History</div><div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div></div>
+      <div class="exp-list" id="save-list"></div>
+    </div>
+
     <!-- GOALS -->
     <div class="page" id="page-goals">
-      <button class="save-settings-btn" style="background:var(--purple);color:#fff;margin-bottom:12px" onclick="openSfBalModal('contribution')">&#x1F437; Save Money &mdash; add to sinking fund</button>
       <div class="card">
         <div class="goal-center">
           <div class="goal-pct" id="goal-pct">0%</div>
@@ -348,21 +381,8 @@
         <div class="card-title">Goal settings</div>
         <div class="frow"><div class="flabel">Goal name / label</div><input class="finput" type="text" id="goal-name-inp" placeholder="e.g. Marriage &amp; house" dir="auto"></div>
         <div class="frow"><div class="flabel">Target amount (EGP)</div><input class="finput" type="number" id="goal-target-inp" placeholder="608000" inputmode="numeric"></div>
-        <div class="frow"><div class="flabel">Current savings total (EGP)</div><input class="finput" type="number" id="goal-inp" placeholder="e.g. 12000" inputmode="numeric"></div>
         <div class="frow"><div class="flabel">Monthly contribution (EGP)</div><input class="finput" type="number" id="goal-m-inp" inputmode="numeric"></div>
         <button class="sub-btn" style="background:var(--lime)" onclick="saveGoal()">Save goal</button>
-      </div>
-      <div class="card">
-        <div class="card-title">Savings allocation</div>
-        <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.5">Update these amounts after each contribution to reflect where your money is held.</div>
-        <div id="alloc-list"></div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <input class="finput" id="alloc-new-emoji" placeholder="🪙" style="width:52px;flex:none;text-align:center;font-size:20px">
-          <input class="finput" id="alloc-new-label" placeholder="Label e.g. Gold">
-          <input class="finput" id="alloc-new-amount" type="number" placeholder="Amount" inputmode="numeric" style="width:90px;flex:none">
-        </div>
-        <button class="save-settings-btn" style="margin-top:8px" onclick="addAllocRow()">+ Add allocation</button>
-        <button class="save-settings-btn" style="background:var(--s3);color:var(--t1);margin-top:6px" onclick="saveAlloc()">Save allocation</button>
       </div>
     </div>
 
@@ -457,6 +477,7 @@
     <button class="nb" id="nav-add" onclick="goPage('add')"><div class="nb-i">&#xFF0B;</div><div>Add</div></button>
     <button class="nb" id="nav-stats" onclick="goPage('stats')"><div class="nb-i">&#x1F4CA;</div><div>Stats</div></button>
     <button class="nb" id="nav-sinking" onclick="goPage('sinking')"><div class="nb-i">&#x1F437;</div><div>Fund</div></button>
+    <button class="nb" id="nav-savings" onclick="goPage('savings')"><div class="nb-i">&#x1F4C8;</div><div>Save</div></button>
     <button class="nb" id="nav-goals" onclick="goPage('goals')"><div class="nb-i">&#x1F3AF;</div><div>Goals</div></button>
     <button class="nb" id="nav-export" onclick="goPage('export')"><div class="nb-i">&#x1F4E4;</div><div>Export</div></button>
     <button class="nb" id="nav-settings" onclick="goPage('settings')"><div class="nb-i">&#x2699;&#xFE0F;</div><div>Settings</div></button>
@@ -501,6 +522,31 @@
   </div>
 </div>
 
+<!-- Savings balance modal (new) -->
+<div class="modal-overlay" id="save-bal-modal" onclick="closeSaveBalModal(event)">
+  <div class="modal">
+    <div class="modal-title">Savings <span class="modal-close" onclick="closeSaveBalModal()">&#xD7;</span></div>
+    <div class="ttog" style="margin-bottom:14px"><button class="tbtn" id="svm-tab-contrib" onclick="saveModalTab('contribution')">&#x1F4E5; Contribution</button><button class="tbtn" id="svm-tab-with" onclick="saveModalTab('withdrawal')">&#x1F4E4; Withdrawal</button></div>
+    <div class="frow" id="svm-from-row"><div class="flabel">From account</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="svm-from-cash" onclick="saveSetFrom('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="svm-from-visa" onclick="saveSetFrom('visa')">&#x1F4B3; Visa</button></div></div>
+    <div class="frow"><div class="flabel">Allocation label</div><input class="finput" type="text" id="svm-label" placeholder="e.g. Gold, Stocks, Bank…" dir="auto"></div>
+    <div class="frow"><div class="flabel" id="svm-note-label">Note (optional)</div><input class="finput" type="text" id="svm-name" dir="auto" placeholder="e.g. Monthly savings…"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="svm-amount" inputmode="numeric" placeholder="0"></div>
+    <button class="modal-save-btn" id="svm-save-btn" style="background:var(--blue)" onclick="saveSaveBalEntry()">Add contribution</button>
+  </div>
+</div>
+
+<!-- Savings edit modal -->
+<div class="modal-overlay" id="save-edit-modal" onclick="closeSaveEditModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="save-edit-title">Edit Savings <span class="modal-close" onclick="closeSaveEditModal()">&#xD7;</span></div>
+    <div class="frow"><div class="flabel">Name / note</div><input class="finput" type="text" id="save-edit-name" dir="auto"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="save-edit-amount" inputmode="numeric"></div>
+    <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="save-edit-date"></div>
+    <button class="modal-save-btn" style="background:var(--blue)" onclick="saveSaveEdit()">Save changes</button>
+    <button class="modal-del-btn" onclick="deleteSaveEntry()">Delete</button>
+  </div>
+</div>
+
 <!-- Income modal -->
 <div class="modal-overlay" id="income-modal" onclick="closeIncomeModal(event)">
   <div class="modal">
@@ -533,9 +579,7 @@
     <div class="frow"><div class="flabel">Name</div><input class="finput" type="text" id="exp-edit-name" dir="auto"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="exp-edit-amount" inputmode="numeric"></div>
     <div class="frow"><div class="flabel">Category</div><div class="cat-grid" id="exp-edit-cat-grid"></div></div>
-    <div class="frow"><div class="flabel">Type</div>
-      <div class="ttog"><button class="tbtn" id="exp-edit-cash" onclick="expEditSetType('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="exp-edit-digital" onclick="expEditSetType('digital')">&#x1F4F2; Digital</button><button class="tbtn" id="exp-edit-sinking" onclick="expEditSetType('sinking')">&#x1F437; Sinking</button></div>
-    </div>
+    <div class="frow"><div class="flabel">Type</div><div class="ttog"><button class="tbtn" id="exp-edit-cash" onclick="expEditSetType('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="exp-edit-digital" onclick="expEditSetType('digital')">&#x1F4F2; Digital</button><button class="tbtn" id="exp-edit-sinking" onclick="expEditSetType('sinking')">&#x1F437; Sinking</button></div></div>
     <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="exp-edit-date"></div>
     <button class="modal-save-btn" onclick="saveExpEdit()">Save changes</button>
     <button class="modal-del-btn" onclick="deleteExpFromEdit()">Delete expense</button>
@@ -559,9 +603,9 @@ let CATS=[
 let BUDGET={needs:3500,wants:2000,sinking:3000,debt:0};
 let GOAL_TARGET=608000,GOAL_NAME='Marriage & house goal';
 let ALLOC=[{emoji:'🪙',label:'Gold',amount:3000},{emoji:'📈',label:'Stocks',amount:1200},{emoji:'🏦',label:'Bank',amount:1800}];
-let expenses=[],sfLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[];
+let expenses=[],sfLog=[],savingsLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[];
 let selCat=CATS[0],selType='cash',sfBalModalType='contribution',sfEditingId=null,incModalType='cash',incEditingId=null;
-let tfFrom='cash',tfTo='visa',sfFrom='cash';
+let tfFrom='cash',tfTo='visa',sfFrom='cash',saveFrom='cash',saveBalModalType='contribution',saveEditingId=null;
 let expEditingId=null,expEditCat=null,expEditType='cash';
 let statsMonthOffset=0;
 
@@ -583,6 +627,7 @@ function refreshQuickItems(){
 function loadState(){
   try{expenses=JSON.parse(localStorage.getItem('ms_exp')||'[]');}catch(e){expenses=[];}
   try{sfLog=JSON.parse(localStorage.getItem('ms_sf')||'[]');}catch(e){sfLog=[];}
+  try{savingsLog=JSON.parse(localStorage.getItem('ms_save')||'[]');}catch(e){savingsLog=[];}
   try{wishlist=JSON.parse(localStorage.getItem('ms_wish')||JSON.stringify([{id:1,name:'Running shoes',cost:1200,done:false},{id:2,name:'قميص',cost:800,done:false},{id:3,name:'Driving license',cost:2500,done:false}]));}catch(e){wishlist=[];}
   try{goalData=JSON.parse(localStorage.getItem('ms_goal')||'{"saved":0,"monthly":6000}');}catch(e){goalData={saved:0,monthly:6000};}
   try{incomes=JSON.parse(localStorage.getItem('ms_inc')||'[]');}catch(e){incomes=[];}
@@ -595,7 +640,7 @@ function loadState(){
 }
 function saveState(){
   localStorage.setItem('ms_exp',JSON.stringify(expenses));localStorage.setItem('ms_sf',JSON.stringify(sfLog));
-  localStorage.setItem('ms_wish',JSON.stringify(wishlist));localStorage.setItem('ms_goal',JSON.stringify(goalData));
+  localStorage.setItem('ms_save',JSON.stringify(savingsLog));localStorage.setItem('ms_wish',JSON.stringify(wishlist));localStorage.setItem('ms_goal',JSON.stringify(goalData));
   localStorage.setItem('ms_inc',JSON.stringify(incomes));localStorage.setItem('ms_tf',JSON.stringify(transfers));
   scheduleSync();
 }
@@ -619,7 +664,7 @@ function setSyncStatus(state,text){
   el.style.display='block';el.innerHTML='<span class="sync-dot '+state+'"></span>'+text;
   el.style.color=state==='ok'?'var(--green)':state==='err'?'var(--red)':state==='spin'?'var(--amber)':'var(--t3)';
 }
-const SUPA_NO_DATE=['wishlist','app_state','transfers'];
+const SUPA_NO_DATE=['wishlist','app_state','transfers','savings_log'];
 async function supaFetch(table,method,body,matchId){
   if(!supaReady())return null;
   let url=SUPA_URL+'/rest/v1/'+table;
@@ -643,6 +688,8 @@ async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expe
 async function supaDeleteExpense(id){if(!supaReady())return;await supaFetch('expenses','DELETE',null,id);}
 async function supaUpsertSfLog(e){if(!supaReady())return;await supaFetch('sf_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,from_type:e.from||null,date:e.date});}
 async function supaDeleteSfLog(id){if(!supaReady())return;await supaFetch('sf_log','DELETE',null,id);}
+async function supaUpsertSavingsLog(e){if(!supaReady())return;await supaFetch('savings_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,label:e.label||'',from_type:e.from||null,date:e.date});}
+async function supaDeleteSavingsLog(id){if(!supaReady())return;await supaFetch('savings_log','DELETE',null,id);}
 async function supaUpsertWishlist(){
   if(!supaReady())return;
   await fetch(SUPA_URL+'/rest/v1/wishlist?user_id=eq.'+encodeURIComponent(SUPA_USER_ID),{method:'DELETE',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
@@ -658,6 +705,7 @@ async function syncToSupabase(silent=false){
   try{
     if(expenses.length)await supaFetch('expenses','POST',expenses.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date})));
     if(sfLog.length)await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,from_type:e.from||null,date:e.date})));
+    if(savingsLog.length)await supaFetch('savings_log','POST',savingsLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,label:e.label||'',from_type:e.from||null,date:e.date})));
     if(incomes.length)await supaFetch('incomes','POST',incomes.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date})));
     if(transfers.length)await supaFetch('transfers','POST',transfers.map(t=>({id:t.id,user_id:SUPA_USER_ID,from_type:t.from,to_type:t.to,amount:t.amount,date:t.date})));
     await supaUpsertWishlist();await supaUpsertAppState();
@@ -672,9 +720,10 @@ async function pullFromSupabase(silent=false){
   if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
   _pulling=true;setSyncStatus('spin',silent?'Restoring...':'Pulling...');
   try{
-    const [remExp,remSf,remWish,remInc,remState,remTf]=await Promise.all([supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('wishlist','GET'),supaFetch('incomes','GET'),supaFetchAppState(),supaFetch('transfers','GET')]);
+    const [remExp,remSf,remSave,remWish,remInc,remState,remTf]=await Promise.all([supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('savings_log','GET'),supaFetch('wishlist','GET'),supaFetch('incomes','GET'),supaFetchAppState(),supaFetch('transfers','GET')]);
     if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
     if(remSf)sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,from:e.from_type||null,date:e.date}));
+    if(remSave)savingsLog=remSave.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,label:e.label||'',from:e.from_type||null,date:e.date}));
     if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));
     if(remInc)incomes=remInc.map(e=>({id:e.id,name:e.name,amount:e.amount,payType:e.pay_type,date:e.date}));
     if(remTf)transfers=remTf.map(t=>({id:t.id,from:t.from_type,to:t.to_type,amount:t.amount,date:t.date}));
@@ -693,7 +742,7 @@ async function pullFromSupabase(silent=false){
     localStorage.setItem('ms_last_sync',new Date().toISOString());setSyncStatus('ok','Synced '+t);
     if(!silent)flash('Pulled from Supabase ✓','var(--green)');
     renderHome();const cur=document.querySelector('.page.active')?.id;
-    if(cur==='page-stats')renderStats();if(cur==='page-sinking')renderSinking();if(cur==='page-goals')renderGoals();if(cur==='page-settings')renderSettings();
+    if(cur==='page-stats')renderStats();if(cur==='page-sinking')renderSinking();if(cur==='page-savings')renderSavings();if(cur==='page-goals')renderGoals();if(cur==='page-settings')renderSettings();
   }catch(e){_pulling=false;setSyncStatus('err','Pull failed');if(!silent)flash('Pull failed: '+e.message,'var(--red)');}
 }
 async function testSupaConnection(){
@@ -723,7 +772,7 @@ function goPage(p){
   document.querySelectorAll('.nb').forEach(el=>el.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');document.getElementById('nav-'+p).classList.add('active');
   if(p==='home')renderHome();if(p==='stats')renderStats();if(p==='sinking')renderSinking();
-  if(p==='goals')renderGoals();if(p==='settings')renderSettings();
+  if(p==='savings')renderSavings();if(p==='goals')renderGoals();if(p==='settings')renderSettings();
   if(p==='add')setTimeout(()=>document.getElementById('inp-name').focus(),150);
 }
 
@@ -776,30 +825,74 @@ function renderBBar(id,label,emoji,spent,cap,color){
 }
 function renderHome(){
   const{m,y}=nowDate(),list=monthExp(m,y);
+  // Liquid calculations
   const needs=list.filter(e=>e.nw==='needs'&&e.cat!=='💳').reduce((s,e)=>s+e.amount,0);
   const wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
-  const totalSpent=list.filter(e=>e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
-  const sfWith=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='withdrawal';}).reduce((s,e)=>s+e.amount,0);
   const debtPaid=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0);
+  const sfWith=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='withdrawal';}).reduce((s,e)=>s+e.amount,0);
   const sfContribMonth=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';}).reduce((s,e)=>s+e.amount,0);
+  const saveContribMonth=savingsLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';}).reduce((s,e)=>s+e.amount,0);
   const monthInc=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});
   const cashIn=monthInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
   const visaIn=monthInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
   const totalIn=cashIn+visaIn;
   const cashOut=list.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
   const visaOut=list.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+
+  // Transfers
   const tfM=transfers.filter(t=>{const d=new Date(t.date);return d.getMonth()===m&&d.getFullYear()===y;});
   let cashTfIn=tfM.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
   let cashTfOut=tfM.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
   let visaTfIn=tfM.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
   let visaTfOut=tfM.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+
+  // Sinking fund movements
   const sfM=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.from;});
   cashTfOut+=sfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfOut+=sfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   cashTfIn+=sfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=sfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+
+  // Savings movements
+  const saveM=savingsLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.from;});
+  cashTfOut+=saveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+  visaTfOut+=saveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+  cashTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+  visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+
   const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
   const net=netCash+netVisa;
+
+  // Previous month liquid for available stat
+  let prevNet=0;
+  try{
+    const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
+    const prevList=monthExp(prevM,prevY);
+    const prevCashIn=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.payType==='cash';}).reduce((s,e)=>s+e.amount,0);
+    const prevVisaIn=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.payType==='visa';}).reduce((s,e)=>s+e.amount,0);
+    const prevCashOut=prevList.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
+    const prevVisaOut=prevList.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+    const prevTfM=transfers.filter(t=>{const d=new Date(t.date);return d.getMonth()===prevM&&d.getFullYear()===prevY;});
+    let pCashTfIn=prevTfM.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
+    let pCashTfOut=prevTfM.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfIn=prevTfM.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfOut=prevTfM.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+    const prevSfM=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.from;});
+    pCashTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    const prevSaveM=savingsLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.from;});
+    pCashTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    const prevNetCash=prevCashIn-prevCashOut+pCashTfIn-pCashTfOut;
+    const prevNetVisa=prevVisaIn-prevVisaOut+pVisaTfIn-pVisaTfOut;
+    prevNet=prevNetCash+prevNetVisa;
+  }catch(e){prevNet=0;}
+
+  // UI
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');hv.textContent=(net>=0?'+':'')+fmt(net);hv.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
   const bv=document.getElementById('bal-net');bv.textContent=(net>=0?'+':'')+fmt(net)+' EGP';bv.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');
@@ -807,11 +900,16 @@ function renderHome(){
   document.getElementById('bal-visa-in').textContent=fmt(visaIn);document.getElementById('bal-visa-out').textContent=fmt(visaOut);
   document.getElementById('bal-cash-net').textContent=fmt(netCash)+' EGP';document.getElementById('bal-visa-net').textContent=fmt(netVisa)+' EGP';
   document.getElementById('bal-sf-note').textContent=fmt(sfContribMonth)+' EGP';
-  document.getElementById('s-count').textContent=list.length+monthInc.length;document.getElementById('s-income').textContent=fmt(totalIn);document.getElementById('s-spent').textContent=fmt(totalSpent);
+  document.getElementById('bal-save-note').textContent=fmt(saveContribMonth)+' EGP';
+  document.getElementById('s-available').textContent=fmt(prevNet+totalIn);
+  document.getElementById('s-income').textContent=fmt(totalIn);
+  document.getElementById('s-saved').textContent=fmt(sfContribMonth+saveContribMonth);
+
   renderBBar('bb-needs','Needs','🍗',needs,BUDGET.needs,'var(--green)');
   renderBBar('bb-wants','Wants','⚡',wants,BUDGET.wants,'var(--amber)');
   renderBBar('bb-sinking','Sinking','🐷',sfWith,BUDGET.sinking,'var(--purple)');
   renderBBar('bb-debt','Debt payoff','💳',debtPaid,BUDGET.debt,'var(--red)');
+
   const qg=document.getElementById('quick-grid');qg.innerHTML='';
   quickItems.slice(0,6).forEach(q=>{
     const b=document.createElement('button');b.className='qbtn';b.textContent=q.cat+' '+q.name+' '+q.amount;
@@ -974,19 +1072,113 @@ function closeSfEditModal(e){if(e&&e.target!==document.getElementById('sf-edit-m
 function saveSfEdit(){if(!sfEditingId)return;const idx=sfLog.findIndex(e=>e.id===sfEditingId);if(idx<0)return;const name=document.getElementById('sf-edit-name').value.trim(),amount=parseFloat(document.getElementById('sf-edit-amount').value),date=document.getElementById('sf-edit-date').value;if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}sfLog[idx].name=name||sfLog[idx].name;sfLog[idx].amount=amount;if(date)sfLog[idx].date=new Date(date).toISOString();saveState();supaUpsertSfLog(sfLog[idx]);document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction updated!','var(--green)');renderSinking();}
 function deleteSfEntry(){if(!sfEditingId)return;if(!confirm('Delete this transaction?'))return;supaDeleteSfLog(sfEditingId);sfLog=sfLog.filter(e=>e.id!==sfEditingId);saveState();document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction deleted','var(--red)');renderSinking();}
 
+// SAVINGS (new)
+function renderSavings(){
+  const allW=savingsLog.filter(e=>e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
+  const allC=savingsLog.filter(e=>e.type==='contribution').reduce((s,e)=>s+e.amount,0);
+  const bal=Math.max(0,allC-allW);
+  document.getElementById('save-bal').textContent=fmt(bal);
+  document.getElementById('save-contrib').textContent=fmt(allC);
+  document.getElementById('save-with').textContent=fmt(allW);
+
+  // Allocation chart
+  const labelTotals={};
+  savingsLog.forEach(e=>{if(e.label&&e.type==='contribution'){labelTotals[e.label]=(labelTotals[e.label]||0)+e.amount;}});
+  const sorted=Object.entries(labelTotals).sort((a,b)=>b[1]-a[1]);
+  const total=sorted.reduce((s,[,v])=>s+v,0)||1;
+  const colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'];
+  document.getElementById('alloc-chart').innerHTML=sorted.length?sorted.map(([label,amount],i)=>{
+    const pct=(amount/total*100).toFixed(1);
+    return'<div class="cbar-row"><div class="cbar-label" style="font-size:13px;color:var(--t2);width:auto;text-align:right;min-width:60px">'+label+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div><div class="cbar-val">'+fmt(amount)+'</div></div>';
+  }).join(''):'<div class="empty">No savings yet</div>';
+
+  // Transaction history
+  document.getElementById('save-list').innerHTML=[...savingsLog].reverse().slice(0,30).map(e=>{
+    const d=new Date(e.date),isW=e.type==='withdrawal',fromLabel=e.from?' · from '+e.from:'',labelStr=e.label?' · '+e.label:'';
+    return'<div class="exp-item" style="cursor:pointer" onclick="openSaveEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+labelStr+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--green)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';
+  }).join('')||'<div class="empty">No savings yet</div>';
+}
+
+function openSaveBalModal(defaultTab){
+  saveModalTab(defaultTab||'contribution');
+  document.getElementById('svm-name').value='';document.getElementById('svm-amount').value='';
+  document.getElementById('svm-label').value='';document.getElementById('save-bal-modal').classList.add('open');
+}
+function closeSaveBalModal(e){if(e&&e.target!==document.getElementById('save-bal-modal'))return;document.getElementById('save-bal-modal').classList.remove('open');}
+function saveSetFrom(type){saveFrom=type;document.getElementById('svm-from-cash').className='tbtn'+(type==='cash'?' ac':'');document.getElementById('svm-from-visa').className='tbtn'+(type==='visa'?' ad':'');}
+function saveModalTab(t){
+  saveBalModalType=t;
+  document.getElementById('svm-tab-contrib').className='tbtn'+(t==='contribution'?' ac':'');
+  document.getElementById('svm-tab-with').className='tbtn'+(t==='withdrawal'?' as':'');
+  document.getElementById('svm-note-label').textContent=t==='contribution'?'Note (optional)':'Item name';
+  const btn=document.getElementById('svm-save-btn');btn.textContent=t==='contribution'?'Add contribution':'Log withdrawal';
+  btn.style.background=t==='contribution'?'var(--blue)':'var(--red)';
+  document.getElementById('svm-from-row').style.display=t==='contribution'?'block':'none';
+  saveSetFrom('cash');
+}
+function saveSaveBalEntry(){
+  const name=document.getElementById('svm-name').value.trim()||(saveBalModalType==='contribution'?'Contribution':'Withdrawal');
+  const amount=parseFloat(document.getElementById('svm-amount').value);
+  const label=document.getElementById('svm-label').value.trim();
+  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
+  const entry={id:Date.now(),name,amount,type:saveBalModalType,from:saveBalModalType==='contribution'?saveFrom:null,label,date:new Date().toISOString()};
+  savingsLog.push(entry);saveState();supaUpsertSavingsLog(entry);
+  flash((saveBalModalType==='contribution'?'Contribution':'Withdrawal')+' added!',saveBalModalType==='contribution'?'var(--blue)':'var(--red)');
+  document.getElementById('save-bal-modal').classList.remove('open');renderSavings();renderHome();
+}
+function openSaveEditModal(id){
+  const e=savingsLog.find(e=>e.id===id);if(!e)return;
+  saveEditingId=id;
+  document.getElementById('save-edit-name').value=e.name||'';
+  document.getElementById('save-edit-amount').value=e.amount||'';
+  document.getElementById('save-edit-date').value=e.date?e.date.slice(0,10):'';
+  document.getElementById('save-edit-modal').classList.add('open');
+}
+function closeSaveEditModal(e){if(e&&e.target!==document.getElementById('save-edit-modal'))return;document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;}
+function saveSaveEdit(){
+  if(!saveEditingId)return;const idx=savingsLog.findIndex(e=>e.id===saveEditingId);if(idx<0)return;
+  const name=document.getElementById('save-edit-name').value.trim(),amount=parseFloat(document.getElementById('save-edit-amount').value),date=document.getElementById('save-edit-date').value;
+  if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
+  savingsLog[idx].name=name||savingsLog[idx].name;savingsLog[idx].amount=amount;if(date)savingsLog[idx].date=new Date(date).toISOString();
+  saveState();supaUpsertSavingsLog(savingsLog[idx]);
+  document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;flash('Updated!','var(--green)');renderSavings();
+}
+function deleteSaveEntry(){if(!saveEditingId)return;if(!confirm('Delete?'))return;supaDeleteSavingsLog(saveEditingId);savingsLog=savingsLog.filter(e=>e.id!==saveEditingId);saveState();document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;flash('Deleted','var(--red)');renderSavings();}
+
+// Allocation editing (old Goals allocation)
+function editAllocation(){goPage('goals');}
+
 // GOALS
 function renderGoals(){
-  const pct=Math.min(100,(goalData.saved/GOAL_TARGET)*100),rem=Math.max(0,GOAL_TARGET-goalData.saved),months=goalData.monthly>0?Math.ceil(rem/goalData.monthly):0,eta=new Date();eta.setMonth(eta.getMonth()+months);
-  document.getElementById('goal-pct').textContent=pct.toFixed(1)+'%';document.getElementById('goal-fill').style.width=pct.toFixed(1)+'%';
+  const totalSaved=savingsLog.reduce((s,e)=>e.type==='contribution'?s+e.amount:s-e.amount,0);
+  const pct=Math.min(100,(totalSaved/GOAL_TARGET)*100);
+  const rem=Math.max(0,GOAL_TARGET-totalSaved);
+  const months=goalData.monthly>0?Math.ceil(rem/goalData.monthly):0;
+  const eta=new Date();eta.setMonth(eta.getMonth()+months);
+  document.getElementById('goal-pct').textContent=pct.toFixed(1)+'%';
+  document.getElementById('goal-fill').style.width=pct.toFixed(1)+'%';
   document.getElementById('goal-lbl').textContent='toward '+fmt(GOAL_TARGET)+' EGP — '+GOAL_NAME;
-  document.getElementById('goal-saved-lbl').textContent=fmt(goalData.saved)+' EGP';document.getElementById('goal-rem').textContent=fmt(rem)+' EGP';
+  document.getElementById('goal-saved-lbl').textContent=fmt(totalSaved)+' EGP';
+  document.getElementById('goal-rem').textContent=fmt(rem)+' EGP';
   document.getElementById('goal-eta').textContent=months>0?MONTHS[eta.getMonth()]+' '+eta.getFullYear()+' (~'+months+' months)':'🎉 Reached!';
-  document.getElementById('goal-name-inp').value=GOAL_NAME;document.getElementById('goal-target-inp').value=GOAL_TARGET;document.getElementById('goal-inp').value=goalData.saved||'';document.getElementById('goal-m-inp').value=goalData.monthly||6000;
-  const al=document.getElementById('alloc-list');al.innerHTML='';const total=ALLOC.reduce((s,a)=>s+a.amount,0)||1;
+  document.getElementById('goal-name-inp').value=GOAL_NAME;
+  document.getElementById('goal-target-inp').value=GOAL_TARGET;
+  document.getElementById('goal-m-inp').value=goalData.monthly||6000;
+
+  // Keep allocation editable
+  const al=document.getElementById('alloc-list');al.innerHTML='';
+  const total=ALLOC.reduce((s,a)=>s+a.amount,0)||1;
   ALLOC.forEach((a,i)=>{const pct2=(a.amount/total*100).toFixed(1),colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'],c=colors[i%colors.length],row=document.createElement('div');row.style.cssText='margin-bottom:10px';row.innerHTML='<div class="cbar-row" style="margin-bottom:5px"><div class="cbar-label">'+a.emoji+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct2+'%;background:'+c+'"></div></div><div class="cbar-val">'+fmt(a.amount)+'</div><div class="exp-del" onclick="removeAllocRow('+i+')" style="margin-left:4px">×</div></div><div style="display:flex;gap:6px;align-items:center"><input value="'+a.emoji+'" oninput="ALLOC['+i+'].emoji=this.value;renderGoals()" style="width:44px;flex:none;text-align:center;font-size:18px;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:6px;color:var(--t1);outline:none"><input value="'+a.label+'" oninput="ALLOC['+i+'].label=this.value" placeholder="Label" style="flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--t1);outline:none"><input type="number" value="'+a.amount+'" oninput="ALLOC['+i+'].amount=parseFloat(this.value)||0;renderGoals()" inputmode="numeric" style="width:88px;flex:none;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);outline:none;text-align:right"></div>';al.appendChild(row);});
 }
 function removeAllocRow(i){ALLOC.splice(i,1);saveAllocs();renderGoals();}
-function saveGoal(){const name=document.getElementById('goal-name-inp').value.trim()||GOAL_NAME,target=parseFloat(document.getElementById('goal-target-inp').value)||GOAL_TARGET,saved=parseFloat(document.getElementById('goal-inp').value)||0,monthly=parseFloat(document.getElementById('goal-m-inp').value)||6000;GOAL_NAME=name;GOAL_TARGET=target;goalData={saved,monthly};localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));saveState();supaUpsertAppState();renderGoals();flash('Goal updated!','var(--green)');}
+function saveGoal(){
+  const name=document.getElementById('goal-name-inp').value.trim()||GOAL_NAME;
+  const target=parseFloat(document.getElementById('goal-target-inp').value)||GOAL_TARGET;
+  const monthly=parseFloat(document.getElementById('goal-m-inp').value)||6000;
+  GOAL_NAME=name;GOAL_TARGET=target;goalData.monthly=monthly;
+  localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
+  saveState();supaUpsertAppState();renderGoals();flash('Goal updated!','var(--green)');
+}
 function addAllocRow(){const emoji=document.getElementById('alloc-new-emoji').value.trim()||'💰',label=document.getElementById('alloc-new-label').value.trim()||'Savings',amount=parseFloat(document.getElementById('alloc-new-amount').value)||0;if(!amount){flash('Enter an amount');return;}ALLOC.push({emoji,label,amount});saveAllocs();document.getElementById('alloc-new-emoji').value='';document.getElementById('alloc-new-label').value='';document.getElementById('alloc-new-amount').value='';renderGoals();flash('Allocation added!','var(--green)');}
 function saveAlloc(){saveAllocs();supaUpsertAppState();flash('Allocation saved!','var(--green)');renderGoals();}
 
@@ -1012,8 +1204,8 @@ function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','v
 (function(){const{m,y}=nowDate();document.getElementById('exp-month').value=m;document.getElementById('exp-year').value=y;})();
 function exportXLSX(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses for '+MONTHS[m]+' '+y);return;}const rows=[['main','cost','name','category','type','needs_wants','date']];list.forEach(e=>rows.push([e.amount+' '+e.name+' '+e.cat,e.amount,e.name,e.cat,e.type,e.nw||'',e.date.slice(0,10)]));const catT={};CATS.forEach(c=>{catT[c.e]={label:c.l,total:0};});list.forEach(e=>{if(catT[e.cat])catT[e.cat].total+=e.amount;});const catE=Object.entries(catT).filter(([,v])=>v.total>0),grand=list.reduce((s,e)=>s+e.amount,0),needsT=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0),wantsT=list.filter(e=>e.nw==='wants').reduce((s,e)=>s+e.amount,0),debtT=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0),ws=XLSX.utils.aoa_to_sheet(rows);catE.forEach(([em,{label,total}],i)=>{const r=i+2;ws['I'+r]={v:label};ws['J'+r]={v:em};ws['K'+r]={v:total};});ws['I'+(catE.length+3)]={v:'Grand Total'};ws['K'+(catE.length+3)]={v:grand};ws['I'+(catE.length+5)]={v:'Needs'};ws['K'+(catE.length+5)]={v:needsT};ws['I'+(catE.length+6)]={v:'Wants'};ws['K'+(catE.length+6)]={v:wantsT};ws['I'+(catE.length+7)]={v:'Debt'};ws['K'+(catE.length+7)]={v:debtT};ws['!cols']=[{wch:30},{wch:8},{wch:20},{wch:8},{wch:8},{wch:10},{wch:12},{wch:2},{wch:14},{wch:6},{wch:10}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'table');XLSX.writeFile(wb,MONTHS[m]+'_expenses.xlsx');}
 function exportCSV(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses found');return;}const csv='date,name,amount,category,type,needs_wants\n'+list.map(e=>e.date.slice(0,10)+','+JSON.stringify(e.name)+','+e.amount+','+e.catLabel+','+e.type+','+(e.nw||'')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=MONTHS[m]+'_expenses.csv';a.click();}
-function backupJSON(){const data={expenses,sfLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
-function restoreJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;if(d.quickItems)quickItems=d.quickItems;saveState();saveCats();saveAllocs();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));flash('Restored!','var(--green)');renderHome();}catch(err){flash('Restore failed: '+err.message);}};r.readAsText(file);}
+function backupJSON(){const data={expenses,sfLog,savingsLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
+function restoreJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;if(d.savingsLog)savingsLog=d.savingsLog;if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;if(d.quickItems)quickItems=d.quickItems;saveState();saveCats();saveAllocs();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));flash('Restored!','var(--green)');renderHome();}catch(err){flash('Restore failed: '+err.message);}};r.readAsText(file);}
 
 // PWA
 let deferredPrompt=null;

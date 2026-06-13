@@ -854,7 +854,7 @@ function renderHome(){
   cashTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
-  const net=netCash+netVisa;
+  const net = netCash + netVisa + prevNet;
 
   // Previous month liquid (all months up to prev)
   let prevNet=0;

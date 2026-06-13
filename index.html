@@ -23,8 +23,8 @@
       --green:#4fd88a;--green-d:rgba(79,216,138,0.13);
       --purple:#b87fff;--purple-d:rgba(184,127,255,0.13);
       --r:12px;--rs:8px;
-      --font:'IBM Plex Sans Arabic',system-ui,sans-serif;
-      --mono:'IBM Plex Mono',monospace;
+      --font:\'IBM Plex Sans Arabic\',system-ui,sans-serif;
+      --mono:\'IBM Plex Mono\',monospace;
       --sbot:env(safe-area-inset-bottom,0px);--stop:env(safe-area-inset-top,0px);
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -205,10 +205,7 @@
   <div id="content">
     <!-- HOME -->
     <div class="page active" id="page-home">
-      <div class="ibanner" id="ibanner">
-        <div class="ibanner-text">Install app on home screen</div>
-        <button class="ibanner-btn" id="ibtn">Install</button>
-      </div>
+      <div class="ibanner" id="ibanner"><div class="ibanner-text">Install app on home screen</div><button class="ibanner-btn" id="ibtn">Install</button></div>
       <div class="balance-card">
         <div class="balance-row">
           <div class="balance-main">
@@ -239,35 +236,25 @@
       </div>
       <div class="card">
         <div class="card-title">Budget Status &mdash; this month</div>
-        <div id="bb-needs"></div>
-        <div id="bb-wants"></div>
-        <div id="bb-sinking"></div>
-        <div id="bb-debt"></div>
+        <div id="bb-needs"></div><div id="bb-wants"></div><div id="bb-sinking"></div><div id="bb-debt"></div>
       </div>
-      <div class="card">
-        <div class="card-title">Quick Add &#9889;</div>
-        <div class="quick-grid" id="quick-grid"></div>
-      </div>
+      <div class="card"><div class="card-title">Quick Add &#9889;</div><div class="quick-grid" id="quick-grid"></div></div>
       <div class="stat-row">
         <div class="stat"><div class="stat-l">Available</div><div class="stat-v" id="s-available" style="color:var(--lime)">0</div></div>
         <div class="stat"><div class="stat-l">Income</div><div class="stat-v" id="s-income" style="color:var(--green)">0</div></div>
         <div class="stat"><div class="stat-l">Saved</div><div class="stat-v" id="s-saved" style="color:var(--blue)">0</div></div>
       </div>
-      <div class="sec-hdr">
-        <div class="sec-t">All transactions</div>
-        <div class="sec-a" id="clear-btn">Clear month</div>
-      </div>
+      <div class="sec-hdr"><div class="sec-t">All transactions</div><div class="sec-a" id="clear-btn">Clear month</div></div>
       <div class="exp-list" id="exp-list"></div>
     </div>
-
     <!-- ADD -->
     <div class="page" id="page-add">
       <div class="fcard">
         <div class="flabel">Type</div>
         <div class="ttog">
-          <button class="tbtn ac" id="tbtn-cash" onclick="setType('cash')">&#x1F4B5; Cash</button>
-          <button class="tbtn" id="tbtn-digital" onclick="setType('digital')">&#x1F4F2; Digital</button>
-          <button class="tbtn" id="tbtn-sinking" onclick="setType('sinking')">&#x1F437; Sinking</button>
+          <button class="tbtn ac" id="tbtn-cash" onclick="setType(\'cash\')">&#x1F4B5; Cash</button>
+          <button class="tbtn" id="tbtn-digital" onclick="setType(\'digital\')">&#x1F4F2; Digital</button>
+          <button class="tbtn" id="tbtn-sinking" onclick="setType(\'sinking\')">&#x1F437; Sinking</button>
         </div>
         <div class="frow"><div class="flabel">Name</div><input class="finput" type="text" id="inp-name" placeholder="e.g. باتيه, metro, فراخ…" dir="auto" autocomplete="off"></div>
         <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="inp-amount" placeholder="0" min="0" step="1" inputmode="numeric"></div>
@@ -275,7 +262,6 @@
         <button class="sub-btn" id="sub-btn" style="background:var(--lime)" onclick="addExpense()">Add Expense</button>
       </div>
     </div>
-
     <!-- STATS -->
     <div class="page" id="page-stats">
       <div class="stats-nav">
@@ -288,7 +274,6 @@
       <div class="card"><div class="card-title" id="cat-chart-title">Category breakdown</div><div id="cat-chart"></div></div>
       <div class="card"><div class="card-title">Daily spending</div><div id="daily-chart"></div></div>
     </div>
-
     <!-- SINKING FUND -->
     <div class="page" id="page-sinking">
       <div class="card">
@@ -299,22 +284,11 @@
           <div class="sf-hint">tap to add contribution or withdrawal</div>
         </div>
         <div class="sf-row">
-          <div class="sf-mini" onclick="openSfBalModal('contribution')">
-            <div class="sf-ml">Total contributed</div>
-            <div class="sf-mv" id="sf-contrib" style="color:var(--green)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
-          <div class="sf-mini" onclick="openSfBalModal('withdrawal')">
-            <div class="sf-ml">Total withdrawn</div>
-            <div class="sf-mv" id="sf-with" style="color:var(--red)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
+          <div class="sf-mini" onclick="openSfBalModal(\'contribution\')"><div class="sf-ml">Total contributed</div><div class="sf-mv" id="sf-contrib" style="color:var(--green)">0</div><div class="sf-mini-hint">tap to add</div></div>
+          <div class="sf-mini" onclick="openSfBalModal(\'withdrawal\')"><div class="sf-ml">Total withdrawn</div><div class="sf-mv" id="sf-with" style="color:var(--red)">0</div><div class="sf-mini-hint">tap to add</div></div>
         </div>
         <div class="bbar">
-          <div class="bbar-row">
-            <div class="bbar-label" style="color:var(--purple)">This month: <span id="sf-target-lbl">3,000</span> target</div>
-            <div class="bbar-val" id="sf-prog-lbl">0 / 3,000</div>
-          </div>
+          <div class="bbar-row"><div class="bbar-label" style="color:var(--purple)">This month: <span id="sf-target-lbl">3,000</span> target</div><div class="bbar-val" id="sf-prog-lbl">0 / 3,000</div></div>
           <div class="bbar-track"><div class="bbar-fill" id="sf-prog-fill" style="background:var(--purple)"></div></div>
         </div>
       </div>
@@ -330,7 +304,6 @@
       <div class="sec-hdr"><div class="sec-t">Transaction History</div><div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div></div>
       <div class="exp-list" id="sf-list"></div>
     </div>
-
     <!-- SAVINGS -->
     <div class="page" id="page-savings">
       <div class="card">
@@ -341,16 +314,8 @@
           <div class="sf-hint">tap to add contribution or withdrawal</div>
         </div>
         <div class="sf-row">
-          <div class="sf-mini" onclick="openSaveBalModal('contribution')">
-            <div class="sf-ml">Total contributed</div>
-            <div class="sf-mv" id="save-contrib" style="color:var(--green)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
-          <div class="sf-mini" onclick="openSaveBalModal('withdrawal')">
-            <div class="sf-ml">Total withdrawn</div>
-            <div class="sf-mv" id="save-with" style="color:var(--red)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
+          <div class="sf-mini" onclick="openSaveBalModal(\'contribution\')"><div class="sf-ml">Total contributed</div><div class="sf-mv" id="save-contrib" style="color:var(--green)">0</div><div class="sf-mini-hint">tap to add</div></div>
+          <div class="sf-mini" onclick="openSaveBalModal(\'withdrawal\')"><div class="sf-ml">Total withdrawn</div><div class="sf-mv" id="save-with" style="color:var(--red)">0</div><div class="sf-mini-hint">tap to add</div></div>
         </div>
       </div>
       <div class="card">
@@ -361,12 +326,9 @@
       <div class="sec-hdr"><div class="sec-t">Transaction History</div><div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div></div>
       <div class="exp-list" id="save-list"></div>
     </div>
-
     <!-- GOALS -->
     <div class="page" id="page-goals">
-      <button class="save-settings-btn" style="background:var(--blue);color:#fff;margin-bottom:12px" onclick="openSaveBalModal('contribution')">
-        &#x1F4C8; Save Money &mdash; add to savings
-      </button>
+      <button class="save-settings-btn" style="background:var(--blue);color:#fff;margin-bottom:12px" onclick="openSaveBalModal(\'contribution\')">&#x1F4C8; Save Money &mdash; add to savings</button>
       <div class="card">
         <div class="goal-center">
           <div class="goal-pct" id="goal-pct">0%</div>
@@ -385,7 +347,6 @@
         <button class="sub-btn" style="background:var(--lime)" onclick="saveGoal()">Save goal</button>
       </div>
     </div>
-
     <!-- EXPORT -->
     <div class="page" id="page-export">
       <div class="tip">
@@ -412,7 +373,6 @@
         <label class="xbtn xbtn-s" style="display:block;text-align:center;padding:13px;cursor:pointer">&#x1F4C2; Restore from backup<input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreJSON(event)"></label>
       </div>
     </div>
-
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="card">
@@ -457,7 +417,7 @@
         <div class="card-title">Categories</div>
         <div id="cat-edit-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px"></div>
         <div style="display:flex;gap:7px;margin-bottom:10px">
-          <input class="finput" id="new-cat-emoji" placeholder="😀" style="width:52px;flex:none;text-align:center;font-size:20px">
+          <input class="finput" id="new-cat-emoji" placeholder="&#x1F600;" style="width:52px;flex:none;text-align:center;font-size:20px">
           <input class="finput" id="new-cat-label" placeholder="Label">
           <select class="finput" id="new-cat-nw" style="width:80px;flex:none;font-size:12px"><option value="wants">Wants</option><option value="needs">Needs</option><option value="debt">Debt</option></select>
         </div>
@@ -467,49 +427,44 @@
         <div class="card-title">Quick Add recommendations</div>
         <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">Ranked by frequency &times; recency (last 6 months).</div>
         <div id="qa-preview" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px"></div>
-        <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="refreshQuickItems();renderSettings();flash('Refreshed!','var(--lime)')">Refresh recommendations</button>
+        <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="refreshQuickItems();renderSettings();flash(\'Refreshed!\',\'var(--lime)\')">Refresh recommendations</button>
       </div>
     </div>
   </div>
-
   <nav id="nav">
-    <button class="nb active" id="nav-home" onclick="goPage('home')"><div class="nb-i">&#x1F3E0;</div><div>Home</div></button>
-    <button class="nb" id="nav-add" onclick="goPage('add')"><div class="nb-i">&#xFF0B;</div><div>Add</div></button>
-    <button class="nb" id="nav-stats" onclick="goPage('stats')"><div class="nb-i">&#x1F4CA;</div><div>Stats</div></button>
-    <button class="nb" id="nav-sinking" onclick="goPage('sinking')"><div class="nb-i">&#x1F437;</div><div>Fund</div></button>
-    <button class="nb" id="nav-savings" onclick="goPage('savings')"><div class="nb-i">&#x1F4C8;</div><div>Save</div></button>
-    <button class="nb" id="nav-goals" onclick="goPage('goals')"><div class="nb-i">&#x1F3AF;</div><div>Goals</div></button>
-    <button class="nb" id="nav-export" onclick="goPage('export')"><div class="nb-i">&#x1F4E4;</div><div>Export</div></button>
-    <button class="nb" id="nav-settings" onclick="goPage('settings')"><div class="nb-i">&#x2699;&#xFE0F;</div><div>Settings</div></button>
+    <button class="nb active" id="nav-home" onclick="goPage(\'home\')"><div class="nb-i">&#x1F3E0;</div><div>Home</div></button>
+    <button class="nb" id="nav-add" onclick="goPage(\'add\')"><div class="nb-i">&#xFF0B;</div><div>Add</div></button>
+    <button class="nb" id="nav-stats" onclick="goPage(\'stats\')"><div class="nb-i">&#x1F4CA;</div><div>Stats</div></button>
+    <button class="nb" id="nav-sinking" onclick="goPage(\'sinking\')"><div class="nb-i">&#x1F437;</div><div>Fund</div></button>
+    <button class="nb" id="nav-savings" onclick="goPage(\'savings\')"><div class="nb-i">&#x1F4C8;</div><div>Save</div></button>
+    <button class="nb" id="nav-goals" onclick="goPage(\'goals\')"><div class="nb-i">&#x1F3AF;</div><div>Goals</div></button>
+    <button class="nb" id="nav-export" onclick="goPage(\'export\')"><div class="nb-i">&#x1F4E4;</div><div>Export</div></button>
+    <button class="nb" id="nav-settings" onclick="goPage(\'settings\')"><div class="nb-i">&#x2699;&#xFE0F;</div><div>Settings</div></button>
   </nav>
 </div>
-
 <div class="flash" id="flash"></div>
-
 <!-- Transfer modal -->
 <div class="modal-overlay" id="transfer-modal" onclick="closeTransferModal(event)">
   <div class="modal">
     <div class="modal-title">Transfer Money <span class="modal-close" onclick="closeTransferModal()">&#xD7;</span></div>
-    <div class="frow"><div class="flabel">From</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="tf-from-cash" onclick="setTransferFrom('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="tf-from-visa" onclick="setTransferFrom('visa')">&#x1F4B3; Visa</button></div></div>
-    <div class="frow"><div class="flabel">To</div><div class="ttog" style="margin-bottom:0"><button class="tbtn" id="tf-to-cash" onclick="setTransferTo('cash')">&#x1F4B5; Cash</button><button class="tbtn ad" id="tf-to-visa" onclick="setTransferTo('visa')">&#x1F4B3; Visa</button></div></div>
+    <div class="frow"><div class="flabel">From</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="tf-from-cash" onclick="setTransferFrom(\'cash\')">&#x1F4B5; Cash</button><button class="tbtn" id="tf-from-visa" onclick="setTransferFrom(\'visa\')">&#x1F4B3; Visa</button></div></div>
+    <div class="frow"><div class="flabel">To</div><div class="ttog" style="margin-bottom:0"><button class="tbtn" id="tf-to-cash" onclick="setTransferTo(\'cash\')">&#x1F4B5; Cash</button><button class="tbtn ad" id="tf-to-visa" onclick="setTransferTo(\'visa\')">&#x1F4B3; Visa</button></div></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="tf-amount" placeholder="0" inputmode="numeric"></div>
     <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="tf-date"></div>
     <button class="modal-save-btn" style="background:var(--blue)" onclick="saveTransfer()">Transfer</button>
   </div>
 </div>
-
 <!-- SF balance modal -->
 <div class="modal-overlay" id="sf-bal-modal" onclick="closeSfBalModal(event)">
   <div class="modal">
     <div class="modal-title">Sinking Fund <span class="modal-close" onclick="closeSfBalModal()">&#xD7;</span></div>
-    <div class="ttog" style="margin-bottom:14px"><button class="tbtn" id="sfm-tab-contrib" onclick="sfModalTab('contribution')">&#x1F4E5; Contribution</button><button class="tbtn" id="sfm-tab-with" onclick="sfModalTab('withdrawal')">&#x1F4E4; Withdrawal</button></div>
-    <div class="frow" id="sfm-from-row"><div class="flabel">From account</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="sfm-from-cash" onclick="sfSetFrom('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="sfm-from-visa" onclick="sfSetFrom('visa')">&#x1F4B3; Visa</button></div></div>
+    <div class="ttog" style="margin-bottom:14px"><button class="tbtn" id="sfm-tab-contrib" onclick="sfModalTab(\'contribution\')">&#x1F4E5; Contribution</button><button class="tbtn" id="sfm-tab-with" onclick="sfModalTab(\'withdrawal\')">&#x1F4E4; Withdrawal</button></div>
+    <div class="frow" id="sfm-from-row"><div class="flabel">From account</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="sfm-from-cash" onclick="sfSetFrom(\'cash\')">&#x1F4B5; Cash</button><button class="tbtn" id="sfm-from-visa" onclick="sfSetFrom(\'visa\')">&#x1F4B3; Visa</button></div></div>
     <div class="frow"><div class="flabel" id="sfm-note-label">Note (optional)</div><input class="finput" type="text" id="sfm-name" dir="auto" placeholder="e.g. Paycheck top-up…"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="sfm-amount" inputmode="numeric" placeholder="0"></div>
     <button class="modal-save-btn" id="sfm-save-btn" onclick="saveSfBalEntry()">Add contribution</button>
   </div>
 </div>
-
 <!-- SF edit modal -->
 <div class="modal-overlay" id="sf-edit-modal" onclick="closeSfEditModal(event)">
   <div class="modal">
@@ -521,24 +476,22 @@
     <button class="modal-del-btn" onclick="deleteSfEntry()">Delete transaction</button>
   </div>
 </div>
-
 <!-- Savings balance modal -->
 <div class="modal-overlay" id="save-bal-modal" onclick="closeSaveBalModal(event)">
   <div class="modal">
     <div class="modal-title">Savings <span class="modal-close" onclick="closeSaveBalModal()">&#xD7;</span></div>
-    <div class="ttog" style="margin-bottom:14px"><button class="tbtn" id="svm-tab-contrib" onclick="saveModalTab('contribution')">&#x1F4E5; Contribution</button><button class="tbtn" id="svm-tab-with" onclick="saveModalTab('withdrawal')">&#x1F4E4; Withdrawal</button></div>
-    <div class="frow" id="svm-from-row"><div class="flabel">From account</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="svm-from-cash" onclick="saveSetFrom('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="svm-from-visa" onclick="saveSetFrom('visa')">&#x1F4B3; Visa</button></div></div>
+    <div class="ttog" style="margin-bottom:14px"><button class="tbtn" id="svm-tab-contrib" onclick="saveModalTab(\'contribution\')">&#x1F4E5; Contribution</button><button class="tbtn" id="svm-tab-with" onclick="saveModalTab(\'withdrawal\')">&#x1F4E4; Withdrawal</button></div>
+    <div class="frow" id="svm-from-row"><div class="flabel">From account</div><div class="ttog" style="margin-bottom:0"><button class="tbtn ac" id="svm-from-cash" onclick="saveSetFrom(\'cash\')">&#x1F4B5; Cash</button><button class="tbtn" id="svm-from-visa" onclick="saveSetFrom(\'visa\')">&#x1F4B3; Visa</button></div></div>
     <div class="frow"><div class="flabel">Allocation label</div><input class="finput" type="text" id="svm-label" placeholder="e.g. Gold, Stocks, Bank…" dir="auto"></div>
     <div class="frow"><div class="flabel" id="svm-note-label">Note (optional)</div><input class="finput" type="text" id="svm-name" dir="auto" placeholder="e.g. Monthly savings…"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="svm-amount" inputmode="numeric" placeholder="0"></div>
     <button class="modal-save-btn" id="svm-save-btn" style="background:var(--blue)" onclick="saveSaveBalEntry()">Add contribution</button>
   </div>
 </div>
-
 <!-- Savings edit modal -->
 <div class="modal-overlay" id="save-edit-modal" onclick="closeSaveEditModal(event)">
   <div class="modal">
-    <div class="modal-title" id="save-edit-title">Edit Savings <span class="modal-close" onclick="closeSaveEditModal()">&#xD7;</span></div>
+    <div class="modal-title">Edit Savings <span class="modal-close" onclick="closeSaveEditModal()">&#xD7;</span></div>
     <div class="frow"><div class="flabel">Name / note</div><input class="finput" type="text" id="save-edit-name" dir="auto"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="save-edit-amount" inputmode="numeric"></div>
     <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="save-edit-date"></div>
@@ -546,12 +499,11 @@
     <button class="modal-del-btn" onclick="deleteSaveEntry()">Delete</button>
   </div>
 </div>
-
 <!-- Income modal -->
 <div class="modal-overlay" id="income-modal" onclick="closeIncomeModal(event)">
   <div class="modal">
     <div class="modal-title">Add Income <span class="modal-close" onclick="closeIncomeModal()">&#xD7;</span></div>
-    <div class="ttog" style="margin-bottom:14px"><button class="tbtn ac" id="inc-tab-cash" onclick="incTab('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="inc-tab-visa" onclick="incTab('visa')">&#x1F4B3; Visa / Digital</button></div>
+    <div class="ttog" style="margin-bottom:14px"><button class="tbtn ac" id="inc-tab-cash" onclick="incTab(\'cash\')">&#x1F4B5; Cash</button><button class="tbtn" id="inc-tab-visa" onclick="incTab(\'visa\')">&#x1F4B3; Visa / Digital</button></div>
     <div class="frow"><div class="flabel">Source</div><input class="finput" type="text" id="inc-name" dir="auto" placeholder="e.g. Salary, Freelance, Gift…"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="inc-amount" inputmode="numeric" placeholder="0"></div>
     <div class="frow" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="inc-sf-save" style="width:auto;accent-color:var(--purple)"><label for="inc-sf-save" style="color:var(--t2);font-size:13px">Save % to sinking fund</label><input class="finput" type="number" id="inc-sf-pct" value="10" min="0" max="100" style="width:60px;text-align:center" inputmode="numeric"><span style="color:var(--t3);font-size:12px">%</span></div>
@@ -559,7 +511,6 @@
     <button class="modal-save-btn" style="background:var(--green)" onclick="saveIncome()">Add Income</button>
   </div>
 </div>
-
 <!-- Income edit modal -->
 <div class="modal-overlay" id="income-edit-modal" onclick="closeIncomeEditModal(event)">
   <div class="modal">
@@ -571,7 +522,6 @@
     <button class="modal-del-btn" onclick="deleteIncome()">Delete</button>
   </div>
 </div>
-
 <!-- Expense edit modal -->
 <div class="modal-overlay" id="exp-edit-modal" onclick="closeExpEditModal(event)">
   <div class="modal">
@@ -579,13 +529,12 @@
     <div class="frow"><div class="flabel">Name</div><input class="finput" type="text" id="exp-edit-name" dir="auto"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="exp-edit-amount" inputmode="numeric"></div>
     <div class="frow"><div class="flabel">Category</div><div class="cat-grid" id="exp-edit-cat-grid"></div></div>
-    <div class="frow"><div class="flabel">Type</div><div class="ttog"><button class="tbtn" id="exp-edit-cash" onclick="expEditSetType('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="exp-edit-digital" onclick="expEditSetType('digital')">&#x1F4F2; Digital</button><button class="tbtn" id="exp-edit-sinking" onclick="expEditSetType('sinking')">&#x1F437; Sinking</button></div></div>
+    <div class="frow"><div class="flabel">Type</div><div class="ttog"><button class="tbtn" id="exp-edit-cash" onclick="expEditSetType(\'cash\')">&#x1F4B5; Cash</button><button class="tbtn" id="exp-edit-digital" onclick="expEditSetType(\'digital\')">&#x1F4F2; Digital</button><button class="tbtn" id="exp-edit-sinking" onclick="expEditSetType(\'sinking\')">&#x1F437; Sinking</button></div></div>
     <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="exp-edit-date"></div>
     <button class="modal-save-btn" onclick="saveExpEdit()">Save changes</button>
     <button class="modal-del-btn" onclick="deleteExpFromEdit()">Delete expense</button>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -786,7 +735,6 @@ function setType(t){
   document.getElementById('tbtn-'+t).className='tbtn '+(t==='cash'?'ac':t==='digital'?'ad':'as');
   const btn=document.getElementById('sub-btn');btn.style.background=t==='cash'?'var(--lime)':t==='digital'?'var(--blue)':'var(--purple)';btn.style.color=t==='sinking'?'#fff':'#0f0f0f';buildCatGrid();
 }
-
 function openTransferModal(){tfFrom='cash';tfTo='visa';updateTfUI();document.getElementById('tf-amount').value='';document.getElementById('tf-date').value=new Date().toISOString().slice(0,10);document.getElementById('transfer-modal').classList.add('open');}
 function closeTransferModal(e){if(e&&e.target!==document.getElementById('transfer-modal'))return;document.getElementById('transfer-modal').classList.remove('open');}
 function setTransferFrom(type){tfFrom=type;if(tfTo===type)tfTo=type==='cash'?'visa':'cash';updateTfUI();}
@@ -802,7 +750,6 @@ function saveTransfer(){
   transfers.push(entry);saveState();supaUpsertTransfer(entry);flash('Transferred '+fmt(amount)+' from '+tfFrom+' to '+tfTo,'var(--blue)');
   document.getElementById('transfer-modal').classList.remove('open');renderHome();
 }
-
 function addExpense(){
   const name=document.getElementById('inp-name').value.trim(),amount=parseFloat(document.getElementById('inp-amount').value);
   if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter a name and amount');return;}
@@ -817,13 +764,11 @@ function addExpense(){
   document.getElementById('inp-name').value='';document.getElementById('inp-amount').value='';
   const btn=document.getElementById('sub-btn'),orig=btn.textContent;btn.textContent='✓ Added!';setTimeout(()=>btn.textContent=orig,1200);goPage('home');
 }
-
 function renderBBar(id,label,emoji,spent,cap,color){
   if(!cap||cap<=0){document.getElementById(id).innerHTML='';return;}
   const pct=Math.min(100,(spent/cap)*100),c=pct>=100?'var(--red)':pct>=80?'var(--amber)':color;
   document.getElementById(id).innerHTML='<div class="bbar"><div class="bbar-row"><div class="bbar-label">'+emoji+' '+label+'</div><div class="bbar-val">'+fmt(spent)+' / '+fmt(cap)+'</div></div><div class="bbar-track"><div class="bbar-fill" style="width:'+pct.toFixed(1)+'%;background:'+c+'"></div></div></div>';
 }
-
 function renderHome(){
   const{m,y}=nowDate(),list=monthExp(m,y);
   const needs=list.filter(e=>e.nw==='needs'&&e.cat!=='💳').reduce((s,e)=>s+e.amount,0);
@@ -855,12 +800,10 @@ function renderHome(){
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
   const net=netCash+netVisa;
-
-  // Previous month liquid (all months up to prev)
+  // Cumulative previous months liquid balance
   let prevNet=0;
   try{
-    const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
-    const endDate=new Date(prevY,prevM+1,0,23,59,59);
+    const endDate=new Date(y,m,0,23,59,59); // last moment of previous month
     const before=arr=>arr.filter(e=>new Date(e.date)<=endDate);
     const incB=before(incomes);
     const pCashIn=incB.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
@@ -884,8 +827,7 @@ function renderHome(){
     pCashTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
     pVisaTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
     prevNet=(pCashIn-pCashOut+pCashTfIn-pCashTfOut)+(pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
-  }catch(e){prevNet=0;}
-
+  }catch(err){prevNet=0;}
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');hv.textContent=(net>=0?'+':'')+fmt(net);hv.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
   const bv=document.getElementById('bal-net');bv.textContent=(net>=0?'+':'')+fmt(net)+' EGP';bv.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');
@@ -897,12 +839,10 @@ function renderHome(){
   document.getElementById('s-available').textContent=fmt(prevNet+totalIn);
   document.getElementById('s-income').textContent=fmt(totalIn);
   document.getElementById('s-saved').textContent=fmt(sfContribMonth+saveContribMonth);
-
   renderBBar('bb-needs','Needs','🍗',needs,BUDGET.needs,'var(--green)');
   renderBBar('bb-wants','Wants','⚡',wants,BUDGET.wants,'var(--amber)');
   renderBBar('bb-sinking','Sinking','🐷',sfWith,BUDGET.sinking,'var(--purple)');
   renderBBar('bb-debt','Debt payoff','💳',debtPaid,BUDGET.debt,'var(--red)');
-
   const qg=document.getElementById('quick-grid');qg.innerHTML='';
   quickItems.slice(0,6).forEach(q=>{
     const b=document.createElement('button');b.className='qbtn';b.textContent=q.cat+' '+q.name+' '+q.amount;
@@ -917,9 +857,9 @@ function renderHome(){
     const d=new Date(e.date),div=document.createElement('div');div.className='exp-item';
     if(e._kind==='income'){
       div.innerHTML='<div class="exp-em" style="background:var(--green-d);font-size:16px">'+(e.payType==='visa'?'💳':'💵')+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta"><span class="badge" style="background:var(--green-d);color:var(--green)">income</span><span class="badge" style="background:var(--green-d);color:var(--green)">'+(e.payType==='visa'?'visa':'cash')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--green)">+'+fmt(e.amount)+'</div><div class="exp-del" onclick="openIncomeEdit('+e.id+')">✎</div>';
-    } else if(e._kind==='transfer'){
+    }else if(e._kind==='transfer'){
       div.innerHTML='<div class="exp-em" style="background:var(--blue-d);font-size:16px">⇄</div><div class="exp-info"><div class="exp-name">Transfer: '+e.from+' → '+e.to+'</div><div class="exp-meta"><span class="badge" style="background:var(--blue-d);color:var(--blue)">transfer</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--blue)">'+fmt(e.amount)+'</div><div class="exp-del" onclick="delTransfer('+e.id+')">×</div>';
-    } else {
+    }else{
       const nwBadge=e.nw==='debt'?'badge-debt':'badge-'+(e.nw||'wants');
       div.innerHTML='<div class="exp-em">'+e.cat+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta">'+(e.catLabel||'')+'<span class="badge badge-'+e.type+'">'+e.type+'</span><span class="badge '+nwBadge+'">'+(e.nw||'wants')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt">-'+fmt(e.amount)+'</div><div class="exp-del" onclick="openExpEditModal('+e.id+')">✎</div>';
     }
@@ -934,7 +874,6 @@ document.getElementById('clear-btn').onclick=()=>{
     transfers=transfers.filter(t=>{const d=new Date(t.date);return!(d.getMonth()===m&&d.getFullYear()===y);});
     saveState();renderHome();}
 };
-
 // EXPENSE EDIT
 function openExpEditModal(id){
   const e=expenses.find(e=>e.id===id);if(!e)return;
@@ -974,7 +913,6 @@ function deleteExpFromEdit(){
   saveState();document.getElementById('exp-edit-modal').classList.remove('open');expEditingId=null;
   flash('Expense deleted','var(--red)');renderHome();
 }
-
 // INCOME
 function incTab(t){incModalType=t;document.getElementById('inc-tab-cash').className='tbtn'+(t==='cash'?' ac':'');document.getElementById('inc-tab-visa').className='tbtn'+(t==='visa'?' ad':'');}
 function openIncomeModal(){incModalType='cash';incTab('cash');document.getElementById('inc-name').value='';document.getElementById('inc-amount').value='';document.getElementById('inc-sf-save').checked=false;document.getElementById('inc-sf-pct').value='10';document.getElementById('inc-date').value=new Date().toISOString().slice(0,10);document.getElementById('income-modal').classList.add('open');setTimeout(()=>document.getElementById('inc-name').focus(),200);}
@@ -1000,7 +938,6 @@ function saveIncomeEdit(){
   saveState();supaUpsertIncome(incomes[idx]);document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income updated!','var(--green)');renderHome();
 }
 function deleteIncome(){if(!incEditingId)return;if(!confirm('Delete this income entry?'))return;supaDeleteIncome(incEditingId);incomes=incomes.filter(e=>e.id!==incEditingId);saveState();document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income deleted','var(--red)');renderHome();}
-
 // STATS with month navigation
 function getStatsMonth(){const d=new Date();d.setMonth(d.getMonth()+statsMonthOffset);return{m:d.getMonth(),y:d.getFullYear()};}
 function statsShift(dir){statsMonthOffset+=dir;renderStats();}
@@ -1020,7 +957,6 @@ function renderStats(){
   const daily={};list.forEach(e=>{const d=new Date(e.date).getDate();daily[d]=(daily[d]||0)+e.amount;});const dkeys=Object.keys(daily).sort((a,b)=>a-b),dmax=Math.max(...Object.values(daily),1);
   document.getElementById('daily-chart').innerHTML=dkeys.length?dkeys.map(d=>'<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t3);font-family:var(--mono)">'+d+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+(daily[d]/dmax*100).toFixed(1)+'%;background:var(--blue)"></div></div><div class="cbar-val">'+fmt(daily[d])+'</div></div>').join(''):'<div class="empty">No data</div>';
 }
-
 // SINKING FUND
 (function seedContrib(){
   const{m,y}=nowDate(),exists=sfLog.some(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';});
@@ -1061,7 +997,6 @@ function openSfEditModal(id){const entry=sfLog.find(e=>e.id===id);if(!entry)retu
 function closeSfEditModal(e){if(e&&e.target!==document.getElementById('sf-edit-modal'))return;document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;}
 function saveSfEdit(){if(!sfEditingId)return;const idx=sfLog.findIndex(e=>e.id===sfEditingId);if(idx<0)return;const name=document.getElementById('sf-edit-name').value.trim(),amount=parseFloat(document.getElementById('sf-edit-amount').value),date=document.getElementById('sf-edit-date').value;if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}sfLog[idx].name=name||sfLog[idx].name;sfLog[idx].amount=amount;if(date)sfLog[idx].date=new Date(date).toISOString();saveState();supaUpsertSfLog(sfLog[idx]);document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction updated!','var(--green)');renderSinking();}
 function deleteSfEntry(){if(!sfEditingId)return;if(!confirm('Delete this transaction?'))return;supaDeleteSfLog(sfEditingId);sfLog=sfLog.filter(e=>e.id!==sfEditingId);saveState();document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction deleted','var(--red)');renderSinking();}
-
 // SAVINGS
 function renderSavings(){
   const allW=savingsLog.filter(e=>e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
@@ -1128,7 +1063,6 @@ function saveSaveEdit(){
   document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;flash('Updated!','var(--green)');renderSavings();
 }
 function deleteSaveEntry(){if(!saveEditingId)return;if(!confirm('Delete?'))return;supaDeleteSavingsLog(saveEditingId);savingsLog=savingsLog.filter(e=>e.id!==saveEditingId);saveState();document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;flash('Deleted','var(--red)');renderSavings();}
-
 // GOALS
 function renderGoals(){
   const totalSaved=savingsLog.reduce((s,e)=>e.type==='contribution'?s+e.amount:s-e.amount,0);
@@ -1152,7 +1086,6 @@ function saveGoal(){
   localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
   saveState();supaUpsertAppState();renderGoals();flash('Goal updated!','var(--green)');
 }
-
 // SETTINGS
 function renderSettings(){
   document.getElementById('supa-url').value=localStorage.getItem('ms_supa_url')||'';document.getElementById('supa-key').value=localStorage.getItem('ms_supa_key')||'';
@@ -1170,14 +1103,12 @@ function saveSettings(){
 }
 function addCategory(){const emoji=document.getElementById('new-cat-emoji').value.trim(),label=document.getElementById('new-cat-label').value.trim(),nw=document.getElementById('new-cat-nw').value;if(!emoji||!label){flash('Enter emoji and label');return;}if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}CATS.push({e:emoji,l:label,nw});saveCats();supaUpsertAppState();document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';selCat=CATS[0];buildCatGrid();renderSettings();flash('Category added!','var(--green)');}
 function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;CATS.splice(idx,1);saveCats();supaUpsertAppState();if(!CATS.find(c=>c.e===selCat.e))selCat=CATS[0];buildCatGrid();renderSettings();flash('Category removed','var(--red)');}
-
 // EXPORT
 (function(){const{m,y}=nowDate();document.getElementById('exp-month').value=m;document.getElementById('exp-year').value=y;})();
 function exportXLSX(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses for '+MONTHS[m]+' '+y);return;}const rows=[['main','cost','name','category','type','needs_wants','date']];list.forEach(e=>rows.push([e.amount+' '+e.name+' '+e.cat,e.amount,e.name,e.cat,e.type,e.nw||'',e.date.slice(0,10)]));const catT={};CATS.forEach(c=>{catT[c.e]={label:c.l,total:0};});list.forEach(e=>{if(catT[e.cat])catT[e.cat].total+=e.amount;});const catE=Object.entries(catT).filter(([,v])=>v.total>0),grand=list.reduce((s,e)=>s+e.amount,0),needsT=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0),wantsT=list.filter(e=>e.nw==='wants').reduce((s,e)=>s+e.amount,0),debtT=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0),ws=XLSX.utils.aoa_to_sheet(rows);catE.forEach(([em,{label,total}],i)=>{const r=i+2;ws['I'+r]={v:label};ws['J'+r]={v:em};ws['K'+r]={v:total};});ws['I'+(catE.length+3)]={v:'Grand Total'};ws['K'+(catE.length+3)]={v:grand};ws['I'+(catE.length+5)]={v:'Needs'};ws['K'+(catE.length+5)]={v:needsT};ws['I'+(catE.length+6)]={v:'Wants'};ws['K'+(catE.length+6)]={v:wantsT};ws['I'+(catE.length+7)]={v:'Debt'};ws['K'+(catE.length+7)]={v:debtT};ws['!cols']=[{wch:30},{wch:8},{wch:20},{wch:8},{wch:8},{wch:10},{wch:12},{wch:2},{wch:14},{wch:6},{wch:10}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'table');XLSX.writeFile(wb,MONTHS[m]+'_expenses.xlsx');}
 function exportCSV(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses found');return;}const csv='date,name,amount,category,type,needs_wants\n'+list.map(e=>e.date.slice(0,10)+','+JSON.stringify(e.name)+','+e.amount+','+e.catLabel+','+e.type+','+(e.nw||'')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=MONTHS[m]+'_expenses.csv';a.click();}
 function backupJSON(){const data={expenses,sfLog,savingsLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
 function restoreJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;if(d.savingsLog)savingsLog=d.savingsLog;if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;if(d.quickItems)quickItems=d.quickItems;saveState();saveCats();saveAllocs();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));flash('Restored!','var(--green)');renderHome();}catch(err){flash('Restore failed: '+err.message);}};r.readAsText(file);}
-
 // PWA
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('ibanner').classList.add('show');});

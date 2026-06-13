@@ -855,36 +855,64 @@ function renderHome(){
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
 
-  // Previous month liquid (all months up to prev)
-  let prevNet=0;
-  try{
-    const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
-    const endDate=new Date(prevY,prevM+1,0,23,59,59);
-    const before=arr=>arr.filter(e=>new Date(e.date)<=endDate);
-    const incB=before(incomes);
-    const pCashIn=incB.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
-    const pVisaIn=incB.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
-    const expB=before(expenses);
-    const pCashOut=expB.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
-    const pVisaOut=expB.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
-    const tfB=before(transfers);
-    let pCashTfIn=tfB.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
-    let pCashTfOut=tfB.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
-    let pVisaTfIn=tfB.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
-    let pVisaTfOut=tfB.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
-    const sfB=before(sfLog).filter(e=>e.from);
-    pCashTfOut+=sfB.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfOut+=sfB.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    pCashTfIn+=sfB.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfIn+=sfB.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    const saveB=before(savingsLog).filter(e=>e.from);
-    pCashTfOut+=saveB.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfOut+=saveB.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    pCashTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    prevNet=(pCashIn-pCashOut+pCashTfIn-pCashTfOut)+(pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
-  }catch(e){prevNet=0;}
-  const net = netCash + netVisa + prevNet;
+  let prevNet = 0;
+try {
+  // Get end of previous month
+  const prevM = m===0 ? 11 : m-1;
+  const prevY = m===0 ? y-1 : y;
+  const endDate = new Date(prevY, prevM+1, 0, 23, 59, 59);
+  const startDate = new Date(prevY, prevM, 1);
+
+  // Only look at previous month's transactions (not all history)
+  const prevInc = incomes.filter(e=>{
+    const d=new Date(e.date);
+    return d>=startDate && d<=endDate;
+  });
+  const prevExp = expenses.filter(e=>{
+    const d=new Date(e.date);
+    return d>=startDate && d<=endDate;
+  });
+  const prevTf = transfers.filter(t=>{
+    const d=new Date(t.date);
+    return d>=startDate && d<=endDate;
+  });
+
+  const pCashIn = prevInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
+  const pVisaIn = prevInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
+  const pCashOut = prevExp.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
+  const pVisaOut = prevExp.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+
+  let pCashTfIn = prevTf.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
+  let pCashTfOut = prevTf.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
+  let pVisaTfIn = prevTf.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
+  let pVisaTfOut = prevTf.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+
+  // Include sinking/savings movements from previous month
+  const prevSfM = sfLog.filter(e=>{
+    const d=new Date(e.date);
+    return d>=startDate && d<=endDate && e.from;
+  });
+  pCashTfOut += prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+  pVisaTfOut += prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+  pCashTfIn  += prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+  pVisaTfIn  += prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+
+  const prevSaveM = savingsLog.filter(e=>{
+    const d=new Date(e.date);
+    return d>=startDate && d<=endDate && e.from;
+  });
+  pCashTfOut += prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+  pVisaTfOut += prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+  pCashTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+  pVisaTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+
+  prevNet = (pCashIn - pCashOut + pCashTfIn - pCashTfOut) +
+            (pVisaIn - pVisaOut + pVisaTfIn - pVisaTfOut);
+
+} catch(e) { prevNet = 0; }
+
+// Now add prevNet to current month
+const net = netCash + netVisa + prevNet;
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');hv.textContent=(net>=0?'+':'')+fmt(net);hv.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
   const bv=document.getElementById('bal-net');bv.textContent=(net>=0?'+':'')+fmt(net)+' EGP';bv.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');

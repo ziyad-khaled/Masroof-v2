@@ -234,7 +234,7 @@
         </div>
         <div class="liquid-note">
           <div class="liquid-dot"></div>
-          <span>Sinking fund: <span id="bal-sf-note" style="color:var(--purple)">0 EGP</span> · Savings: <span id="bal-save-note" style="color:var(--blue)">0 EGP</span> saved this month — excluded from liquid balance</span>
+          <span>Sinking: <span id="bal-sf-note" style="color:var(--purple)">0 EGP</span> &middot; Savings: <span id="bal-save-note" style="color:var(--blue)">0 EGP</span> saved this month &mdash; excluded from liquid</span>
         </div>
       </div>
       <div class="card">
@@ -331,7 +331,7 @@
       <div class="exp-list" id="sf-list"></div>
     </div>
 
-    <!-- SAVINGS (new) -->
+    <!-- SAVINGS -->
     <div class="page" id="page-savings">
       <div class="card">
         <div class="sf-center" onclick="openSaveBalModal()">
@@ -355,11 +355,8 @@
       </div>
       <div class="card">
         <div class="card-title">Holdings allocation</div>
-        <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.5">Auto‑calculated from contributions. Tap to edit labels.</div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.5">Auto-calculated from contributions by label.</div>
         <div id="alloc-chart"></div>
-        <div style="margin-top:12px">
-          <button class="save-settings-btn" style="background:var(--s3);color:var(--t1)" onclick="editAllocation()">Edit allocation</button>
-        </div>
       </div>
       <div class="sec-hdr"><div class="sec-t">Transaction History</div><div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div></div>
       <div class="exp-list" id="save-list"></div>
@@ -367,6 +364,9 @@
 
     <!-- GOALS -->
     <div class="page" id="page-goals">
+      <button class="save-settings-btn" style="background:var(--blue);color:#fff;margin-bottom:12px" onclick="openSaveBalModal('contribution')">
+        &#x1F4C8; Save Money &mdash; add to savings
+      </button>
       <div class="card">
         <div class="goal-center">
           <div class="goal-pct" id="goal-pct">0%</div>
@@ -522,7 +522,7 @@
   </div>
 </div>
 
-<!-- Savings balance modal (new) -->
+<!-- Savings balance modal -->
 <div class="modal-overlay" id="save-bal-modal" onclick="closeSaveBalModal(event)">
   <div class="modal">
     <div class="modal-title">Savings <span class="modal-close" onclick="closeSaveBalModal()">&#xD7;</span></div>
@@ -640,9 +640,9 @@ function loadState(){
 }
 function saveState(){
   localStorage.setItem('ms_exp',JSON.stringify(expenses));localStorage.setItem('ms_sf',JSON.stringify(sfLog));
-  localStorage.setItem('ms_save',JSON.stringify(savingsLog));localStorage.setItem('ms_wish',JSON.stringify(wishlist));localStorage.setItem('ms_goal',JSON.stringify(goalData));
-  localStorage.setItem('ms_inc',JSON.stringify(incomes));localStorage.setItem('ms_tf',JSON.stringify(transfers));
-  scheduleSync();
+  localStorage.setItem('ms_save',JSON.stringify(savingsLog));localStorage.setItem('ms_wish',JSON.stringify(wishlist));
+  localStorage.setItem('ms_goal',JSON.stringify(goalData));localStorage.setItem('ms_inc',JSON.stringify(incomes));
+  localStorage.setItem('ms_tf',JSON.stringify(transfers));scheduleSync();
 }
 function saveCats(){localStorage.setItem('ms_cats',JSON.stringify(CATS));}
 function saveAllocs(){localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));}
@@ -823,9 +823,9 @@ function renderBBar(id,label,emoji,spent,cap,color){
   const pct=Math.min(100,(spent/cap)*100),c=pct>=100?'var(--red)':pct>=80?'var(--amber)':color;
   document.getElementById(id).innerHTML='<div class="bbar"><div class="bbar-row"><div class="bbar-label">'+emoji+' '+label+'</div><div class="bbar-val">'+fmt(spent)+' / '+fmt(cap)+'</div></div><div class="bbar-track"><div class="bbar-fill" style="width:'+pct.toFixed(1)+'%;background:'+c+'"></div></div></div>';
 }
+
 function renderHome(){
   const{m,y}=nowDate(),list=monthExp(m,y);
-  // Liquid calculations
   const needs=list.filter(e=>e.nw==='needs'&&e.cat!=='💳').reduce((s,e)=>s+e.amount,0);
   const wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
   const debtPaid=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0);
@@ -838,61 +838,54 @@ function renderHome(){
   const totalIn=cashIn+visaIn;
   const cashOut=list.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
   const visaOut=list.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
-
-  // Transfers
   const tfM=transfers.filter(t=>{const d=new Date(t.date);return d.getMonth()===m&&d.getFullYear()===y;});
   let cashTfIn=tfM.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
   let cashTfOut=tfM.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
   let visaTfIn=tfM.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
   let visaTfOut=tfM.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
-
-  // Sinking fund movements
   const sfM=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.from;});
   cashTfOut+=sfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfOut+=sfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   cashTfIn+=sfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=sfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-
-  // Savings movements
   const saveM=savingsLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.from;});
   cashTfOut+=saveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfOut+=saveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   cashTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-
   const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
   const net=netCash+netVisa;
 
-  // Previous month liquid for available stat
+  // Previous month liquid (all months up to prev)
   let prevNet=0;
   try{
     const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
-    const prevList=monthExp(prevM,prevY);
-    const prevCashIn=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.payType==='cash';}).reduce((s,e)=>s+e.amount,0);
-    const prevVisaIn=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.payType==='visa';}).reduce((s,e)=>s+e.amount,0);
-    const prevCashOut=prevList.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
-    const prevVisaOut=prevList.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
-    const prevTfM=transfers.filter(t=>{const d=new Date(t.date);return d.getMonth()===prevM&&d.getFullYear()===prevY;});
-    let pCashTfIn=prevTfM.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
-    let pCashTfOut=prevTfM.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
-    let pVisaTfIn=prevTfM.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
-    let pVisaTfOut=prevTfM.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
-    const prevSfM=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.from;});
-    pCashTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    pCashTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    const prevSaveM=savingsLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===prevM&&d.getFullYear()===prevY&&e.from;});
-    pCashTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    pCashTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    const prevNetCash=prevCashIn-prevCashOut+pCashTfIn-pCashTfOut;
-    const prevNetVisa=prevVisaIn-prevVisaOut+pVisaTfIn-pVisaTfOut;
-    prevNet=prevNetCash+prevNetVisa;
+    const endDate=new Date(prevY,prevM+1,0,23,59,59);
+    const before=arr=>arr.filter(e=>new Date(e.date)<=endDate);
+    const incB=before(incomes);
+    const pCashIn=incB.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
+    const pVisaIn=incB.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
+    const expB=before(expenses);
+    const pCashOut=expB.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
+    const pVisaOut=expB.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+    const tfB=before(transfers);
+    let pCashTfIn=tfB.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
+    let pCashTfOut=tfB.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfIn=tfB.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfOut=tfB.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+    const sfB=before(sfLog).filter(e=>e.from);
+    pCashTfOut+=sfB.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut+=sfB.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn+=sfB.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn+=sfB.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    const saveB=before(savingsLog).filter(e=>e.from);
+    pCashTfOut+=saveB.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut+=saveB.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    prevNet=(pCashIn-pCashOut+pCashTfIn-pCashTfOut)+(pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
   }catch(e){prevNet=0;}
 
-  // UI
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');hv.textContent=(net>=0?'+':'')+fmt(net);hv.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
   const bv=document.getElementById('bal-net');bv.textContent=(net>=0?'+':'')+fmt(net)+' EGP';bv.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');
@@ -952,10 +945,7 @@ function openExpEditModal(id){
   expEditUpdateTypeUI();buildExpEditCatGrid();
   document.getElementById('exp-edit-modal').classList.add('open');
 }
-function closeExpEditModal(ev){
-  if(ev&&ev.target!==document.getElementById('exp-edit-modal'))return;
-  document.getElementById('exp-edit-modal').classList.remove('open');expEditingId=null;
-}
+function closeExpEditModal(ev){if(ev&&ev.target!==document.getElementById('exp-edit-modal'))return;document.getElementById('exp-edit-modal').classList.remove('open');expEditingId=null;}
 function expEditSetType(t){expEditType=t;expEditUpdateTypeUI();}
 function expEditUpdateTypeUI(){
   document.getElementById('exp-edit-cash').className='tbtn'+(expEditType==='cash'?' ac':'');
@@ -963,8 +953,8 @@ function expEditUpdateTypeUI(){
   document.getElementById('exp-edit-sinking').className='tbtn'+(expEditType==='sinking'?' as':'');
 }
 function buildExpEditCatGrid(){
-  const g=document.getElementById('exp-edit-cat-grid');g.innerHTML='';const isSink=expEditType==='sinking';
-  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===expEditCat?(isSink?' sels':' sel'):'');b.innerHTML='<div class="ce">'+c.e+'</div><div class="cl">'+c.l+'</div>';b.onclick=()=>{expEditCat=c.e;buildExpEditCatGrid();};g.appendChild(b);});
+  const g=document.getElementById('exp-edit-cat-grid');g.innerHTML='';
+  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===expEditCat?' sel':'');b.innerHTML='<div class="ce">'+c.e+'</div><div class="cl">'+c.l+'</div>';b.onclick=()=>{expEditCat=c.e;buildExpEditCatGrid();};g.appendChild(b);});
 }
 function saveExpEdit(){
   if(!expEditingId)return;const idx=expenses.findIndex(e=>e.id===expEditingId);if(idx<0)return;
@@ -1011,7 +1001,7 @@ function saveIncomeEdit(){
 }
 function deleteIncome(){if(!incEditingId)return;if(!confirm('Delete this income entry?'))return;supaDeleteIncome(incEditingId);incomes=incomes.filter(e=>e.id!==incEditingId);saveState();document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income deleted','var(--red)');renderHome();}
 
-// STATS
+// STATS with month navigation
 function getStatsMonth(){const d=new Date();d.setMonth(d.getMonth()+statsMonthOffset);return{m:d.getMonth(),y:d.getFullYear()};}
 function statsShift(dir){statsMonthOffset+=dir;renderStats();}
 function renderStats(){
@@ -1072,7 +1062,7 @@ function closeSfEditModal(e){if(e&&e.target!==document.getElementById('sf-edit-m
 function saveSfEdit(){if(!sfEditingId)return;const idx=sfLog.findIndex(e=>e.id===sfEditingId);if(idx<0)return;const name=document.getElementById('sf-edit-name').value.trim(),amount=parseFloat(document.getElementById('sf-edit-amount').value),date=document.getElementById('sf-edit-date').value;if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}sfLog[idx].name=name||sfLog[idx].name;sfLog[idx].amount=amount;if(date)sfLog[idx].date=new Date(date).toISOString();saveState();supaUpsertSfLog(sfLog[idx]);document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction updated!','var(--green)');renderSinking();}
 function deleteSfEntry(){if(!sfEditingId)return;if(!confirm('Delete this transaction?'))return;supaDeleteSfLog(sfEditingId);sfLog=sfLog.filter(e=>e.id!==sfEditingId);saveState();document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction deleted','var(--red)');renderSinking();}
 
-// SAVINGS (new)
+// SAVINGS
 function renderSavings(){
   const allW=savingsLog.filter(e=>e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
   const allC=savingsLog.filter(e=>e.type==='contribution').reduce((s,e)=>s+e.amount,0);
@@ -1080,8 +1070,6 @@ function renderSavings(){
   document.getElementById('save-bal').textContent=fmt(bal);
   document.getElementById('save-contrib').textContent=fmt(allC);
   document.getElementById('save-with').textContent=fmt(allW);
-
-  // Allocation chart
   const labelTotals={};
   savingsLog.forEach(e=>{if(e.label&&e.type==='contribution'){labelTotals[e.label]=(labelTotals[e.label]||0)+e.amount;}});
   const sorted=Object.entries(labelTotals).sort((a,b)=>b[1]-a[1]);
@@ -1089,20 +1077,17 @@ function renderSavings(){
   const colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'];
   document.getElementById('alloc-chart').innerHTML=sorted.length?sorted.map(([label,amount],i)=>{
     const pct=(amount/total*100).toFixed(1);
-    return'<div class="cbar-row"><div class="cbar-label" style="font-size:13px;color:var(--t2);width:auto;text-align:right;min-width:60px">'+label+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div><div class="cbar-val">'+fmt(amount)+'</div></div>';
+    return'<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t2);width:auto;text-align:right;min-width:60px">'+label+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div><div class="cbar-val">'+fmt(amount)+'</div></div>';
   }).join(''):'<div class="empty">No savings yet</div>';
-
-  // Transaction history
   document.getElementById('save-list').innerHTML=[...savingsLog].reverse().slice(0,30).map(e=>{
     const d=new Date(e.date),isW=e.type==='withdrawal',fromLabel=e.from?' · from '+e.from:'',labelStr=e.label?' · '+e.label:'';
-    return'<div class="exp-item" style="cursor:pointer" onclick="openSaveEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+labelStr+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--green)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';
+    return'<div class="exp-item" style="cursor:pointer" onclick="openSaveEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+labelStr+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--blue)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';
   }).join('')||'<div class="empty">No savings yet</div>';
 }
-
 function openSaveBalModal(defaultTab){
   saveModalTab(defaultTab||'contribution');
-  document.getElementById('svm-name').value='';document.getElementById('svm-amount').value='';
-  document.getElementById('svm-label').value='';document.getElementById('save-bal-modal').classList.add('open');
+  document.getElementById('svm-name').value='';document.getElementById('svm-amount').value='';document.getElementById('svm-label').value='';
+  document.getElementById('save-bal-modal').classList.add('open');
 }
 function closeSaveBalModal(e){if(e&&e.target!==document.getElementById('save-bal-modal'))return;document.getElementById('save-bal-modal').classList.remove('open');}
 function saveSetFrom(type){saveFrom=type;document.getElementById('svm-from-cash').className='tbtn'+(type==='cash'?' ac':'');document.getElementById('svm-from-visa').className='tbtn'+(type==='visa'?' ad':'');}
@@ -1127,8 +1112,7 @@ function saveSaveBalEntry(){
   document.getElementById('save-bal-modal').classList.remove('open');renderSavings();renderHome();
 }
 function openSaveEditModal(id){
-  const e=savingsLog.find(e=>e.id===id);if(!e)return;
-  saveEditingId=id;
+  const e=savingsLog.find(e=>e.id===id);if(!e)return;saveEditingId=id;
   document.getElementById('save-edit-name').value=e.name||'';
   document.getElementById('save-edit-amount').value=e.amount||'';
   document.getElementById('save-edit-date').value=e.date?e.date.slice(0,10):'';
@@ -1145,16 +1129,11 @@ function saveSaveEdit(){
 }
 function deleteSaveEntry(){if(!saveEditingId)return;if(!confirm('Delete?'))return;supaDeleteSavingsLog(saveEditingId);savingsLog=savingsLog.filter(e=>e.id!==saveEditingId);saveState();document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;flash('Deleted','var(--red)');renderSavings();}
 
-// Allocation editing (old Goals allocation)
-function editAllocation(){goPage('goals');}
-
 // GOALS
 function renderGoals(){
   const totalSaved=savingsLog.reduce((s,e)=>e.type==='contribution'?s+e.amount:s-e.amount,0);
-  const pct=Math.min(100,(totalSaved/GOAL_TARGET)*100);
-  const rem=Math.max(0,GOAL_TARGET-totalSaved);
-  const months=goalData.monthly>0?Math.ceil(rem/goalData.monthly):0;
-  const eta=new Date();eta.setMonth(eta.getMonth()+months);
+  const pct=Math.min(100,(totalSaved/GOAL_TARGET)*100),rem=Math.max(0,GOAL_TARGET-totalSaved);
+  const months=goalData.monthly>0?Math.ceil(rem/goalData.monthly):0,eta=new Date();eta.setMonth(eta.getMonth()+months);
   document.getElementById('goal-pct').textContent=pct.toFixed(1)+'%';
   document.getElementById('goal-fill').style.width=pct.toFixed(1)+'%';
   document.getElementById('goal-lbl').textContent='toward '+fmt(GOAL_TARGET)+' EGP — '+GOAL_NAME;
@@ -1164,13 +1143,7 @@ function renderGoals(){
   document.getElementById('goal-name-inp').value=GOAL_NAME;
   document.getElementById('goal-target-inp').value=GOAL_TARGET;
   document.getElementById('goal-m-inp').value=goalData.monthly||6000;
-
-  // Keep allocation editable
-  const al=document.getElementById('alloc-list');al.innerHTML='';
-  const total=ALLOC.reduce((s,a)=>s+a.amount,0)||1;
-  ALLOC.forEach((a,i)=>{const pct2=(a.amount/total*100).toFixed(1),colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'],c=colors[i%colors.length],row=document.createElement('div');row.style.cssText='margin-bottom:10px';row.innerHTML='<div class="cbar-row" style="margin-bottom:5px"><div class="cbar-label">'+a.emoji+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct2+'%;background:'+c+'"></div></div><div class="cbar-val">'+fmt(a.amount)+'</div><div class="exp-del" onclick="removeAllocRow('+i+')" style="margin-left:4px">×</div></div><div style="display:flex;gap:6px;align-items:center"><input value="'+a.emoji+'" oninput="ALLOC['+i+'].emoji=this.value;renderGoals()" style="width:44px;flex:none;text-align:center;font-size:18px;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:6px;color:var(--t1);outline:none"><input value="'+a.label+'" oninput="ALLOC['+i+'].label=this.value" placeholder="Label" style="flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--t1);outline:none"><input type="number" value="'+a.amount+'" oninput="ALLOC['+i+'].amount=parseFloat(this.value)||0;renderGoals()" inputmode="numeric" style="width:88px;flex:none;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);outline:none;text-align:right"></div>';al.appendChild(row);});
 }
-function removeAllocRow(i){ALLOC.splice(i,1);saveAllocs();renderGoals();}
 function saveGoal(){
   const name=document.getElementById('goal-name-inp').value.trim()||GOAL_NAME;
   const target=parseFloat(document.getElementById('goal-target-inp').value)||GOAL_TARGET;
@@ -1179,8 +1152,6 @@ function saveGoal(){
   localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
   saveState();supaUpsertAppState();renderGoals();flash('Goal updated!','var(--green)');
 }
-function addAllocRow(){const emoji=document.getElementById('alloc-new-emoji').value.trim()||'💰',label=document.getElementById('alloc-new-label').value.trim()||'Savings',amount=parseFloat(document.getElementById('alloc-new-amount').value)||0;if(!amount){flash('Enter an amount');return;}ALLOC.push({emoji,label,amount});saveAllocs();document.getElementById('alloc-new-emoji').value='';document.getElementById('alloc-new-label').value='';document.getElementById('alloc-new-amount').value='';renderGoals();flash('Allocation added!','var(--green)');}
-function saveAlloc(){saveAllocs();supaUpsertAppState();flash('Allocation saved!','var(--green)');renderGoals();}
 
 // SETTINGS
 function renderSettings(){

@@ -854,7 +854,6 @@ function renderHome(){
   cashTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
-  const net = netCash + netVisa + prevNet;
 
   // Previous month liquid (all months up to prev)
   let prevNet=0;
@@ -885,7 +884,7 @@ function renderHome(){
     pVisaTfIn+=saveB.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
     prevNet=(pCashIn-pCashOut+pCashTfIn-pCashTfOut)+(pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
   }catch(e){prevNet=0;}
-
+  const net = netCash + netVisa + prevNet;
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');hv.textContent=(net>=0?'+':'')+fmt(net);hv.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
   const bv=document.getElementById('bal-net');bv.textContent=(net>=0?'+':'')+fmt(net)+' EGP';bv.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');

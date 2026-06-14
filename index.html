@@ -196,9 +196,9 @@
         <div id="sync-status" style="font-size:10px;margin-top:3px;display:none"></div>
       </div>
       <div class="hdr-total">
-        <div class="hdr-tlabel">Liquid balance</div>
+        <div class="hdr-tlabel">Total liquid balance</div>
         <div class="hdr-tval" id="hdr-total" style="color:var(--green)">0</div>
-        <div class="hdr-tcur">EGP this month</div>
+        <div class="hdr-tcur">EGP all time</div>
       </div>
     </div>
   </div>
@@ -212,7 +212,7 @@
       <div class="balance-card">
         <div class="balance-row">
           <div class="balance-main">
-            <div class="balance-label">Liquid balance this month</div>
+            <div class="balance-label">Total liquid balance</div>
             <div class="balance-val zero" id="bal-net">0</div>
           </div>
           <button class="balance-add-btn" onclick="openIncomeModal()">+ Income</button>
@@ -220,16 +220,16 @@
         <button class="transfer-btn" onclick="openTransferModal()">&#8644; Transfer between Cash &#8596; Visa</button>
         <div class="income-split" style="margin-top:8px">
           <div class="income-mini">
-            <div class="income-mini-l">&#x1F4B5; Cash in hand</div>
+            <div class="income-mini-l">&#x1F4B5; Cash balance</div>
             <div class="income-mini-v" id="bal-cash-in">0</div>
-            <div style="font-size:9px;color:var(--t3);margin-top:2px">in &middot; <span id="bal-cash-out" style="color:var(--red)">0</span> out</div>
-            <div style="font-size:9px;color:var(--t2);margin-top:2px">Net: <span id="bal-cash-net" style="color:var(--t1)">0</span></div>
+            <div style="font-size:9px;color:var(--t3);margin-top:2px">in <span id="bal-cash-in-month" style="color:var(--green)">0</span> &middot; <span id="bal-cash-out" style="color:var(--red)">0</span> out</div>
+            <div style="font-size:9px;color:var(--t2);margin-top:2px">Initial: <span id="bal-cash-initial" style="color:var(--t1)">0</span></div>
           </div>
           <div class="income-mini">
             <div class="income-mini-l">&#x1F4B3; Visa / Digital</div>
             <div class="income-mini-v" id="bal-visa-in">0</div>
-            <div style="font-size:9px;color:var(--t3);margin-top:2px">in &middot; <span id="bal-visa-out" style="color:var(--red)">0</span> out</div>
-            <div style="font-size:9px;color:var(--t2);margin-top:2px">Net: <span id="bal-visa-net" style="color:var(--t1)">0</span></div>
+            <div style="font-size:9px;color:var(--t3);margin-top:2px">in <span id="bal-visa-in-month" style="color:var(--green)">0</span> &middot; <span id="bal-visa-out" style="color:var(--red)">0</span> out</div>
+            <div style="font-size:9px;color:var(--t2);margin-top:2px">Initial: <span id="bal-visa-initial" style="color:var(--t1)">0</span></div>
           </div>
         </div>
         <div class="liquid-note">
@@ -824,6 +824,18 @@ function renderBBar(id,label,emoji,spent,cap,color){
   document.getElementById(id).innerHTML='<div class="bbar"><div class="bbar-row"><div class="bbar-label">'+emoji+' '+label+'</div><div class="bbar-val">'+fmt(spent)+' / '+fmt(cap)+'</div></div><div class="bbar-track"><div class="bbar-fill" style="width:'+pct.toFixed(1)+'%;background:'+c+'"></div></div></div>';
 }
 
+function getWalletBalance(type){
+  const inc=incomes.filter(e=>e.payType===type).reduce((s,e)=>s+e.amount,0);
+  const exp=expenses.filter(e=>e.type===type).reduce((s,e)=>s+e.amount,0);
+  const tfIn=transfers.filter(t=>t.to===type).reduce((s,t)=>s+t.amount,0);
+  const tfOut=transfers.filter(t=>t.from===type).reduce((s,t)=>s+t.amount,0);
+  const sfOut=sfLog.filter(e=>e.from===type&&e.type==='contribution').reduce((s,e)=>s+e.amount,0);
+  const sfIn=sfLog.filter(e=>e.from===type&&e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
+  const saveOut=savingsLog.filter(e=>e.from===type&&e.type==='contribution').reduce((s,e)=>s+e.amount,0);
+  const saveIn=savingsLog.filter(e=>e.from===type&&e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
+  return inc-exp+tfIn-tfOut+sfIn-sfOut+saveIn-saveOut;
+}
+
 function renderHome(){
   const{m,y}=nowDate(),list=monthExp(m,y);
   const needs=list.filter(e=>e.nw==='needs'&&e.cat!=='💳').reduce((s,e)=>s+e.amount,0);
@@ -853,72 +865,62 @@ function renderHome(){
   visaTfOut+=saveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
   cashTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-  const netCash=cashIn-cashOut+cashTfIn-cashTfOut,netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
 
-  let prevNet = 0;
-try {
-  // Get end of previous month
-  const prevM = m===0 ? 11 : m-1;
-  const prevY = m===0 ? y-1 : y;
-  const endDate = new Date(prevY, prevM+1, 0, 23, 59, 59);
-  const startDate = new Date(prevY, prevM, 1);
+  const netCash=cashIn-cashOut+cashTfIn-cashTfOut;
+  const netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
+  const totalCash=getWalletBalance('cash');
+  const totalVisa=getWalletBalance('visa');
+  const totalLiquid=totalCash+totalVisa;
+  const initialCash=totalCash-netCash;
+  const initialVisa=totalVisa-netVisa;
 
-  // Only look at previous month's transactions (not all history)
-  const prevInc = incomes.filter(e=>{
-    const d=new Date(e.date);
-    return d>=startDate && d<=endDate;
-  });
-  const prevExp = expenses.filter(e=>{
-    const d=new Date(e.date);
-    return d>=startDate && d<=endDate;
-  });
-  const prevTf = transfers.filter(t=>{
-    const d=new Date(t.date);
-    return d>=startDate && d<=endDate;
-  });
+  let prevNet=0;
+  try{
+    const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
+    const startDate=new Date(prevY,prevM,1),endDate=new Date(prevY,prevM+1,0,23,59,59);
+    const prevInc=incomes.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
+    const prevExp=expenses.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
+    const prevTf=transfers.filter(t=>{const d=new Date(t.date);return d>=startDate&&d<=endDate;});
+    const pCashIn=prevInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
+    const pVisaIn=prevInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
+    const pCashOut=prevExp.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
+    const pVisaOut=prevExp.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+    let pCashTfIn=prevTf.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
+    let pCashTfOut=prevTf.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfIn=prevTf.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfOut=prevTf.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+    const prevSfM=sfLog.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate&&e.from;});
+    pCashTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    const prevSaveM=savingsLog.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate&&e.from;});
+    pCashTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    prevNet=(pCashIn-pCashOut+pCashTfIn-pCashTfOut)+(pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
+  }catch(e){prevNet=0;}
 
-  const pCashIn = prevInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
-  const pVisaIn = prevInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
-  const pCashOut = prevExp.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
-  const pVisaOut = prevExp.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
-
-  let pCashTfIn = prevTf.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
-  let pCashTfOut = prevTf.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
-  let pVisaTfIn = prevTf.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
-  let pVisaTfOut = prevTf.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
-
-  // Include sinking/savings movements from previous month
-  const prevSfM = sfLog.filter(e=>{
-    const d=new Date(e.date);
-    return d>=startDate && d<=endDate && e.from;
-  });
-  pCashTfOut += prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-  pVisaTfOut += prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-  pCashTfIn  += prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-  pVisaTfIn  += prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-
-  const prevSaveM = savingsLog.filter(e=>{
-    const d=new Date(e.date);
-    return d>=startDate && d<=endDate && e.from;
-  });
-  pCashTfOut += prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-  pVisaTfOut += prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-  pCashTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-  pVisaTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-
-  prevNet = (pCashIn - pCashOut + pCashTfIn - pCashTfOut) +
-            (pVisaIn - pVisaOut + pVisaTfIn - pVisaTfOut);
-
-} catch(e) { prevNet = 0; }
-
-// Now add prevNet to current month
-const net = netCash + netVisa + prevNet;
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
-  const hv=document.getElementById('hdr-total');hv.textContent=(net>=0?'+':'')+fmt(net);hv.style.color=net>0?'var(--green)':net<0?'var(--red)':'var(--t3)';
-  const bv=document.getElementById('bal-net');bv.textContent=(net>=0?'+':'')+fmt(net)+' EGP';bv.className='balance-val '+(net>0?'pos':net<0?'neg':'zero');
-  document.getElementById('bal-cash-in').textContent=fmt(cashIn);document.getElementById('bal-cash-out').textContent=fmt(cashOut);
-  document.getElementById('bal-visa-in').textContent=fmt(visaIn);document.getElementById('bal-visa-out').textContent=fmt(visaOut);
-  document.getElementById('bal-cash-net').textContent=fmt(netCash)+' EGP';document.getElementById('bal-visa-net').textContent=fmt(netVisa)+' EGP';
+  const hv=document.getElementById('hdr-total');
+  hv.textContent=fmt(totalLiquid);
+  hv.style.color=totalLiquid>0?'var(--green)':totalLiquid<0?'var(--red)':'var(--t3)';
+
+  const bv=document.getElementById('bal-net');
+  bv.textContent=fmt(totalLiquid)+' EGP';
+  bv.className='balance-val '+(totalLiquid>0?'pos':totalLiquid<0?'neg':'zero');
+
+  // ── FIX: populate all four in/out spans ───────────────────────────────────
+  document.getElementById('bal-cash-in').textContent=fmt(totalCash);
+  document.getElementById('bal-visa-in').textContent=fmt(totalVisa);
+  document.getElementById('bal-cash-in-month').textContent=fmt(cashIn);
+  document.getElementById('bal-visa-in-month').textContent=fmt(visaIn);
+  document.getElementById('bal-cash-out').textContent=fmt(cashOut);
+  document.getElementById('bal-visa-out').textContent=fmt(visaOut);
+  document.getElementById('bal-cash-initial').textContent=fmt(initialCash)+' EGP';
+  document.getElementById('bal-visa-initial').textContent=fmt(initialVisa)+' EGP';
+
   document.getElementById('bal-sf-note').textContent=fmt(sfContribMonth)+' EGP';
   document.getElementById('bal-save-note').textContent=fmt(saveContribMonth)+' EGP';
   document.getElementById('s-available').textContent=fmt(prevNet+totalIn);
@@ -944,9 +946,9 @@ const net = netCash + netVisa + prevNet;
     const d=new Date(e.date),div=document.createElement('div');div.className='exp-item';
     if(e._kind==='income'){
       div.innerHTML='<div class="exp-em" style="background:var(--green-d);font-size:16px">'+(e.payType==='visa'?'💳':'💵')+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta"><span class="badge" style="background:var(--green-d);color:var(--green)">income</span><span class="badge" style="background:var(--green-d);color:var(--green)">'+(e.payType==='visa'?'visa':'cash')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--green)">+'+fmt(e.amount)+'</div><div class="exp-del" onclick="openIncomeEdit('+e.id+')">✎</div>';
-    } else if(e._kind==='transfer'){
+    }else if(e._kind==='transfer'){
       div.innerHTML='<div class="exp-em" style="background:var(--blue-d);font-size:16px">⇄</div><div class="exp-info"><div class="exp-name">Transfer: '+e.from+' → '+e.to+'</div><div class="exp-meta"><span class="badge" style="background:var(--blue-d);color:var(--blue)">transfer</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--blue)">'+fmt(e.amount)+'</div><div class="exp-del" onclick="delTransfer('+e.id+')">×</div>';
-    } else {
+    }else{
       const nwBadge=e.nw==='debt'?'badge-debt':'badge-'+(e.nw||'wants');
       div.innerHTML='<div class="exp-em">'+e.cat+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta">'+(e.catLabel||'')+'<span class="badge badge-'+e.type+'">'+e.type+'</span><span class="badge '+nwBadge+'">'+(e.nw||'wants')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt">-'+fmt(e.amount)+'</div><div class="exp-del" onclick="openExpEditModal('+e.id+')">✎</div>';
     }
@@ -1028,7 +1030,7 @@ function saveIncomeEdit(){
 }
 function deleteIncome(){if(!incEditingId)return;if(!confirm('Delete this income entry?'))return;supaDeleteIncome(incEditingId);incomes=incomes.filter(e=>e.id!==incEditingId);saveState();document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income deleted','var(--red)');renderHome();}
 
-// STATS with month navigation
+// STATS
 function getStatsMonth(){const d=new Date();d.setMonth(d.getMonth()+statsMonthOffset);return{m:d.getMonth(),y:d.getFullYear()};}
 function statsShift(dir){statsMonthOffset+=dir;renderStats();}
 function renderStats(){
@@ -1214,7 +1216,7 @@ if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch((
 const up=new URLSearchParams(window.location.search);
 if(up.get('amount')){document.getElementById('inp-amount').value=up.get('amount');if(up.get('name'))document.getElementById('inp-name').value=up.get('name');const t=up.get('type')||'digital';setType(t==='income'?'digital':t);goPage('add');}
 renderHome();
-if(supaReady()){const last=localStorage.getItem('ms_last_sync');if(expenses.length===0&&incomes.length===0){setSyncStatus('spin','Restoring data...');pullFromSupabase(true).then(()=>setSyncStatus('ok','Restored from cloud'));}else if(last){const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Last sync '+t);}else{setSyncStatus('off','Not synced yet');}}
+if(supaReady()){const last=localStorage.getItem('ms_last_sync');if(expenses.length===0&&incomes.length===0){setSyncStatus('spin','Restoring data...');pullFromSupabase(true).then(()=>setSyncStatus('ok','Restored from cloud'));}else if(last){const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Last sync '+t);}else{setSyncStatus('off','Not synced yet');}}
 </script>
 </body>
 </html>

@@ -205,10 +205,7 @@
   <div id="content">
     <!-- HOME -->
     <div class="page active" id="page-home">
-      <div class="ibanner" id="ibanner">
-        <div class="ibanner-text">Install app on home screen</div>
-        <button class="ibanner-btn" id="ibtn">Install</button>
-      </div>
+      <div class="ibanner" id="ibanner"><div class="ibanner-text">Install app on home screen</div><button class="ibanner-btn" id="ibtn">Install</button></div>
       <div class="balance-card">
         <div class="balance-row">
           <div class="balance-main">
@@ -239,27 +236,17 @@
       </div>
       <div class="card">
         <div class="card-title">Budget Status &mdash; this month</div>
-        <div id="bb-needs"></div>
-        <div id="bb-wants"></div>
-        <div id="bb-sinking"></div>
-        <div id="bb-debt"></div>
+        <div id="bb-needs"></div><div id="bb-wants"></div><div id="bb-sinking"></div><div id="bb-debt"></div>
       </div>
-      <div class="card">
-        <div class="card-title">Quick Add &#9889;</div>
-        <div class="quick-grid" id="quick-grid"></div>
-      </div>
+      <div class="card"><div class="card-title">Quick Add &#9889;</div><div class="quick-grid" id="quick-grid"></div></div>
       <div class="stat-row">
         <div class="stat"><div class="stat-l">Available</div><div class="stat-v" id="s-available" style="color:var(--lime)">0</div></div>
         <div class="stat"><div class="stat-l">Income</div><div class="stat-v" id="s-income" style="color:var(--green)">0</div></div>
         <div class="stat"><div class="stat-l">Saved</div><div class="stat-v" id="s-saved" style="color:var(--blue)">0</div></div>
       </div>
-      <div class="sec-hdr">
-        <div class="sec-t">All transactions</div>
-        <div class="sec-a" id="clear-btn">Clear month</div>
-      </div>
+      <div class="sec-hdr"><div class="sec-t">All transactions</div><div class="sec-a" id="clear-btn">Clear month</div></div>
       <div class="exp-list" id="exp-list"></div>
     </div>
-
     <!-- ADD -->
     <div class="page" id="page-add">
       <div class="fcard">
@@ -275,7 +262,6 @@
         <button class="sub-btn" id="sub-btn" style="background:var(--lime)" onclick="addExpense()">Add Expense</button>
       </div>
     </div>
-
     <!-- STATS -->
     <div class="page" id="page-stats">
       <div class="stats-nav">
@@ -288,7 +274,6 @@
       <div class="card"><div class="card-title" id="cat-chart-title">Category breakdown</div><div id="cat-chart"></div></div>
       <div class="card"><div class="card-title">Daily spending</div><div id="daily-chart"></div></div>
     </div>
-
     <!-- SINKING FUND -->
     <div class="page" id="page-sinking">
       <div class="card">
@@ -299,22 +284,11 @@
           <div class="sf-hint">tap to add contribution or withdrawal</div>
         </div>
         <div class="sf-row">
-          <div class="sf-mini" onclick="openSfBalModal('contribution')">
-            <div class="sf-ml">Total contributed</div>
-            <div class="sf-mv" id="sf-contrib" style="color:var(--green)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
-          <div class="sf-mini" onclick="openSfBalModal('withdrawal')">
-            <div class="sf-ml">Total withdrawn</div>
-            <div class="sf-mv" id="sf-with" style="color:var(--red)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
+          <div class="sf-mini" onclick="openSfBalModal('contribution')"><div class="sf-ml">Total contributed</div><div class="sf-mv" id="sf-contrib" style="color:var(--green)">0</div><div class="sf-mini-hint">tap to add</div></div>
+          <div class="sf-mini" onclick="openSfBalModal('withdrawal')"><div class="sf-ml">Total withdrawn</div><div class="sf-mv" id="sf-with" style="color:var(--red)">0</div><div class="sf-mini-hint">tap to add</div></div>
         </div>
         <div class="bbar">
-          <div class="bbar-row">
-            <div class="bbar-label" style="color:var(--purple)">This month: <span id="sf-target-lbl">3,000</span> target</div>
-            <div class="bbar-val" id="sf-prog-lbl">0 / 3,000</div>
-          </div>
+          <div class="bbar-row"><div class="bbar-label" style="color:var(--purple)">This month: <span id="sf-target-lbl">3,000</span> target</div><div class="bbar-val" id="sf-prog-lbl">0 / 3,000</div></div>
           <div class="bbar-track"><div class="bbar-fill" id="sf-prog-fill" style="background:var(--purple)"></div></div>
         </div>
       </div>
@@ -330,7 +304,6 @@
       <div class="sec-hdr"><div class="sec-t">Transaction History</div><div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div></div>
       <div class="exp-list" id="sf-list"></div>
     </div>
-
     <!-- SAVINGS -->
     <div class="page" id="page-savings">
       <div class="card">
@@ -341,16 +314,8 @@
           <div class="sf-hint">tap to add contribution or withdrawal</div>
         </div>
         <div class="sf-row">
-          <div class="sf-mini" onclick="openSaveBalModal('contribution')">
-            <div class="sf-ml">Total contributed</div>
-            <div class="sf-mv" id="save-contrib" style="color:var(--green)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
-          <div class="sf-mini" onclick="openSaveBalModal('withdrawal')">
-            <div class="sf-ml">Total withdrawn</div>
-            <div class="sf-mv" id="save-with" style="color:var(--red)">0</div>
-            <div class="sf-mini-hint">tap to add</div>
-          </div>
+          <div class="sf-mini" onclick="openSaveBalModal('contribution')"><div class="sf-ml">Total contributed</div><div class="sf-mv" id="save-contrib" style="color:var(--green)">0</div><div class="sf-mini-hint">tap to add</div></div>
+          <div class="sf-mini" onclick="openSaveBalModal('withdrawal')"><div class="sf-ml">Total withdrawn</div><div class="sf-mv" id="save-with" style="color:var(--red)">0</div><div class="sf-mini-hint">tap to add</div></div>
         </div>
       </div>
       <div class="card">
@@ -361,12 +326,9 @@
       <div class="sec-hdr"><div class="sec-t">Transaction History</div><div class="sec-a" style="color:var(--t3);font-size:11px">tap to edit</div></div>
       <div class="exp-list" id="save-list"></div>
     </div>
-
     <!-- GOALS -->
     <div class="page" id="page-goals">
-      <button class="save-settings-btn" style="background:var(--blue);color:#fff;margin-bottom:12px" onclick="openSaveBalModal('contribution')">
-        &#x1F4C8; Save Money &mdash; add to savings
-      </button>
+      <button class="save-settings-btn" style="background:var(--blue);color:#fff;margin-bottom:12px" onclick="openSaveBalModal('contribution')">&#x1F4C8; Save Money &mdash; add to savings</button>
       <div class="card">
         <div class="goal-center">
           <div class="goal-pct" id="goal-pct">0%</div>
@@ -385,7 +347,6 @@
         <button class="sub-btn" style="background:var(--lime)" onclick="saveGoal()">Save goal</button>
       </div>
     </div>
-
     <!-- EXPORT -->
     <div class="page" id="page-export">
       <div class="tip">
@@ -412,7 +373,6 @@
         <label class="xbtn xbtn-s" style="display:block;text-align:center;padding:13px;cursor:pointer">&#x1F4C2; Restore from backup<input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreJSON(event)"></label>
       </div>
     </div>
-
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="card">
@@ -451,6 +411,8 @@
         <div class="srow"><div class="srow-left"><div class="srow-label">&#x26A1; Wants cap</div><div class="srow-sub">Coffee, snacks, gaming, misc</div></div><input class="srow-input" type="number" id="set-wants" inputmode="numeric" placeholder="2000"></div>
         <div class="srow"><div class="srow-left"><div class="srow-label">&#x1F437; Sinking fund target</div><div class="srow-sub">Monthly contribution goal</div></div><input class="srow-input" type="number" id="set-sinking" inputmode="numeric" placeholder="3000"></div>
         <div class="srow"><div class="srow-left"><div class="srow-label">&#x1F4B3; Debt payoff</div><div class="srow-sub">Loan / card target (0 = hidden)</div></div><input class="srow-input" type="number" id="set-debt" inputmode="numeric" placeholder="0"></div>
+        <div class="srow"><div class="srow-left"><div class="srow-label">&#x1F4B5; Cash opening balance</div><div class="srow-sub">Starting amount before tracking</div></div><input class="srow-input" type="number" id="set-cash-opening" inputmode="numeric" placeholder="0"></div>
+        <div class="srow"><div class="srow-left"><div class="srow-label">&#x1F4B3; Visa opening balance</div><div class="srow-sub">Starting amount before tracking</div></div><input class="srow-input" type="number" id="set-visa-opening" inputmode="numeric" placeholder="0"></div>
         <button class="save-settings-btn" onclick="saveSettings()">Save budget caps</button>
       </div>
       <div class="card">
@@ -600,7 +562,7 @@ let CATS=[
   {e:'❓',l:'Misc',nw:'wants'},{e:'🥛',l:'Dairy',nw:'wants'},
   {e:'💳',l:'Debt',nw:'debt'},
 ];
-let BUDGET={needs:3500,wants:2000,sinking:3000,debt:0};
+let BUDGET={needs:3500,wants:2000,sinking:3000,debt:0,cashOpening:0,visaOpening:0};
 let GOAL_TARGET=608000,GOAL_NAME='Marriage & house goal';
 let ALLOC=[{emoji:'🪙',label:'Gold',amount:3000},{emoji:'📈',label:'Stocks',amount:1200},{emoji:'🏦',label:'Bank',amount:1800}];
 let expenses=[],sfLog=[],savingsLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[];
@@ -633,6 +595,8 @@ function loadState(){
   try{incomes=JSON.parse(localStorage.getItem('ms_inc')||'[]');}catch(e){incomes=[];}
   try{transfers=JSON.parse(localStorage.getItem('ms_tf')||'[]');}catch(e){transfers=[];}
   try{const b=JSON.parse(localStorage.getItem('ms_budget')||'null');if(b)Object.assign(BUDGET,b);}catch(e){}
+  if(typeof BUDGET.cashOpening!=='number')BUDGET.cashOpening=0;
+  if(typeof BUDGET.visaOpening!=='number')BUDGET.visaOpening=0;
   try{const c=JSON.parse(localStorage.getItem('ms_cats')||'null');if(c&&c.length)CATS=c;}catch(e){}
   try{const a=JSON.parse(localStorage.getItem('ms_alloc')||'null');if(a&&a.length)ALLOC=a;}catch(e){}
   try{const g=JSON.parse(localStorage.getItem('ms_goal_meta')||'null');if(g){GOAL_TARGET=g.target||608000;GOAL_NAME=g.name||'Marriage & house goal';}}catch(e){}
@@ -682,7 +646,7 @@ async function supaFetchAppState(){
 }
 async function supaUpsertAppState(){
   if(!supaReady())return;
-  await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,goal_target:GOAL_TARGET,goal_name:GOAL_NAME,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,budget_debt:BUDGET.debt||0,cats_json:CATS,alloc_json:ALLOC,quick_items:quickItems,updated_at:new Date().toISOString()});
+  await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,goal_target:GOAL_TARGET,goal_name:GOAL_NAME,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,budget_debt:BUDGET.debt||0,budget_cash_opening:BUDGET.cashOpening||0,budget_visa_opening:BUDGET.visaOpening||0,cats_json:CATS,alloc_json:ALLOC,quick_items:quickItems,updated_at:new Date().toISOString()});
 }
 async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});}
 async function supaDeleteExpense(id){if(!supaReady())return;await supaFetch('expenses','DELETE',null,id);}
@@ -731,6 +695,7 @@ async function pullFromSupabase(silent=false){
       const s=remState[0];goalData={saved:s.goal_saved||0,monthly:s.goal_monthly||6000};
       GOAL_TARGET=Number(s.goal_target)||608000;GOAL_NAME=s.goal_name||'Marriage & house goal';
       BUDGET.needs=s.budget_needs||3500;BUDGET.wants=s.budget_wants||2000;BUDGET.sinking=s.budget_sinking||3000;BUDGET.debt=s.budget_debt||0;
+      BUDGET.cashOpening=Number(s.budget_cash_opening)||0;BUDGET.visaOpening=Number(s.budget_visa_opening)||0;
       if(s.cats_json&&Array.isArray(s.cats_json)&&s.cats_json.length)CATS=s.cats_json;
       if(s.alloc_json&&Array.isArray(s.alloc_json)&&s.alloc_json.length)ALLOC=s.alloc_json;
       if(s.quick_items&&Array.isArray(s.quick_items))quickItems=s.quick_items;
@@ -824,16 +789,18 @@ function renderBBar(id,label,emoji,spent,cap,color){
   document.getElementById(id).innerHTML='<div class="bbar"><div class="bbar-row"><div class="bbar-label">'+emoji+' '+label+'</div><div class="bbar-val">'+fmt(spent)+' / '+fmt(cap)+'</div></div><div class="bbar-track"><div class="bbar-fill" style="width:'+pct.toFixed(1)+'%;background:'+c+'"></div></div></div>';
 }
 
-function getWalletBalance(type){
-  const inc=incomes.filter(e=>e.payType===type).reduce((s,e)=>s+e.amount,0);
-  const exp=expenses.filter(e=>e.type===type).reduce((s,e)=>s+e.amount,0);
-  const tfIn=transfers.filter(t=>t.to===type).reduce((s,t)=>s+t.amount,0);
-  const tfOut=transfers.filter(t=>t.from===type).reduce((s,t)=>s+t.amount,0);
-  const sfOut=sfLog.filter(e=>e.from===type&&e.type==='contribution').reduce((s,e)=>s+e.amount,0);
-  const sfIn=sfLog.filter(e=>e.from===type&&e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
-  const saveOut=savingsLog.filter(e=>e.from===type&&e.type==='contribution').reduce((s,e)=>s+e.amount,0);
-  const saveIn=savingsLog.filter(e=>e.from===type&&e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
-  return inc-exp+tfIn-tfOut+sfIn-sfOut+saveIn-saveOut;
+// ─── helper: total accumulated balance for a wallet across ALL time ───────────
+function getWalletBalance(type) {
+  const opening = type === 'cash' ? (BUDGET.cashOpening || 0) : (BUDGET.visaOpening || 0);
+  const inc = incomes.filter(e => e.payType === type).reduce((s, e) => s + e.amount, 0);
+  const exp = expenses.filter(e => e.type === type).reduce((s, e) => s + e.amount, 0);
+  const tfIn  = transfers.filter(t => t.to   === type).reduce((s, t) => s + t.amount, 0);
+  const tfOut = transfers.filter(t => t.from  === type).reduce((s, t) => s + t.amount, 0);
+  const sfOut = sfLog.filter(e => e.from === type && e.type === 'contribution').reduce((s, e) => s + e.amount, 0);
+  const sfIn  = sfLog.filter(e => e.from === type && e.type === 'withdrawal' ).reduce((s, e) => s + e.amount, 0);
+  const saveOut = savingsLog.filter(e => e.from === type && e.type === 'contribution').reduce((s, e) => s + e.amount, 0);
+  const saveIn  = savingsLog.filter(e => e.from === type && e.type === 'withdrawal' ).reduce((s, e) => s + e.amount, 0);
+  return opening + inc - exp + tfIn - tfOut + sfIn - sfOut + saveIn - saveOut;
 }
 
 function renderHome(){
@@ -866,41 +833,45 @@ function renderHome(){
   cashTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
   visaTfIn+=saveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
 
-  const netCash=cashIn-cashOut+cashTfIn-cashTfOut;
-  const netVisa=visaIn-visaOut+visaTfIn-visaTfOut;
-  const totalCash=getWalletBalance('cash');
-  const totalVisa=getWalletBalance('visa');
-  const totalLiquid=totalCash+totalVisa;
-  const initialCash=totalCash-netCash;
-  const initialVisa=totalVisa-netVisa;
+  const netCash = cashIn - cashOut + cashTfIn - cashTfOut;
+  const netVisa = visaIn - visaOut + visaTfIn - visaTfOut;
 
-  let prevNet=0;
-  try{
-    const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
-    const startDate=new Date(prevY,prevM,1),endDate=new Date(prevY,prevM+1,0,23,59,59);
-    const prevInc=incomes.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
-    const prevExp=expenses.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
-    const prevTf=transfers.filter(t=>{const d=new Date(t.date);return d>=startDate&&d<=endDate;});
-    const pCashIn=prevInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
-    const pVisaIn=prevInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
-    const pCashOut=prevExp.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
-    const pVisaOut=prevExp.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
-    let pCashTfIn=prevTf.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
-    let pCashTfOut=prevTf.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
-    let pVisaTfIn=prevTf.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
-    let pVisaTfOut=prevTf.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
-    const prevSfM=sfLog.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate&&e.from;});
-    pCashTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfOut+=prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    pCashTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfIn+=prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    const prevSaveM=savingsLog.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate&&e.from;});
-    pCashTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfOut+=prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    pCashTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
-    pVisaTfIn+=prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
-    prevNet=(pCashIn-pCashOut+pCashTfIn-pCashTfOut)+(pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
-  }catch(e){prevNet=0;}
+  const totalCash = getWalletBalance('cash');
+  const totalVisa = getWalletBalance('visa');
+  const totalLiquid = totalCash + totalVisa;
+
+  const initialCash = totalCash - netCash;
+  const initialVisa = totalVisa - netVisa;
+
+  let prevNet = 0;
+  try {
+    const prevM = m===0 ? 11 : m-1;
+    const prevY = m===0 ? y-1 : y;
+    const startDate = new Date(prevY, prevM, 1);
+    const endDate   = new Date(prevY, prevM+1, 0, 23, 59, 59);
+    const prevInc = incomes.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
+    const prevExp = expenses.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
+    const prevTf  = transfers.filter(t=>{const d=new Date(t.date);return d>=startDate&&d<=endDate;});
+    const pCashIn  = prevInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
+    const pVisaIn  = prevInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
+    const pCashOut = prevExp.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
+    const pVisaOut = prevExp.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
+    let pCashTfIn  = prevTf.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
+    let pCashTfOut = prevTf.filter(t=>t.from==='cash').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfIn  = prevTf.filter(t=>t.to==='visa').reduce((s,t)=>s+t.amount,0);
+    let pVisaTfOut = prevTf.filter(t=>t.from==='visa').reduce((s,t)=>s+t.amount,0);
+    const prevSfM  = sfLog.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate&&e.from;});
+    pCashTfOut += prevSfM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut += prevSfM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn  += prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn  += prevSfM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    const prevSaveM = savingsLog.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate&&e.from;});
+    pCashTfOut += prevSaveM.filter(e=>e.type==='contribution'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfOut += prevSaveM.filter(e=>e.type==='contribution'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    pCashTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
+    pVisaTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
+    prevNet = (pCashIn-pCashOut+pCashTfIn-pCashTfOut) + (pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
+  } catch(e) { prevNet=0; }
 
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');
@@ -911,15 +882,14 @@ function renderHome(){
   bv.textContent=fmt(totalLiquid)+' EGP';
   bv.className='balance-val '+(totalLiquid>0?'pos':totalLiquid<0?'neg':'zero');
 
-  // ── FIX: populate all four in/out spans ───────────────────────────────────
-  document.getElementById('bal-cash-in').textContent=fmt(totalCash);
-  document.getElementById('bal-visa-in').textContent=fmt(totalVisa);
-  document.getElementById('bal-cash-in-month').textContent=fmt(cashIn);
-  document.getElementById('bal-visa-in-month').textContent=fmt(visaIn);
-  document.getElementById('bal-cash-out').textContent=fmt(cashOut);
-  document.getElementById('bal-visa-out').textContent=fmt(visaOut);
-  document.getElementById('bal-cash-initial').textContent=fmt(initialCash)+' EGP';
-  document.getElementById('bal-visa-initial').textContent=fmt(initialVisa)+' EGP';
+  document.getElementById('bal-cash-in').textContent = fmt(totalCash);
+  document.getElementById('bal-visa-in').textContent = fmt(totalVisa);
+  document.getElementById('bal-cash-in-month').textContent = fmt(cashIn);
+  document.getElementById('bal-visa-in-month').textContent = fmt(visaIn);
+  document.getElementById('bal-cash-out').textContent = fmt(cashOut);
+  document.getElementById('bal-visa-out').textContent = fmt(visaOut);
+  document.getElementById('bal-cash-initial').textContent = fmt(initialCash) + ' EGP';
+  document.getElementById('bal-visa-initial').textContent = fmt(initialVisa) + ' EGP';
 
   document.getElementById('bal-sf-note').textContent=fmt(sfContribMonth)+' EGP';
   document.getElementById('bal-save-note').textContent=fmt(saveContribMonth)+' EGP';
@@ -946,9 +916,9 @@ function renderHome(){
     const d=new Date(e.date),div=document.createElement('div');div.className='exp-item';
     if(e._kind==='income'){
       div.innerHTML='<div class="exp-em" style="background:var(--green-d);font-size:16px">'+(e.payType==='visa'?'💳':'💵')+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta"><span class="badge" style="background:var(--green-d);color:var(--green)">income</span><span class="badge" style="background:var(--green-d);color:var(--green)">'+(e.payType==='visa'?'visa':'cash')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--green)">+'+fmt(e.amount)+'</div><div class="exp-del" onclick="openIncomeEdit('+e.id+')">✎</div>';
-    }else if(e._kind==='transfer'){
+    } else if(e._kind==='transfer'){
       div.innerHTML='<div class="exp-em" style="background:var(--blue-d);font-size:16px">⇄</div><div class="exp-info"><div class="exp-name">Transfer: '+e.from+' → '+e.to+'</div><div class="exp-meta"><span class="badge" style="background:var(--blue-d);color:var(--blue)">transfer</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--blue)">'+fmt(e.amount)+'</div><div class="exp-del" onclick="delTransfer('+e.id+')">×</div>';
-    }else{
+    } else {
       const nwBadge=e.nw==='debt'?'badge-debt':'badge-'+(e.nw||'wants');
       div.innerHTML='<div class="exp-em">'+e.cat+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta">'+(e.catLabel||'')+'<span class="badge badge-'+e.type+'">'+e.type+'</span><span class="badge '+nwBadge+'">'+(e.nw||'wants')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt">-'+fmt(e.amount)+'</div><div class="exp-del" onclick="openExpEditModal('+e.id+')">✎</div>';
     }
@@ -1030,7 +1000,7 @@ function saveIncomeEdit(){
 }
 function deleteIncome(){if(!incEditingId)return;if(!confirm('Delete this income entry?'))return;supaDeleteIncome(incEditingId);incomes=incomes.filter(e=>e.id!==incEditingId);saveState();document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income deleted','var(--red)');renderHome();}
 
-// STATS
+// STATS with month navigation
 function getStatsMonth(){const d=new Date();d.setMonth(d.getMonth()+statsMonthOffset);return{m:d.getMonth(),y:d.getFullYear()};}
 function statsShift(dir){statsMonthOffset+=dir;renderStats();}
 function renderStats(){
@@ -1187,6 +1157,8 @@ function renderSettings(){
   document.getElementById('supa-url').value=localStorage.getItem('ms_supa_url')||'';document.getElementById('supa-key').value=localStorage.getItem('ms_supa_key')||'';
   document.getElementById('set-needs').value=BUDGET.needs;document.getElementById('set-wants').value=BUDGET.wants;document.getElementById('set-sinking').value=BUDGET.sinking;
   document.getElementById('set-debt').value=BUDGET.debt||0;
+  document.getElementById('set-cash-opening').value=BUDGET.cashOpening||0;
+  document.getElementById('set-visa-opening').value=BUDGET.visaOpening||0;
   document.getElementById('custom-user-id').value=localStorage.getItem('ms_custom_uid')||'';document.getElementById('current-uid-display').textContent=SUPA_USER_ID||'(device)';
   const g=document.getElementById('cat-edit-grid');g.innerHTML='';
   CATS.forEach((c,i)=>{const div=document.createElement('div');div.className='cbtn';div.style.cursor='default';div.innerHTML='<div class="cat-remove" onclick="removeCat('+i+')">×</div><div class="ce">'+c.e+'</div><div class="cl">'+c.l+'</div><div class="cl" style="color:'+(c.nw==='needs'?'var(--green)':c.nw==='debt'?'var(--red)':'var(--amber)')+'">'+c.nw+'</div>';g.appendChild(div);});
@@ -1195,7 +1167,10 @@ function renderSettings(){
 function saveSettings(){
   const n=parseFloat(document.getElementById('set-needs').value),w=parseFloat(document.getElementById('set-wants').value),s=parseFloat(document.getElementById('set-sinking').value),debt=parseFloat(document.getElementById('set-debt').value)||0;
   if(!n||!w||!s||isNaN(n)||isNaN(w)||isNaN(s)){flash('Enter valid numbers for all caps');return;}
-  BUDGET.needs=n;BUDGET.wants=w;BUDGET.sinking=s;BUDGET.debt=debt;localStorage.setItem('ms_budget',JSON.stringify(BUDGET));supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
+  BUDGET.needs=n;BUDGET.wants=w;BUDGET.sinking=s;BUDGET.debt=debt;
+  BUDGET.cashOpening=parseFloat(document.getElementById('set-cash-opening').value)||0;
+  BUDGET.visaOpening=parseFloat(document.getElementById('set-visa-opening').value)||0;
+  localStorage.setItem('ms_budget',JSON.stringify(BUDGET));supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
 }
 function addCategory(){const emoji=document.getElementById('new-cat-emoji').value.trim(),label=document.getElementById('new-cat-label').value.trim(),nw=document.getElementById('new-cat-nw').value;if(!emoji||!label){flash('Enter emoji and label');return;}if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}CATS.push({e:emoji,l:label,nw});saveCats();supaUpsertAppState();document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';selCat=CATS[0];buildCatGrid();renderSettings();flash('Category added!','var(--green)');}
 function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;CATS.splice(idx,1);saveCats();supaUpsertAppState();if(!CATS.find(c=>c.e===selCat.e))selCat=CATS[0];buildCatGrid();renderSettings();flash('Category removed','var(--red)');}
@@ -1216,7 +1191,7 @@ if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch((
 const up=new URLSearchParams(window.location.search);
 if(up.get('amount')){document.getElementById('inp-amount').value=up.get('amount');if(up.get('name'))document.getElementById('inp-name').value=up.get('name');const t=up.get('type')||'digital';setType(t==='income'?'digital':t);goPage('add');}
 renderHome();
-if(supaReady()){const last=localStorage.getItem('ms_last_sync');if(expenses.length===0&&incomes.length===0){setSyncStatus('spin','Restoring data...');pullFromSupabase(true).then(()=>setSyncStatus('ok','Restored from cloud'));}else if(last){const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Last sync '+t);}else{setSyncStatus('off','Not synced yet');}}
+if(supaReady()){const last=localStorage.getItem('ms_last_sync');if(expenses.length===0&&incomes.length===0){setSyncStatus('spin','Restoring data...');pullFromSupabase(true).then(()=>setSyncStatus('ok','Restored from cloud'));}else if(last){const t=new Date(last).toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Last sync '+t);}else{setSyncStatus('off','Not synced yet');}}
 </script>
 </body>
 </html>

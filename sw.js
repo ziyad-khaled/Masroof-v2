@@ -1,4 +1,3 @@
-// sw.js
 const CACHE = 'masroof-v1';
 const ASSETS = [
   './',

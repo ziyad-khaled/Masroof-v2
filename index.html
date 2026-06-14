@@ -793,7 +793,8 @@ function renderBBar(id,label,emoji,spent,cap,color){
 function getWalletBalance(type) {
   const opening = type === 'cash' ? (BUDGET.cashOpening || 0) : (BUDGET.visaOpening || 0);
   const inc = incomes.filter(e => e.payType === type).reduce((s, e) => s + e.amount, 0);
-  const exp = expenses.filter(e => e.type === type).reduce((s, e) => s + e.amount, 0);
+  const expType = type === 'visa' ? 'digital' : type;
+  const exp = expenses.filter(e => e.type === expType).reduce((s, e) => s + e.amount, 0);
   const tfIn  = transfers.filter(t => t.to   === type).reduce((s, t) => s + t.amount, 0);
   const tfOut = transfers.filter(t => t.from  === type).reduce((s, t) => s + t.amount, 0);
   const sfOut = sfLog.filter(e => e.from === type && e.type === 'contribution').reduce((s, e) => s + e.amount, 0);

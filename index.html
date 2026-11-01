@@ -68,6 +68,29 @@
     .badge-digital{background:var(--blue-d);color:var(--blue)}
     .badge-sinking{background:var(--purple-d);color:var(--purple)}
     .badge-needs{background:var(--green-d);color:var(--green)}
+    .mom-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+    .mom-row+.mom-row{border-top:0.5px solid var(--b1)}
+    .mom-l{flex:1;color:var(--t2)}
+    .mom-v{font-weight:600;color:var(--t1);font-family:var(--mono);min-width:58px;text-align:right}
+    .mom-d{min-width:52px;text-align:right;font-size:10px;font-weight:600;font-family:var(--mono)}
+    .tx-filter-row{display:flex;gap:6px;margin-bottom:8px}
+    .tx-filter-row input{flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);padding:8px 11px;font-size:12px;color:var(--t1);font-family:var(--font);outline:none}
+    .tx-filter-row select{background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);padding:8px 8px;font-size:12px;color:var(--t1);font-family:var(--font);outline:none}
+    .rec-actions{display:flex;align-items:center;gap:10px}
+    .rec-toggle{width:36px;height:20px;border-radius:10px;background:var(--s3);position:relative;cursor:pointer;transition:background .15s;flex:none}
+    .rec-toggle.on{background:var(--green)}
+    .rec-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+    .rec-toggle.on::after{left:18px}
+    .rec-del{color:var(--red);font-size:18px;cursor:pointer;padding:0 2px;line-height:1}
+    .rec-due-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;font-size:12px}
+    .rec-due-row+.rec-due-row{border-top:0.5px solid var(--b1)}
+    .rimp-row{border:0.5px solid var(--b1);border-radius:var(--r);padding:10px;margin-bottom:8px}
+    .rimp-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .rimp-head input[type=checkbox]{width:18px;height:18px;accent-color:var(--lime);flex:none}
+    .rimp-note{font-size:11px;color:var(--t3);margin-top:6px}
+    .rimp-grid{display:grid;grid-template-columns:1fr 90px 60px;gap:6px}
+    .rimp-grid input,.rimp-grid select{background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 8px;font-size:12px;color:var(--t1);font-family:var(--font);outline:none;width:100%}
+    .rimp-cat-row{margin-top:6px}
     .badge-wants{background:var(--amber-d);color:var(--amber)}
     .badge-debt{background:var(--red-d);color:var(--red)}
     .exp-amt{font-family:var(--mono);font-size:14px;font-weight:500;flex-shrink:0}
@@ -206,6 +229,13 @@
     <!-- HOME -->
     <div class="page active" id="page-home">
       <div class="ibanner" id="ibanner"><div class="ibanner-text">Install app on home screen</div><button class="ibanner-btn" id="ibtn">Install</button></div>
+      <div class="card" id="recurring-banner" style="display:none;background:var(--blue-d);border:0.5px solid var(--blue)">
+        <div style="font-size:12px;color:var(--t1);margin-bottom:8px" id="recurring-banner-title">Recurring transactions due</div>
+        <div id="recurring-banner-list"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--blue);color:#fff" onclick="addAllDueRecurring()">Add all</button>
+        </div>
+      </div>
       <div class="balance-card">
         <div class="balance-row">
           <div class="balance-main">
@@ -238,6 +268,14 @@
         <div class="card-title">Budget Status &mdash; this month</div>
         <div id="bb-needs"></div><div id="bb-wants"></div><div id="bb-sinking"></div><div id="bb-debt"></div>
       </div>
+      <div class="card" id="mom-card">
+        <div class="card-title">This month vs last <span id="mom-prev-label" style="color:var(--t3);font-weight:400;text-transform:none;letter-spacing:normal"></span></div>
+        <div class="mom-row"><span class="mom-l">🍗 Needs</span><span class="mom-v" id="mom-needs-val">0</span><span class="mom-d" id="mom-needs-delta">–</span></div>
+        <div class="mom-row"><span class="mom-l">⚡ Wants</span><span class="mom-v" id="mom-wants-val">0</span><span class="mom-d" id="mom-wants-delta">–</span></div>
+        <div class="mom-row"><span class="mom-l">💳 Debt paid</span><span class="mom-v" id="mom-debt-val">0</span><span class="mom-d" id="mom-debt-delta">–</span></div>
+        <div class="mom-row"><span class="mom-l" style="font-weight:600;color:var(--t1)">Total spend</span><span class="mom-v" id="mom-total-val">0</span><span class="mom-d" id="mom-total-delta">–</span></div>
+        <div class="mom-row"><span class="mom-l">💰 Income</span><span class="mom-v" id="mom-income-val">0</span><span class="mom-d" id="mom-income-delta">–</span></div>
+      </div>
       <div class="card"><div class="card-title">Quick Add &#9889;</div><div class="quick-grid" id="quick-grid"></div></div>
       <div class="stat-row">
         <div class="stat"><div class="stat-l">Available</div><div class="stat-v" id="s-available" style="color:var(--lime)">0</div></div>
@@ -245,6 +283,15 @@
         <div class="stat"><div class="stat-l">Saved</div><div class="stat-v" id="s-saved" style="color:var(--blue)">0</div></div>
       </div>
       <div class="sec-hdr"><div class="sec-t">All transactions</div><div class="sec-a" id="clear-btn">Clear month</div></div>
+      <div class="tx-filter-row">
+        <input type="text" id="tx-search" placeholder="Search transactions..." oninput="renderTxList()">
+        <select id="tx-filter-kind" onchange="renderTxList()">
+          <option value="all">All</option>
+          <option value="expense">Expenses</option>
+          <option value="income">Income</option>
+          <option value="transfer">Transfers</option>
+        </select>
+      </div>
       <div class="exp-list" id="exp-list"></div>
     </div>
     <!-- ADD -->
@@ -256,7 +303,11 @@
           <button class="tbtn" id="tbtn-digital" onclick="setType('digital')">&#x1F4F2; Digital</button>
           <button class="tbtn" id="tbtn-sinking" onclick="setType('sinking')">&#x1F437; Sinking</button>
         </div>
-        <div class="frow"><div class="flabel">Name</div><input class="finput" type="text" id="inp-name" placeholder="e.g. باتيه, metro, فراخ…" dir="auto" autocomplete="off"></div>
+        <div class="frow" style="position:relative">
+          <div class="flabel">Name</div>
+          <input class="finput" type="text" id="inp-name" placeholder="e.g. باتيه, metro, فراخ…" dir="auto" autocomplete="off" oninput="renderNameSuggestions()" onfocus="renderNameSuggestions()">
+          <div id="name-suggestions" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);max-height:220px;overflow-y:auto;margin-top:2px"></div>
+        </div>
         <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="inp-amount" placeholder="0" min="0" step="1" inputmode="numeric"></div>
         <div class="frow"><div class="flabel">Category</div><div class="cat-grid" id="cat-grid"></div></div>
         <button class="sub-btn" id="sub-btn" style="background:var(--lime)" onclick="addExpense()">Add Expense</button>
@@ -276,6 +327,13 @@
     </div>
     <!-- SINKING FUND -->
     <div class="page" id="page-sinking">
+      <div class="card" id="sf-contrib-banner" style="display:none;background:var(--purple-d);border:0.5px solid var(--purple)">
+        <div style="font-size:12px;color:var(--t1);margin-bottom:8px">💜 Log this month's sinking fund contribution of <b id="sf-contrib-banner-amt">0</b> EGP?</div>
+        <div style="display:flex;gap:8px">
+          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--purple);color:#fff" onclick="logMonthlyContribution()">Add contribution</button>
+          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--s3);color:var(--t2)" onclick="dismissContribPrompt()">Not now</button>
+        </div>
+      </div>
       <div class="card">
         <div class="sf-center" onclick="openSfBalModal()">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Sinking Fund Balance</div>
@@ -370,7 +428,12 @@
       <div class="card">
         <div class="card-title">Backup &amp; Restore</div>
         <button class="xbtn xbtn-s" onclick="backupJSON()" style="margin-bottom:7px">&#x1F4BE; Backup all data</button>
-        <label class="xbtn xbtn-s" style="display:block;text-align:center;padding:13px;cursor:pointer">&#x1F4C2; Restore from backup<input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreJSON(event)"></label>
+        <label class="xbtn xbtn-s" id="restore-label" style="display:block;text-align:center;padding:13px;cursor:pointer"><span id="restore-label-text">&#x1F4C2; Restore from backup</span><input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreJSON(event)"></label>
+      </div>
+      <div class="card">
+        <div class="card-title">Data cleanup</div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:10px">Merges known spelling variants (e.g. قهوة / قهوه) in your existing expense history into one canonical name, so Quick Add counts them as the same item. One-time, safe to run more than once.</div>
+        <button class="xbtn xbtn-s" onclick="mergeItemNameVariants()">&#x1F9F9; Merge duplicate item names</button>
       </div>
     </div>
     <!-- SETTINGS -->
@@ -414,6 +477,15 @@
         <div class="srow"><div class="srow-left"><div class="srow-label">&#x1F4B5; Cash opening balance</div><div class="srow-sub">Starting amount before tracking</div></div><input class="srow-input" type="number" id="set-cash-opening" inputmode="numeric" placeholder="0"></div>
         <div class="srow"><div class="srow-left"><div class="srow-label">&#x1F4B3; Visa opening balance</div><div class="srow-sub">Starting amount before tracking</div></div><input class="srow-input" type="number" id="set-visa-opening" inputmode="numeric" placeholder="0"></div>
         <button class="save-settings-btn" onclick="saveSettings()">Save budget caps</button>
+      </div>
+      <div class="card">
+        <div class="card-title">&#x1F501; Recurring transactions</div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:10px">Rent, internet, subscriptions, salary — anything that repeats monthly. You'll get a prompt on Home once each is due; nothing posts automatically.</div>
+        <div id="recurring-list" style="margin-bottom:10px"></div>
+        <div style="display:flex;gap:8px">
+          <button class="save-settings-btn" style="flex:1;margin-top:0" onclick="openRecurringModal()">+ Add recurring</button>
+          <button class="save-settings-btn" style="flex:1;margin-top:0;background:var(--s3);color:var(--t1)" onclick="openRecurringImportModal()">&#x1F50D; Import suggestions</button>
+        </div>
       </div>
       <div class="card">
         <div class="card-title">Categories</div>
@@ -534,6 +606,30 @@
   </div>
 </div>
 
+<!-- Recurring rule modal -->
+<div class="modal-overlay" id="recurring-modal" onclick="closeRecurringModal(event)">
+  <div class="modal">
+    <div class="modal-title">Add Recurring <span class="modal-close" onclick="closeRecurringModal()">&#xD7;</span></div>
+    <div class="ttog" style="margin-bottom:14px"><button class="tbtn ac" id="rec-tab-expense" onclick="recTab('expense')">&#x1F4B8; Expense</button><button class="tbtn" id="rec-tab-income" onclick="recTab('income')">&#x1F4B0; Income</button></div>
+    <div class="frow"><div class="flabel">Name</div><input class="finput" type="text" id="rec-name" dir="auto" placeholder="e.g. Rent, Internet, Salary…"></div>
+    <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="rec-amount" inputmode="numeric" placeholder="0"></div>
+    <div class="frow"><div class="flabel">Day of month</div><input class="finput" type="number" id="rec-day" inputmode="numeric" min="1" max="31" value="1"><div class="srow-sub" style="margin-top:4px">In shorter months (e.g. day 31 in April), it'll use the last day instead.</div></div>
+    <div class="frow" id="rec-cat-row"><div class="flabel">Category</div><select class="finput" id="rec-cat"></select></div>
+    <div class="frow"><div class="flabel">Pay from</div><div class="ttog"><button class="tbtn ac" id="rec-pay-a" onclick="recPay('a')">Cash</button><button class="tbtn" id="rec-pay-b" onclick="recPay('b')">Digital</button></div></div>
+    <button class="modal-save-btn" style="background:var(--lime)" onclick="saveRecurringRule()">Add recurring</button>
+  </div>
+</div>
+
+<!-- Recurring import/review modal -->
+<div class="modal-overlay" id="recurring-import-modal" onclick="closeRecurringImportModal(event)">
+  <div class="modal" style="max-height:85vh;overflow-y:auto">
+    <div class="modal-title">Suggested Recurring <span class="modal-close" onclick="closeRecurringImportModal()">&#xD7;</span></div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:12px">Found by scanning your transaction history. Review, edit, and check the ones you want — nothing is added until you tap Confirm.</div>
+    <div id="recurring-import-rows"></div>
+    <button class="modal-save-btn" style="background:var(--blue)" onclick="confirmRecurringImport()">Add checked as recurring</button>
+  </div>
+</div>
+
 <!-- Expense edit modal -->
 <div class="modal-overlay" id="exp-edit-modal" onclick="closeExpEditModal(event)">
   <div class="modal">
@@ -565,7 +661,8 @@ let CATS=[
 let BUDGET={needs:3500,wants:2000,sinking:3000,debt:0,cashOpening:0,visaOpening:0};
 let GOAL_TARGET=608000,GOAL_NAME='Marriage & house goal';
 let ALLOC=[{emoji:'🪙',label:'Gold',amount:3000},{emoji:'📈',label:'Stocks',amount:1200},{emoji:'🏦',label:'Bank',amount:1800}];
-let expenses=[],sfLog=[],savingsLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[];
+let expenses=[],sfLog=[],savingsLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[],recurringRules=[];
+let homeAllTx=[];
 let selCat=CATS[0],selType='cash',sfBalModalType='contribution',sfEditingId=null,incModalType='cash',incEditingId=null;
 let tfFrom='cash',tfTo='visa',sfFrom='cash',saveFrom='cash',saveBalModalType='contribution',saveEditingId=null;
 let expEditingId=null,expEditCat=null,expEditType='cash';
@@ -574,26 +671,142 @@ let statsMonthOffset=0;
 function computeSmartQuickItems(){
   const now=new Date(),cutoff=new Date(now.getFullYear(),now.getMonth()-5,1);
   const recent=expenses.filter(e=>new Date(e.date)>=cutoff);const scores={};
-  recent.forEach(e=>{const key=e.name+'||'+e.cat+'||'+e.amount,ageMonths=(now-new Date(e.date))/(1000*60*60*24*30),w=Math.max(0.1,1-(ageMonths/6)*0.5);
-    if(!scores[key])scores[key]={name:e.name,amount:e.amount,cat:e.cat,catLabel:e.catLabel||e.cat,nw:e.nw||'wants',freq:0,score:0};
-    scores[key].freq++;scores[key].score+=w;});
-  return Object.values(scores).sort((a,b)=>b.score-a.score).slice(0,8);
+  recent.forEach(e=>{const key=e.name+'||'+e.cat,ageMonths=(now-new Date(e.date))/(1000*60*60*24*30),w=Math.max(0.1,1-(ageMonths/6)*0.5);
+    if(!scores[key])scores[key]={name:e.name,cat:e.cat,catLabel:e.catLabel||e.cat,nw:e.nw||'wants',freq:0,score:0,amountSum:0};
+    scores[key].freq++;scores[key].score+=w;scores[key].amountSum+=e.amount;});
+  return Object.values(scores).map(s=>({name:s.name,cat:s.cat,catLabel:s.catLabel,nw:s.nw,freq:s.freq,score:s.score,amount:Math.round(s.amountSum/s.freq)})).sort((a,b)=>b.score-a.score).slice(0,8);
 }
 let quickItems=[];
+// Spelling/typo variants of the same logged item, found by analyzing this
+// user's own transaction history (multiple raw names that clearly refer to
+// the same thing, e.g. قهوة vs قهوه). Quick Add scores by exact name, so
+// these fragment frequency counts until merged. One-time, user-triggered —
+// see mergeItemNameVariants().
+const ITEM_NAME_MERGE_MAP={
+  'قهوة':'قهوه','فايدة':'فايده','جامعة':'جامعه','أكل':'اكل',
+  'مياة':'مياه','مياةx2':'مياه','آيس كريم':'ايس كريم','أيس كريم':'ايس كريم',
+  'فاصوليا حمرا x2':'فاصوليا حمرا','فاصوليا حمراx2':'فاصوليا حمرا',
+  'حاجة-حلوة':'حاجه-حلوه','كبدة':'كبده','Error':'error'
+};
+// Normalizes a raw entered name before it's stored: unifies common Arabic
+// letter variants (alef-hamza forms, ya/alef-maqsura, tatweel) so unlisted
+// spelling variants converge automatically, then looks the result up in
+// ITEM_NAME_MERGE_MAP for names that need an explicit canonical mapping.
+function canonicalName(raw){
+  let t=String(raw||'').trim();
+  if(!t)return t;
+  t=t.replace(/[أإآا]/g,'ا').replace(/ى/g,'ي').replace(/ـ/g,'');
+  return ITEM_NAME_MERGE_MAP[t]||t;
+}
+function mergeItemNameVariants(){
+  let count=0;
+  expenses.forEach(e=>{
+    const canon=ITEM_NAME_MERGE_MAP[e.name];
+    if(canon&&canon!==e.name){e.name=canon;count++;}
+  });
+  if(count){saveState();refreshQuickItems();rebuildNameIndex();renderHome();flash('Merged '+count+' entries into canonical names','var(--green)');}
+  else flash('No matching variants found — nothing to merge','var(--t3)');
+  return count;
+}
 function refreshQuickItems(){
   const smart=computeSmartQuickItems();if(smart.length>0){quickItems=smart;}
-  else{try{quickItems=JSON.parse(localStorage.getItem('ms_quick')||'[]');}catch(e){}
-    if(!quickItems.length)quickItems=[{name:'صقر',amount:4,cat:'🚦',catLabel:'Transport',nw:'needs'},{name:'شبس',amount:8,cat:'🥔',catLabel:'Snacks',nw:'wants'}];}
+  else{try{quickItems=JSON.parse(localStorage.getItem('ms_quick')||'[]');}catch(e){quickItems=[];}
+    if(!Array.isArray(quickItems))quickItems=[];}
   localStorage.setItem('ms_quick',JSON.stringify(quickItems));
 }
+
+// ─── name autocomplete: in-memory index derived from the user's own expenses,
+// rebuilt (not persisted) whenever `expenses` changes ───────────────────────
+let NAME_INDEX=[];  // [{canon,last:{amount,cat,catLabel,nw,type,date},count}]
+function rebuildNameIndex(){
+  const byName={};
+  for(const e of expenses){
+    const canon=canonicalName(e.name);
+    if(!canon)continue;
+    const prev=byName[canon];
+    if(!prev){
+      byName[canon]={canon,last:{amount:e.amount,cat:e.cat,catLabel:e.catLabel,nw:e.nw,type:e.type,date:e.date},count:1};
+    } else {
+      prev.count++;
+      if(new Date(e.date)>new Date(prev.last.date))
+        prev.last={amount:e.amount,cat:e.cat,catLabel:e.catLabel,nw:e.nw,type:e.type,date:e.date};
+    }
+  }
+  NAME_INDEX=Object.values(byName).sort((a,b)=>b.count-a.count);
+}
+function renderNameSuggestions(){
+  const el=document.getElementById('name-suggestions');
+  if(!el)return;
+  const q=canonicalName(document.getElementById('inp-name').value).toLowerCase();
+  if(!q){el.style.display='none';el.innerHTML='';return;}
+  const matches=NAME_INDEX.filter(it=>it.canon.toLowerCase().includes(q)).slice(0,8);
+  if(!matches.length){el.style.display='none';el.innerHTML='';return;}
+  el.innerHTML='';
+  matches.forEach(it=>{
+    const row=document.createElement('div');
+    row.dataset.canon=it.canon;
+    row.style.cssText='padding:9px 11px;font-size:13px;cursor:pointer;border-bottom:0.5px solid var(--b1);display:flex;justify-content:space-between;gap:8px';
+    const nameSpan=document.createElement('span');nameSpan.textContent=it.canon;
+    const metaSpan=document.createElement('span');
+    metaSpan.style.cssText='color:var(--t3);font-family:var(--mono);font-size:11px';
+    metaSpan.textContent=fmt(it.last.amount)+' · '+it.count+'×';
+    row.appendChild(nameSpan);row.appendChild(metaSpan);
+    el.appendChild(row);
+  });
+  el.style.display='block';
+}
+// Delegated click handler reading data-canon, instead of an inline onclick
+// built from interpolated string data — entity-escaping a quote inside an
+// HTML attribute does not stop it from breaking out of a JS string literal,
+// since the browser decodes entities in the attribute before parsing it as JS.
+document.addEventListener('click',e=>{
+  const row=e.target.closest('#name-suggestions > [data-canon]');
+  if(row){pickSuggestedName(row.dataset.canon);return;}
+  const box=document.getElementById('name-suggestions');
+  if(box&&!box.contains(e.target)&&e.target.id!=='inp-name')box.style.display='none';
+});
+function pickSuggestedName(canon){
+  const it=NAME_INDEX.find(x=>x.canon===canon);if(!it)return;
+  document.getElementById('inp-name').value=canon;
+  document.getElementById('inp-amount').value=it.last.amount;
+  if(it.last.cat){
+    const c=CATS.find(x=>x.e===it.last.cat);
+    if(c){selCat=c;buildCatGrid();}
+  }
+  if(it.last.type)setType(it.last.type);
+  const el=document.getElementById('name-suggestions');
+  if(el)el.style.display='none';
+}
 function loadState(){
-  try{expenses=JSON.parse(localStorage.getItem('ms_exp')||'[]');}catch(e){expenses=[];}
-  try{sfLog=JSON.parse(localStorage.getItem('ms_sf')||'[]');}catch(e){sfLog=[];}
-  try{savingsLog=JSON.parse(localStorage.getItem('ms_save')||'[]');}catch(e){savingsLog=[];}
-  try{wishlist=JSON.parse(localStorage.getItem('ms_wish')||JSON.stringify([{id:1,name:'Running shoes',cost:1200,done:false},{id:2,name:'قميص',cost:800,done:false},{id:3,name:'Driving license',cost:2500,done:false}]));}catch(e){wishlist=[];}
-  try{goalData=JSON.parse(localStorage.getItem('ms_goal')||'{"saved":0,"monthly":6000}');}catch(e){goalData={saved:0,monthly:6000};}
-  try{incomes=JSON.parse(localStorage.getItem('ms_inc')||'[]');}catch(e){incomes=[];}
-  try{transfers=JSON.parse(localStorage.getItem('ms_tf')||'[]');}catch(e){transfers=[];}
+  let data=null;
+  try{const raw=localStorage.getItem('ms_data');if(raw)data=JSON.parse(raw);}catch(e){data=null;}
+  if(data){
+    expenses=Array.isArray(data.exp)?data.exp:[];
+    sfLog=Array.isArray(data.sf)?data.sf:[];
+    savingsLog=Array.isArray(data.save)?data.save:[];
+    wishlist=Array.isArray(data.wish)?data.wish:[];
+    goalData=data.goal&&typeof data.goal==='object'?data.goal:{saved:0,monthly:6000};
+    incomes=Array.isArray(data.inc)?data.inc:[];
+    transfers=Array.isArray(data.tf)?data.tf:[];
+    recurringRules=Array.isArray(data.rec)?data.rec:[];
+  } else {
+    // Migration: no consolidated blob yet, so this is either a first run or a
+    // device that last saved before saveState() switched to a single atomic key.
+    // Read the old per-key format, then immediately re-save as the new blob so
+    // future loads take the fast/atomic path and the stale keys can be dropped.
+    try{expenses=JSON.parse(localStorage.getItem('ms_exp')||'[]');}catch(e){expenses=[];}
+    try{sfLog=JSON.parse(localStorage.getItem('ms_sf')||'[]');}catch(e){sfLog=[];}
+    try{savingsLog=JSON.parse(localStorage.getItem('ms_save')||'[]');}catch(e){savingsLog=[];}
+    try{wishlist=JSON.parse(localStorage.getItem('ms_wish')||'[]');}catch(e){wishlist=[];}
+    try{goalData=JSON.parse(localStorage.getItem('ms_goal')||'{"saved":0,"monthly":6000}');}catch(e){goalData={saved:0,monthly:6000};}
+    try{incomes=JSON.parse(localStorage.getItem('ms_inc')||'[]');}catch(e){incomes=[];}
+    try{transfers=JSON.parse(localStorage.getItem('ms_tf')||'[]');}catch(e){transfers=[];}
+    recurringRules=[];
+    try{
+      localStorage.setItem('ms_data',JSON.stringify({exp:expenses,sf:sfLog,save:savingsLog,wish:wishlist,goal:goalData,inc:incomes,tf:transfers,rec:recurringRules}));
+      ['ms_exp','ms_sf','ms_save','ms_wish','ms_goal','ms_inc','ms_tf'].forEach(k=>localStorage.removeItem(k));
+    }catch(e){/* migration write failed; old keys stay put, will retry next load */}
+  }
   try{const b=JSON.parse(localStorage.getItem('ms_budget')||'null');if(b)Object.assign(BUDGET,b);}catch(e){}
   if(typeof BUDGET.cashOpening!=='number')BUDGET.cashOpening=0;
   if(typeof BUDGET.visaOpening!=='number')BUDGET.visaOpening=0;
@@ -601,12 +814,19 @@ function loadState(){
   try{const a=JSON.parse(localStorage.getItem('ms_alloc')||'null');if(a&&a.length)ALLOC=a;}catch(e){}
   try{const g=JSON.parse(localStorage.getItem('ms_goal_meta')||'null');if(g){GOAL_TARGET=g.target||608000;GOAL_NAME=g.name||'Marriage & house goal';}}catch(e){}
   try{quickItems=JSON.parse(localStorage.getItem('ms_quick')||'[]');}catch(e){}
+  rebuildNameIndex();
 }
 function saveState(){
-  localStorage.setItem('ms_exp',JSON.stringify(expenses));localStorage.setItem('ms_sf',JSON.stringify(sfLog));
-  localStorage.setItem('ms_save',JSON.stringify(savingsLog));localStorage.setItem('ms_wish',JSON.stringify(wishlist));
-  localStorage.setItem('ms_goal',JSON.stringify(goalData));localStorage.setItem('ms_inc',JSON.stringify(incomes));
-  localStorage.setItem('ms_tf',JSON.stringify(transfers));scheduleSync();
+  try{
+    localStorage.setItem('ms_data',JSON.stringify({exp:expenses,sf:sfLog,save:savingsLog,wish:wishlist,goal:goalData,inc:incomes,tf:transfers,rec:recurringRules}));
+  }catch(e){
+    // Quota exceeded (or Safari private-mode denial) throws here. A single setItem
+    // means this can no longer fail halfway through — either the whole snapshot
+    // lands or none of it does, so ms_data never disagrees with itself on reload.
+    console.error('saveState failed:',e.message);
+    flash('⚠️ Storage is full — this change may not be saved locally','var(--red)');
+  }
+  scheduleSync();
 }
 function saveCats(){localStorage.setItem('ms_cats',JSON.stringify(CATS));}
 function saveAllocs(){localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));}
@@ -623,21 +843,32 @@ function supaInit(){
 }
 supaInit();
 function supaReady(){return !!(SUPA_URL&&SUPA_KEY);}
+// Distinguishes *why* a sync failed for the status dot/tooltip. supaFetch's
+// HTTP errors are thrown as "STATUS: body", so a leading 3-digit code means
+// the request reached Supabase and was rejected (schema/permission/etc.).
+// Anything else reaching here is a fetch()-level failure — most commonly no
+// connectivity — which we can partially confirm via navigator.onLine.
+function syncErrorSuffix(e){
+  const m=/^(\d{3}):/.exec((e&&e.message)||'');
+  if(m)return ' ('+m[1]+')';
+  return navigator.onLine===false?' (offline)':' (network)';
+}
 function setSyncStatus(state,text){
   const el=document.getElementById('sync-status');if(!supaReady()){el.style.display='none';return;}
   el.style.display='block';el.innerHTML='<span class="sync-dot '+state+'"></span>'+text;
   el.style.color=state==='ok'?'var(--green)':state==='err'?'var(--red)':state==='spin'?'var(--amber)':'var(--t3)';
 }
-const SUPA_NO_DATE=['wishlist','app_state','transfers','savings_log'];
-async function supaFetch(table,method,body,matchId){
+const SUPA_NO_DATE=['wishlist','app_state','recurring_rules'];
+async function supaFetch(table,method,body,matchId,onConflict){
   if(!supaReady())return null;
   let url=SUPA_URL+'/rest/v1/'+table;
   if(matchId!==undefined){url+='?id=eq.'+matchId+'&user_id=eq.'+encodeURIComponent(SUPA_USER_ID);}
   else if(method==='GET'){url+='?user_id=eq.'+encodeURIComponent(SUPA_USER_ID)+(!SUPA_NO_DATE.includes(table)?'&order=date.asc':'')+'&limit=5000';}
+  else if(method==='POST'&&onConflict){url+='?on_conflict='+onConflict;}
   const opts={method,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'resolution=merge-duplicates':''}};
   if(body)opts.body=JSON.stringify(body);
   try{const r=await fetch(url,opts);if(!r.ok){const t=await r.text();throw new Error(r.status+': '+t.slice(0,120));}if(method==='GET')return await r.json();return true;}
-  catch(e){console.error('Supa',method,table,e.message);setSyncStatus('err','Sync error');return null;}
+  catch(e){console.error('Supa',method,table,e.message);setSyncStatus('err','Sync error'+syncErrorSuffix(e));throw e;}
 }
 async function supaFetchAppState(){
   if(!supaReady())return null;
@@ -645,38 +876,68 @@ async function supaFetchAppState(){
   try{const r=await fetch(url,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});if(!r.ok)throw new Error(r.status);return await r.json();}catch(e){return null;}
 }
 async function supaUpsertAppState(){
-  if(!supaReady())return;
-  await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,goal_target:GOAL_TARGET,goal_name:GOAL_NAME,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,budget_debt:BUDGET.debt||0,budget_cash_opening:BUDGET.cashOpening||0,budget_visa_opening:BUDGET.visaOpening||0,cats_json:CATS,alloc_json:ALLOC,quick_items:quickItems,updated_at:new Date().toISOString()});
+  if(!supaReady())return false;
+  try{await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,goal_target:GOAL_TARGET,goal_name:GOAL_NAME,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,budget_debt:BUDGET.debt||0,budget_cash_opening:BUDGET.cashOpening||0,budget_visa_opening:BUDGET.visaOpening||0,cats_json:CATS,alloc_json:ALLOC,quick_items:quickItems,updated_at:new Date().toISOString()});return true;}
+  catch(e){return false;/* logged by supaFetch; this is a background sync, not a user-facing action */}
 }
-async function supaUpsertExpense(e){if(!supaReady())return;await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date});}
-async function supaDeleteExpense(id){if(!supaReady())return;await supaFetch('expenses','DELETE',null,id);}
-async function supaUpsertSfLog(e){if(!supaReady())return;await supaFetch('sf_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,from_type:e.from||null,date:e.date});}
-async function supaDeleteSfLog(id){if(!supaReady())return;await supaFetch('sf_log','DELETE',null,id);}
-async function supaUpsertSavingsLog(e){if(!supaReady())return;await supaFetch('savings_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,label:e.label||'',from_type:e.from||null,date:e.date});}
-async function supaDeleteSavingsLog(id){if(!supaReady())return;await supaFetch('savings_log','DELETE',null,id);}
+async function supaUpsertExpense(e){if(!supaReady())return;try{await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date,recurring_rule_id:e.recurringRuleId||null,period:e.period||null});}catch(err){}}
+async function supaDeleteExpense(id){if(!supaReady())return;try{await supaFetch('expenses','DELETE',null,id);}catch(err){}}
+// Posting a freshly-created recurring instance needs to dedupe on (rule, period),
+// not on its own randomly-generated id — two devices creating "Rent for
+// 2026-09" independently will mint different ids but must still collapse to
+// one row. supaUpsertExpense/Income (id-based conflict) are used for every
+// later edit to that same row, once it has a settled id.
+async function supaPostRecurringInstance(table,payload){
+  if(!supaReady())return false;
+  try{await supaFetch(table,'POST',payload,undefined,'user_id,recurring_rule_id,period');return true;}
+  catch(err){return false;}
+}
+async function supaUpsertSfLog(e){if(!supaReady())return;try{await supaFetch('sf_log','POST',{id:e.id,user_id:SUPA_USER_ID,expense_id:e.expenseId||null,name:e.name||'',amount:e.amount,type:e.type,from_type:e.from||null,date:e.date});}catch(err){}}
+async function supaDeleteSfLog(id){if(!supaReady())return;try{await supaFetch('sf_log','DELETE',null,id);}catch(err){}}
+async function supaUpsertSavingsLog(e){if(!supaReady())return;try{await supaFetch('savings_log','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,label:e.label||'',from_type:e.from||null,date:e.date});}catch(err){}}
+async function supaDeleteSavingsLog(id){if(!supaReady())return;try{await supaFetch('savings_log','DELETE',null,id);}catch(err){}}
 async function supaUpsertWishlist(){
-  if(!supaReady())return;
-  await fetch(SUPA_URL+'/rest/v1/wishlist?user_id=eq.'+encodeURIComponent(SUPA_USER_ID),{method:'DELETE',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
-  if(wishlist.length)await supaFetch('wishlist','POST',wishlist.map(w=>({id:w.id,user_id:SUPA_USER_ID,name:w.name,cost:w.cost||0,done:w.done||false})));
+  if(!supaReady())return false;
+  try{
+    if(wishlist.length)await supaFetch('wishlist','POST',wishlist.map(w=>({id:w.id,user_id:SUPA_USER_ID,name:w.name,cost:w.cost||0,done:w.done||false,sf_log_id:w.sfLogId||null})));
+    const remote=await supaFetch('wishlist','GET');
+    if(remote){
+      const localIds=new Set(wishlist.map(w=>w.id));
+      const stale=remote.filter(r=>!localIds.has(r.id));
+      for(const r of stale)await supaFetch('wishlist','DELETE',null,r.id);
+    }
+    return true;
+  }catch(err){return false;}
 }
-async function supaUpsertIncome(e){if(!supaReady())return;await supaFetch('incomes','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date});}
-async function supaDeleteIncome(id){if(!supaReady())return;await supaFetch('incomes','DELETE',null,id);}
-async function supaUpsertTransfer(t){if(!supaReady())return;await supaFetch('transfers','POST',{id:t.id,user_id:SUPA_USER_ID,from_type:t.from,to_type:t.to,amount:t.amount,date:t.date});}
-async function supaDeleteTransfer(id){if(!supaReady())return;await supaFetch('transfers','DELETE',null,id);}
+async function supaUpsertIncome(e){if(!supaReady())return;try{await supaFetch('incomes','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date,recurring_rule_id:e.recurringRuleId||null,period:e.period||null});}catch(err){}}
+async function supaDeleteIncome(id){if(!supaReady())return;try{await supaFetch('incomes','DELETE',null,id);}catch(err){}}
+async function supaUpsertTransfer(t){if(!supaReady())return;try{await supaFetch('transfers','POST',{id:t.id,user_id:SUPA_USER_ID,from_type:t.from,to_type:t.to,amount:t.amount,date:t.date});}catch(err){}}
+async function supaDeleteTransfer(id){if(!supaReady())return;try{await supaFetch('transfers','DELETE',null,id);}catch(err){}}
+async function supaUpsertRecurringRule(r){if(!supaReady())return;try{await supaFetch('recurring_rules','POST',{id:r.id,user_id:SUPA_USER_ID,kind:r.kind,name:r.name,amount:r.amount,day_of_month:r.dayOfMonth,cat:r.cat||null,cat_label:r.catLabel||null,nw:r.nw||null,pay_method:r.payMethod,active:r.active});}catch(err){}}
+async function supaDeleteRecurringRule(id){if(!supaReady())return;try{await supaFetch('recurring_rules','DELETE',null,id);}catch(err){}}
 async function syncToSupabase(silent=false){
-  if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
+  if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return false;}
   setSyncStatus('spin','Syncing...');
   try{
-    if(expenses.length)await supaFetch('expenses','POST',expenses.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date})));
-    if(sfLog.length)await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,from_type:e.from||null,date:e.date})));
+    const expToRow=e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date,recurring_rule_id:e.recurringRuleId||null,period:e.period||null});
+    const plainExp=expenses.filter(e=>!e.recurringRuleId),recExp=expenses.filter(e=>e.recurringRuleId);
+    if(plainExp.length)await supaFetch('expenses','POST',plainExp.map(expToRow));
+    if(recExp.length)await supaFetch('expenses','POST',recExp.map(expToRow),undefined,'user_id,recurring_rule_id,period');
+    if(sfLog.length)await supaFetch('sf_log','POST',sfLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,expense_id:e.expenseId||null,name:e.name||'',amount:e.amount,type:e.type,from_type:e.from||null,date:e.date})));
     if(savingsLog.length)await supaFetch('savings_log','POST',savingsLog.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name||'',amount:e.amount,type:e.type,label:e.label||'',from_type:e.from||null,date:e.date})));
-    if(incomes.length)await supaFetch('incomes','POST',incomes.map(e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date})));
+    const incToRow=e=>({id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date,recurring_rule_id:e.recurringRuleId||null,period:e.period||null});
+    const plainInc=incomes.filter(e=>!e.recurringRuleId),recInc=incomes.filter(e=>e.recurringRuleId);
+    if(plainInc.length)await supaFetch('incomes','POST',plainInc.map(incToRow));
+    if(recInc.length)await supaFetch('incomes','POST',recInc.map(incToRow),undefined,'user_id,recurring_rule_id,period');
     if(transfers.length)await supaFetch('transfers','POST',transfers.map(t=>({id:t.id,user_id:SUPA_USER_ID,from_type:t.from,to_type:t.to,amount:t.amount,date:t.date})));
-    await supaUpsertWishlist();await supaUpsertAppState();
+    if(recurringRules.length)await supaFetch('recurring_rules','POST',recurringRules.map(r=>({id:r.id,user_id:SUPA_USER_ID,kind:r.kind,name:r.name,amount:r.amount,day_of_month:r.dayOfMonth,cat:r.cat||null,cat_label:r.catLabel||null,nw:r.nw||null,pay_method:r.payMethod,active:r.active})));
+    const wishOk=await supaUpsertWishlist(),stateOk=await supaUpsertAppState();
+    if(!wishOk||!stateOk)throw new Error((!wishOk?'wishlist':'app_state')+' write failed');
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Synced '+t);localStorage.setItem('ms_last_sync',new Date().toISOString());
     if(!silent)flash('Pushed to Supabase ✓','var(--green)');
-  }catch(e){setSyncStatus('err','Sync failed');if(!silent)flash('Sync failed: '+e.message,'var(--red)');}
+    return true;
+  }catch(e){setSyncStatus('err','Sync failed'+syncErrorSuffix(e));if(!silent)flash('Sync failed: '+e.message,'var(--red)');return false;}
 }
 let syncTimer=null,_pulling=false;
 function scheduleSync(){if(!supaReady()||_pulling)return;clearTimeout(syncTimer);setSyncStatus('spin','Saving...');syncTimer=setTimeout(()=>syncToSupabase(true),1200);}
@@ -684,23 +945,28 @@ async function pullFromSupabase(silent=false){
   if(!supaReady()){if(!silent)flash('Set Supabase credentials first','var(--amber)');return;}
   _pulling=true;setSyncStatus('spin',silent?'Restoring...':'Pulling...');
   try{
-    const [remExp,remSf,remSave,remWish,remInc,remState,remTf]=await Promise.all([supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('savings_log','GET'),supaFetch('wishlist','GET'),supaFetch('incomes','GET'),supaFetchAppState(),supaFetch('transfers','GET')]);
-    if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date}));
-    if(remSf)sfLog=remSf.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,from:e.from_type||null,date:e.date}));
+    const [remExp,remSf,remSave,remWish,remInc,remState,remTf,remRec]=await Promise.all([supaFetch('expenses','GET'),supaFetch('sf_log','GET'),supaFetch('savings_log','GET'),supaFetch('wishlist','GET'),supaFetch('incomes','GET'),supaFetchAppState(),supaFetch('transfers','GET'),supaFetch('recurring_rules','GET')]);
+    if(remExp)expenses=remExp.map(e=>({id:e.id,name:e.name,amount:e.amount,cat:e.cat,catLabel:e.cat_label,nw:e.nw,type:e.type,date:e.date,recurringRuleId:e.recurring_rule_id||null,period:e.period||null}));
+    if(remSf)sfLog=remSf.map(e=>({id:e.id,expenseId:e.expense_id||null,name:e.name,amount:e.amount,type:e.type,from:e.from_type||null,date:e.date}));
     if(remSave)savingsLog=remSave.map(e=>({id:e.id,name:e.name,amount:e.amount,type:e.type,label:e.label||'',from:e.from_type||null,date:e.date}));
-    if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done}));
-    if(remInc)incomes=remInc.map(e=>({id:e.id,name:e.name,amount:e.amount,payType:e.pay_type,date:e.date}));
+    if(remWish)wishlist=remWish.map(w=>({id:w.id,name:w.name,cost:w.cost,done:w.done,sfLogId:w.sf_log_id||null}));
+    if(remInc)incomes=remInc.map(e=>({id:e.id,name:e.name,amount:e.amount,payType:e.pay_type,date:e.date,recurringRuleId:e.recurring_rule_id||null,period:e.period||null}));
     if(remTf)transfers=remTf.map(t=>({id:t.id,from:t.from_type,to:t.to_type,amount:t.amount,date:t.date}));
+    if(remRec)recurringRules=remRec.map(r=>({id:r.id,kind:r.kind,name:r.name,amount:r.amount,dayOfMonth:r.day_of_month,cat:r.cat||null,catLabel:r.cat_label||null,nw:r.nw||null,payMethod:r.pay_method,active:r.active!==false}));
     if(remState&&remState[0]){
-      const s=remState[0];goalData={saved:s.goal_saved||0,monthly:s.goal_monthly||6000};
-      GOAL_TARGET=Number(s.goal_target)||608000;GOAL_NAME=s.goal_name||'Marriage & house goal';
-      BUDGET.needs=s.budget_needs||3500;BUDGET.wants=s.budget_wants||2000;BUDGET.sinking=s.budget_sinking||3000;BUDGET.debt=s.budget_debt||0;
-      BUDGET.cashOpening=Number(s.budget_cash_opening)||0;BUDGET.visaOpening=Number(s.budget_visa_opening)||0;
+      const s=remState[0];goalData={saved:s.goal_saved??0,monthly:s.goal_monthly??6000};
+      GOAL_TARGET=s.goal_target!=null?Number(s.goal_target):608000;GOAL_NAME=s.goal_name??'Marriage & house goal';
+      BUDGET.needs=s.budget_needs??3500;BUDGET.wants=s.budget_wants??2000;BUDGET.sinking=s.budget_sinking??3000;BUDGET.debt=s.budget_debt??0;
+      BUDGET.cashOpening=s.budget_cash_opening!=null?Number(s.budget_cash_opening):0;BUDGET.visaOpening=s.budget_visa_opening!=null?Number(s.budget_visa_opening):0;
       if(s.cats_json&&Array.isArray(s.cats_json)&&s.cats_json.length)CATS=s.cats_json;
       if(s.alloc_json&&Array.isArray(s.alloc_json)&&s.alloc_json.length)ALLOC=s.alloc_json;
       if(s.quick_items&&Array.isArray(s.quick_items))quickItems=s.quick_items;
     }
-    _pulling=false;saveState();saveCats();saveAllocs();
+    saveState();saveCats();saveAllocs();rebuildNameIndex();
+    // Reset _pulling only after saveState() has run, so its scheduleSync() call
+    // (which no-ops while _pulling is true) doesn't get followed by an immediate
+    // re-push of the data we just pulled.
+    _pulling=false;
     localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));
     localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));localStorage.setItem('ms_quick',JSON.stringify(quickItems));
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
@@ -708,7 +974,7 @@ async function pullFromSupabase(silent=false){
     if(!silent)flash('Pulled from Supabase ✓','var(--green)');
     renderHome();const cur=document.querySelector('.page.active')?.id;
     if(cur==='page-stats')renderStats();if(cur==='page-sinking')renderSinking();if(cur==='page-savings')renderSavings();if(cur==='page-goals')renderGoals();if(cur==='page-settings')renderSettings();
-  }catch(e){_pulling=false;setSyncStatus('err','Pull failed');if(!silent)flash('Pull failed: '+e.message,'var(--red)');}
+  }catch(e){_pulling=false;setSyncStatus('err','Pull failed'+syncErrorSuffix(e));if(!silent)flash('Pull failed: '+e.message,'var(--red)');}
 }
 async function testSupaConnection(){
   const url=(document.getElementById('supa-url').value||'').trim().replace(/\/$/,''),key=(document.getElementById('supa-key').value||'').trim();
@@ -726,7 +992,36 @@ function saveSupaConfig(){
 function saveCustomUserId(){const val=document.getElementById('custom-user-id').value.trim();localStorage.setItem('ms_custom_uid',val||'');supaInit();flash('User ID saved as: '+(SUPA_USER_ID||'(device)'),'var(--green)');renderSettings();if(val)syncToSupabase(true);}
 function copyCurrentUserId(){const id=SUPA_USER_ID||'';if(!id)return flash('No user ID','var(--amber)');navigator.clipboard.writeText(id).then(()=>flash('Copied: '+id,'var(--green)')).catch(()=>prompt('Copy this ID:',id));}
 
+// Escapes a value for use as HTML *content* (e.g. inside a <div>...</div>).
+// Not safe for attribute context (e.g. title="...", data-x="...", href="...") —
+// if a name-derived value ever lands in an attribute, it needs its own escaping.
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function fmt(n){return Math.round(n).toLocaleString('en-EG');}
+// Date-only <input type="date"> values ('2025-01-15') parse as UTC midnight,
+// which shows as the previous day in negative-offset timezones. Anchoring to
+// local noon avoids the shift while still being safe near DST boundaries.
+function parseLocalDate(s){return new Date(s+'T12:00:00');}
+// new Date().toISOString().slice(0,10) reads the UTC date, which can prefill
+// "today" as yesterday for anyone west of Greenwich after ~9pm-midnight local.
+function todayLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+// Date.now() alone collides when two entries are created in the same millisecond
+// (fast quick-add taps, or a same-tick sfLog/savingsLog side-effect next to an
+// expense/income). nid() keeps ids monotonic and unique within a session.
+let _idSeq=0;
+function nid(){_idSeq=(_idSeq+1)%1000;return Date.now()*1000+_idSeq;}
+// Compares this month's value to last month's for the month-over-month card.
+// dir:'down' means lower is better (spend categories); dir:'up' means higher is better (income).
+function momDelta(cur,prev,dir){
+  if(!prev){
+    if(!cur)return{text:'–',color:'var(--t3)'};
+    return{text:'▲ new',color:dir==='down'?'var(--red)':'var(--green)'};
+  }
+  const diff=cur-prev;
+  if(!diff)return{text:'▬ same',color:'var(--t3)'};
+  const pct=Math.round(Math.abs(diff)/prev*100),up=diff>0;
+  const good=(dir==='down'&&!up)||(dir==='up'&&up);
+  return{text:(up?'▲ ':'▼ ')+pct+'%',color:good?'var(--green)':'var(--red)'};
+}
 function nowDate(){const d=new Date();return{m:d.getMonth(),y:d.getFullYear()};}
 function monthExp(m,y){return expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});}
 function catNW(emoji){return CATS.find(c=>c.e===emoji)?.nw||'wants';}
@@ -743,7 +1038,7 @@ function goPage(p){
 
 function buildCatGrid(){
   const g=document.getElementById('cat-grid');g.innerHTML='';const isSink=selType==='sinking';
-  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===selCat.e?(isSink?' sels':' sel'):'');b.innerHTML='<div class="ce">'+c.e+'</div><div class="cl">'+c.l+'</div>';b.onclick=()=>{selCat=c;buildCatGrid();};g.appendChild(b);});
+  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===selCat.e?(isSink?' sels':' sel'):'');b.innerHTML='<div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div>';b.onclick=()=>{selCat=c;buildCatGrid();};g.appendChild(b);});
 }
 buildCatGrid();
 function setType(t){
@@ -752,7 +1047,7 @@ function setType(t){
   const btn=document.getElementById('sub-btn');btn.style.background=t==='cash'?'var(--lime)':t==='digital'?'var(--blue)':'var(--purple)';btn.style.color=t==='sinking'?'#fff':'#0f0f0f';buildCatGrid();
 }
 
-function openTransferModal(){tfFrom='cash';tfTo='visa';updateTfUI();document.getElementById('tf-amount').value='';document.getElementById('tf-date').value=new Date().toISOString().slice(0,10);document.getElementById('transfer-modal').classList.add('open');}
+function openTransferModal(){tfFrom='cash';tfTo='visa';updateTfUI();document.getElementById('tf-amount').value='';document.getElementById('tf-date').value=todayLocal();document.getElementById('transfer-modal').classList.add('open');}
 function closeTransferModal(e){if(e&&e.target!==document.getElementById('transfer-modal'))return;document.getElementById('transfer-modal').classList.remove('open');}
 function setTransferFrom(type){tfFrom=type;if(tfTo===type)tfTo=type==='cash'?'visa':'cash';updateTfUI();}
 function setTransferTo(type){tfTo=type;if(tfFrom===type)tfFrom=type==='cash'?'visa':'cash';updateTfUI();}
@@ -762,24 +1057,25 @@ function updateTfUI(){
 }
 function saveTransfer(){
   const amount=parseFloat(document.getElementById('tf-amount').value);if(!amount||amount<=0){flash('Enter a valid amount');return;}
-  const dateVal=document.getElementById('tf-date').value||new Date().toISOString().slice(0,10);
-  const entry={id:Date.now(),from:tfFrom,to:tfTo,amount,date:new Date(dateVal).toISOString()};
+  const dateVal=document.getElementById('tf-date').value||todayLocal();
+  const entry={id:nid(),from:tfFrom,to:tfTo,amount,date:parseLocalDate(dateVal).toISOString()};
   transfers.push(entry);saveState();supaUpsertTransfer(entry);flash('Transferred '+fmt(amount)+' from '+tfFrom+' to '+tfTo,'var(--blue)');
   document.getElementById('transfer-modal').classList.remove('open');renderHome();
 }
 
 function addExpense(){
-  const name=document.getElementById('inp-name').value.trim(),amount=parseFloat(document.getElementById('inp-amount').value);
+  const name=canonicalName(document.getElementById('inp-name').value),amount=parseFloat(document.getElementById('inp-amount').value);
   if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter a name and amount');return;}
   if(selType!=='sinking'&&selCat.nw==='wants'){
     const{m,y}=nowDate(),wTotal=monthExp(m,y).filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
     if(wTotal+amount>BUDGET.wants)flash('⚠️ Over Wants budget! '+fmt(wTotal+amount)+' / '+fmt(BUDGET.wants),'var(--amber)');
   }
-  const id=Date.now(),entry={id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()};
+  const id=nid(),entry={id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()};
   expenses.push(entry);
-  if(selType==='sinking')sfLog.push({id:id+1,name,amount,type:'withdrawal',date:new Date().toISOString()});
-  saveState();supaUpsertExpense(entry);refreshQuickItems();
+  if(selType==='sinking')sfLog.push({id:nid(),expenseId:id,name,amount,type:'withdrawal',date:new Date().toISOString()});
+  saveState();supaUpsertExpense(entry);refreshQuickItems();rebuildNameIndex();
   document.getElementById('inp-name').value='';document.getElementById('inp-amount').value='';
+  document.getElementById('name-suggestions').style.display='none';
   const btn=document.getElementById('sub-btn'),orig=btn.textContent;btn.textContent='✓ Added!';setTimeout(()=>btn.textContent=orig,1200);goPage('home');
 }
 
@@ -805,11 +1101,11 @@ function getWalletBalance(type) {
 }
 
 function renderHome(){
+  updateRecurringBanner();
   const{m,y}=nowDate(),list=monthExp(m,y);
   const needs=list.filter(e=>e.nw==='needs'&&e.cat!=='💳').reduce((s,e)=>s+e.amount,0);
   const wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
   const debtPaid=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0);
-  const sfWith=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='withdrawal';}).reduce((s,e)=>s+e.amount,0);
   const sfContribMonth=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';}).reduce((s,e)=>s+e.amount,0);
   const saveContribMonth=savingsLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';}).reduce((s,e)=>s+e.amount,0);
   const monthInc=incomes.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;});
@@ -844,7 +1140,7 @@ function renderHome(){
   const initialCash = totalCash - netCash;
   const initialVisa = totalVisa - netVisa;
 
-  let prevNet = 0;
+  let prevNet = 0, pNeeds=0, pWants=0, pDebtPaid=0, pTotalIn=0;
   try {
     const prevM = m===0 ? 11 : m-1;
     const prevY = m===0 ? y-1 : y;
@@ -853,8 +1149,12 @@ function renderHome(){
     const prevInc = incomes.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
     const prevExp = expenses.filter(e=>{const d=new Date(e.date);return d>=startDate&&d<=endDate;});
     const prevTf  = transfers.filter(t=>{const d=new Date(t.date);return d>=startDate&&d<=endDate;});
+    pNeeds=prevExp.filter(e=>e.nw==='needs'&&e.cat!=='💳').reduce((s,e)=>s+e.amount,0);
+    pWants=prevExp.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
+    pDebtPaid=prevExp.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0);
     const pCashIn  = prevInc.filter(e=>e.payType==='cash').reduce((s,e)=>s+e.amount,0);
     const pVisaIn  = prevInc.filter(e=>e.payType==='visa').reduce((s,e)=>s+e.amount,0);
+    pTotalIn = pCashIn+pVisaIn;
     const pCashOut = prevExp.filter(e=>e.type==='cash').reduce((s,e)=>s+e.amount,0);
     const pVisaOut = prevExp.filter(e=>e.type==='digital').reduce((s,e)=>s+e.amount,0);
     let pCashTfIn  = prevTf.filter(t=>t.to==='cash').reduce((s,t)=>s+t.amount,0);
@@ -872,7 +1172,7 @@ function renderHome(){
     pCashTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='cash').reduce((s,e)=>s+e.amount,0);
     pVisaTfIn  += prevSaveM.filter(e=>e.type==='withdrawal'&&e.from==='visa').reduce((s,e)=>s+e.amount,0);
     prevNet = (pCashIn-pCashOut+pCashTfIn-pCashTfOut) + (pVisaIn-pVisaOut+pVisaTfIn-pVisaTfOut);
-  } catch(e) { prevNet=0; }
+  } catch(e) { prevNet=0;pNeeds=0;pWants=0;pDebtPaid=0;pTotalIn=0; }
 
   document.getElementById('hdr-sub').textContent=MONTHS[m]+' '+y;
   const hv=document.getElementById('hdr-total');
@@ -898,30 +1198,52 @@ function renderHome(){
   document.getElementById('s-income').textContent=fmt(totalIn);
   document.getElementById('s-saved').textContent=fmt(sfContribMonth+saveContribMonth);
 
+  const prevM=m===0?11:m-1,prevY=m===0?y-1:y;
+  document.getElementById('mom-prev-label').textContent='vs '+MONTHS[prevM]+' '+prevY;
+  [['mom-needs',needs,pNeeds,'down'],['mom-wants',wants,pWants,'down'],['mom-debt',debtPaid,pDebtPaid,'down'],
+   ['mom-total',needs+wants+debtPaid,pNeeds+pWants+pDebtPaid,'down'],['mom-income',totalIn,pTotalIn,'up']
+  ].forEach(([id,cur,prev,dir])=>{
+    document.getElementById(id+'-val').textContent=fmt(cur);
+    const d=momDelta(cur,prev,dir),de=document.getElementById(id+'-delta');
+    de.textContent=d.text;de.style.color=d.color;
+  });
+
   renderBBar('bb-needs','Needs','🍗',needs,BUDGET.needs,'var(--green)');
   renderBBar('bb-wants','Wants','⚡',wants,BUDGET.wants,'var(--amber)');
-  renderBBar('bb-sinking','Sinking','🐷',sfWith,BUDGET.sinking,'var(--purple)');
+  renderBBar('bb-sinking','Sinking','🐷',sfContribMonth,BUDGET.sinking,'var(--purple)');
   renderBBar('bb-debt','Debt payoff','💳',debtPaid,BUDGET.debt,'var(--red)');
 
   const qg=document.getElementById('quick-grid');qg.innerHTML='';
   quickItems.slice(0,6).forEach(q=>{
     const b=document.createElement('button');b.className='qbtn';b.textContent=q.cat+' '+q.name+' '+q.amount;
-    b.onclick=()=>{const id=Date.now(),entry={id,name:q.name,amount:q.amount,cat:q.cat,catLabel:q.catLabel,nw:q.nw,type:'cash',date:new Date().toISOString()};expenses.push(entry);saveState();supaUpsertExpense(entry);renderHome();flash('Added '+q.name+' '+q.amount+' EGP','var(--green)');};
+    b.onclick=()=>{const id=nid(),entry={id,name:q.name,amount:q.amount,cat:q.cat,catLabel:q.catLabel,nw:q.nw,type:'cash',date:new Date().toISOString()};expenses.push(entry);saveState();supaUpsertExpense(entry);renderHome();flash('Added '+q.name+' '+q.amount+' EGP','var(--green)');};
     qg.appendChild(b);
   });
+  homeAllTx=[...list.map(e=>({...e,_kind:'expense'})),...monthInc.map(e=>({...e,_kind:'income'})),...tfM.map(t=>({...t,_kind:'transfer'}))].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  renderTxList();
+}
+function renderTxList(){
   const el=document.getElementById('exp-list');
-  const allTx=[...list.map(e=>({...e,_kind:'expense'})),...monthInc.map(e=>({...e,_kind:'income'})),...tfM.map(t=>({...t,_kind:'transfer'}))].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(!allTx.length){el.innerHTML='<div class="empty">No transactions yet.<br>Tap + to add.</div>';return;}
+  const q=(document.getElementById('tx-search')?.value||'').trim().toLowerCase();
+  const kind=document.getElementById('tx-filter-kind')?.value||'all';
+  let tx=homeAllTx;
+  if(kind!=='all')tx=tx.filter(e=>e._kind===kind);
+  if(q)tx=tx.filter(e=>{
+    const name=e._kind==='transfer'?(e.from+' '+e.to):(e.name||e.type||'');
+    const cat=e.catLabel||'';
+    return name.toLowerCase().includes(q)||cat.toLowerCase().includes(q);
+  });
+  if(!tx.length){el.innerHTML='<div class="empty">'+(q||kind!=='all'?'No matching transactions.':'No transactions yet.<br>Tap + to add.')+'</div>';return;}
   el.innerHTML='';
-  allTx.slice(0,80).forEach(e=>{
+  tx.slice(0,80).forEach(e=>{
     const d=new Date(e.date),div=document.createElement('div');div.className='exp-item';
     if(e._kind==='income'){
-      div.innerHTML='<div class="exp-em" style="background:var(--green-d);font-size:16px">'+(e.payType==='visa'?'💳':'💵')+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta"><span class="badge" style="background:var(--green-d);color:var(--green)">income</span><span class="badge" style="background:var(--green-d);color:var(--green)">'+(e.payType==='visa'?'visa':'cash')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--green)">+'+fmt(e.amount)+'</div><div class="exp-del" onclick="openIncomeEdit('+e.id+')">✎</div>';
+      div.innerHTML='<div class="exp-em" style="background:var(--green-d);font-size:16px">'+(e.payType==='visa'?'💳':'💵')+'</div><div class="exp-info"><div class="exp-name">'+esc(e.name)+'</div><div class="exp-meta"><span class="badge" style="background:var(--green-d);color:var(--green)">income</span><span class="badge" style="background:var(--green-d);color:var(--green)">'+(e.payType==='visa'?'visa':'cash')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--green)">+'+fmt(e.amount)+'</div><div class="exp-del" onclick="openIncomeEdit('+e.id+')">✎</div>';
     } else if(e._kind==='transfer'){
       div.innerHTML='<div class="exp-em" style="background:var(--blue-d);font-size:16px">⇄</div><div class="exp-info"><div class="exp-name">Transfer: '+e.from+' → '+e.to+'</div><div class="exp-meta"><span class="badge" style="background:var(--blue-d);color:var(--blue)">transfer</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt" style="color:var(--blue)">'+fmt(e.amount)+'</div><div class="exp-del" onclick="delTransfer('+e.id+')">×</div>';
     } else {
       const nwBadge=e.nw==='debt'?'badge-debt':'badge-'+(e.nw||'wants');
-      div.innerHTML='<div class="exp-em">'+e.cat+'</div><div class="exp-info"><div class="exp-name">'+e.name+'</div><div class="exp-meta">'+(e.catLabel||'')+'<span class="badge badge-'+e.type+'">'+e.type+'</span><span class="badge '+nwBadge+'">'+(e.nw||'wants')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt">-'+fmt(e.amount)+'</div><div class="exp-del" onclick="openExpEditModal('+e.id+')">✎</div>';
+      div.innerHTML='<div class="exp-em">'+esc(e.cat)+'</div><div class="exp-info"><div class="exp-name">'+esc(e.name)+'</div><div class="exp-meta">'+esc(e.catLabel||'')+'<span class="badge badge-'+e.type+'">'+e.type+'</span><span class="badge '+nwBadge+'">'+(e.nw||'wants')+'</span> · '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+'</div></div><div class="exp-amt">-'+fmt(e.amount)+'</div><div class="exp-del" onclick="openExpEditModal('+e.id+')">✎</div>';
     }
     el.appendChild(div);
   });
@@ -954,39 +1276,58 @@ function expEditUpdateTypeUI(){
 }
 function buildExpEditCatGrid(){
   const g=document.getElementById('exp-edit-cat-grid');g.innerHTML='';
-  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===expEditCat?' sel':'');b.innerHTML='<div class="ce">'+c.e+'</div><div class="cl">'+c.l+'</div>';b.onclick=()=>{expEditCat=c.e;buildExpEditCatGrid();};g.appendChild(b);});
+  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===expEditCat?' sel':'');b.innerHTML='<div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div>';b.onclick=()=>{expEditCat=c.e;buildExpEditCatGrid();};g.appendChild(b);});
 }
 function saveExpEdit(){
   if(!expEditingId)return;const idx=expenses.findIndex(e=>e.id===expEditingId);if(idx<0)return;
-  const name=document.getElementById('exp-edit-name').value.trim(),amount=parseFloat(document.getElementById('exp-edit-amount').value),date=document.getElementById('exp-edit-date').value;
+  const name=canonicalName(document.getElementById('exp-edit-name').value),amount=parseFloat(document.getElementById('exp-edit-amount').value),date=document.getElementById('exp-edit-date').value;
   if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter valid name and amount');return;}
+  const wasSinking=expenses[idx].type==='sinking';
   expenses[idx].name=name;expenses[idx].amount=amount;expenses[idx].cat=expEditCat;
   expenses[idx].catLabel=CATS.find(c=>c.e===expEditCat)?.l||expEditCat;
   expenses[idx].nw=catNW(expEditCat);expenses[idx].type=expEditType;
-  if(date)expenses[idx].date=new Date(date).toISOString();
-  saveState();supaUpsertExpense(expenses[idx]);
+  if(date)expenses[idx].date=parseLocalDate(date).toISOString();
+  const linked=sfLog.find(s=>s.expenseId===expEditingId);
+  if(expEditType==='sinking'&&linked){
+    // still sinking — keep the withdrawal entry in step with the expense
+    linked.name=name;linked.amount=amount;if(date)linked.date=expenses[idx].date;
+    supaUpsertSfLog(linked);
+  } else if(expEditType==='sinking'&&!wasSinking){
+    // type just changed TO sinking — create the missing withdrawal link
+    const sfEntry={id:nid(),expenseId:expEditingId,name,amount,type:'withdrawal',date:expenses[idx].date};
+    sfLog.push(sfEntry);supaUpsertSfLog(sfEntry);
+  } else if(expEditType!=='sinking'&&wasSinking&&linked){
+    // type changed AWAY from sinking — the fund is no longer debited by this expense
+    sfLog=sfLog.filter(s=>s!==linked);supaDeleteSfLog(linked.id);
+  }
+  // Note: wasSinking===true with no `linked` found (legacy data predating expenseId,
+  // or an already-orphaned entry) intentionally falls through untouched — we have no
+  // reliable way to know the original withdrawal amount, so we don't fabricate one.
+  saveState();supaUpsertExpense(expenses[idx]);rebuildNameIndex();
   document.getElementById('exp-edit-modal').classList.remove('open');expEditingId=null;
   flash('Expense updated!','var(--green)');renderHome();
 }
 function deleteExpFromEdit(){
   if(!expEditingId)return;if(!confirm('Delete this expense?'))return;
+  const linked=sfLog.find(s=>s.expenseId===expEditingId);
+  if(linked){sfLog=sfLog.filter(s=>s!==linked);supaDeleteSfLog(linked.id);}
   supaDeleteExpense(expEditingId);expenses=expenses.filter(e=>e.id!==expEditingId);
-  saveState();document.getElementById('exp-edit-modal').classList.remove('open');expEditingId=null;
+  saveState();rebuildNameIndex();document.getElementById('exp-edit-modal').classList.remove('open');expEditingId=null;
   flash('Expense deleted','var(--red)');renderHome();
 }
 
 // INCOME
 function incTab(t){incModalType=t;document.getElementById('inc-tab-cash').className='tbtn'+(t==='cash'?' ac':'');document.getElementById('inc-tab-visa').className='tbtn'+(t==='visa'?' ad':'');}
-function openIncomeModal(){incModalType='cash';incTab('cash');document.getElementById('inc-name').value='';document.getElementById('inc-amount').value='';document.getElementById('inc-sf-save').checked=false;document.getElementById('inc-sf-pct').value='10';document.getElementById('inc-date').value=new Date().toISOString().slice(0,10);document.getElementById('income-modal').classList.add('open');setTimeout(()=>document.getElementById('inc-name').focus(),200);}
+function openIncomeModal(){incModalType='cash';incTab('cash');document.getElementById('inc-name').value='';document.getElementById('inc-amount').value='';document.getElementById('inc-sf-save').checked=false;document.getElementById('inc-sf-pct').value='10';document.getElementById('inc-date').value=todayLocal();document.getElementById('income-modal').classList.add('open');setTimeout(()=>document.getElementById('inc-name').focus(),200);}
 function closeIncomeModal(e){if(e&&e.target!==document.getElementById('income-modal'))return;document.getElementById('income-modal').classList.remove('open');}
 function saveIncome(){
-  const name=document.getElementById('inc-name').value.trim(),amount=parseFloat(document.getElementById('inc-amount').value),dateVal=document.getElementById('inc-date').value;
+  const name=canonicalName(document.getElementById('inc-name').value),amount=parseFloat(document.getElementById('inc-amount').value),dateVal=document.getElementById('inc-date').value;
   if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter source and amount');return;}
-  const entry={id:Date.now(),name,amount,payType:incModalType,date:dateVal?new Date(dateVal).toISOString():new Date().toISOString()};
+  const entry={id:nid(),name,amount,payType:incModalType,date:dateVal?parseLocalDate(dateVal).toISOString():new Date().toISOString()};
   incomes.push(entry);
   if(document.getElementById('inc-sf-save').checked){
     const pct=parseFloat(document.getElementById('inc-sf-pct').value)||0,sfAmount=Math.round(amount*pct/100);
-    if(sfAmount>0){const sfEntry={id:Date.now()+1,name:'Auto-save: '+name,amount:sfAmount,type:'contribution',from:incModalType,date:entry.date};sfLog.push(sfEntry);supaUpsertSfLog(sfEntry);}
+    if(sfAmount>0){const sfEntry={id:nid(),name:'Auto-save: '+name,amount:sfAmount,type:'contribution',from:incModalType,date:entry.date};sfLog.push(sfEntry);supaUpsertSfLog(sfEntry);}
   }
   saveState();supaUpsertIncome(entry);document.getElementById('income-modal').classList.remove('open');flash('Income added: +'+fmt(amount)+' EGP','var(--green)');renderHome();
 }
@@ -994,9 +1335,9 @@ function openIncomeEdit(id){const entry=incomes.find(e=>e.id===id);if(!entry)ret
 function closeIncomeEditModal(e){if(e&&e.target!==document.getElementById('income-edit-modal'))return;document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;}
 function saveIncomeEdit(){
   if(!incEditingId)return;const idx=incomes.findIndex(e=>e.id===incEditingId);if(idx<0)return;
-  const name=document.getElementById('inc-edit-name').value.trim(),amount=parseFloat(document.getElementById('inc-edit-amount').value),date=document.getElementById('inc-edit-date').value;
+  const name=canonicalName(document.getElementById('inc-edit-name').value),amount=parseFloat(document.getElementById('inc-edit-amount').value),date=document.getElementById('inc-edit-date').value;
   if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
-  incomes[idx].name=name||incomes[idx].name;incomes[idx].amount=amount;if(date)incomes[idx].date=new Date(date).toISOString();
+  incomes[idx].name=name||incomes[idx].name;incomes[idx].amount=amount;if(date)incomes[idx].date=parseLocalDate(date).toISOString();
   saveState();supaUpsertIncome(incomes[idx]);document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income updated!','var(--green)');renderHome();
 }
 function deleteIncome(){if(!incEditingId)return;if(!confirm('Delete this income entry?'))return;supaDeleteIncome(incEditingId);incomes=incomes.filter(e=>e.id!==incEditingId);saveState();document.getElementById('income-edit-modal').classList.remove('open');incEditingId=null;flash('Income deleted','var(--red)');renderHome();}
@@ -1011,34 +1352,242 @@ function renderStats(){
   const tms=[];for(let i=5;i>=0;i--){let mm=m-i,yy=y;if(mm<0){mm+=12;yy--;}tms.push({m:mm,y:yy});}
   const tmax=Math.max(...tms.map(({m:mm,y:yy})=>monthExp(mm,yy).reduce((s,e)=>s+e.amount,0)),1);
   document.getElementById('trends-chart').innerHTML=tms.map(({m:mm,y:yy})=>{const t=monthExp(mm,yy).reduce((s,e)=>s+e.amount,0),isCur=mm===m&&yy===y;return'<div class="trend-row"><div class="trend-lbl">'+MONTHS[mm].slice(0,3)+'</div><div class="trend-track"><div class="trend-fill" style="width:'+(t/tmax*100).toFixed(1)+'%;background:'+(isCur?'var(--lime)':'var(--s4)')+'"></div></div><div class="trend-val">'+fmt(t)+'</div></div>';}).join('');
-  const list=monthExp(m,y),needs=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0),wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0),sunk=list.filter(e=>e.type==='sinking').reduce((s,e)=>s+e.amount,0),debt=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0),smax=Math.max(needs,wants,sunk,debt,1);
+  const list=monthExp(m,y),needs=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0),wants=list.filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0),sunk=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';}).reduce((s,e)=>s+e.amount,0),debt=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0),smax=Math.max(needs,wants,sunk,debt,1);
   const splitItems=[{l:'Needs',v:needs,c:'var(--green)',cap:BUDGET.needs},{l:'Wants',v:wants,c:'var(--amber)',cap:BUDGET.wants},{l:'Sinking',v:sunk,c:'var(--purple)',cap:BUDGET.sinking}];
   if(BUDGET.debt>0)splitItems.push({l:'Debt',v:debt,c:'var(--red)',cap:BUDGET.debt});
   document.getElementById('split-chart').innerHTML=splitItems.map(r=>'<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t2);width:48px;text-align:right">'+r.l+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+(r.v/smax*100).toFixed(1)+'%;background:'+r.c+'"></div></div><div class="cbar-val">'+fmt(r.v)+' / '+fmt(r.cap)+'</div></div>').join('');
   const totals={};list.forEach(e=>{totals[e.cat]=(totals[e.cat]||0)+e.amount;});const sorted=Object.entries(totals).sort((a,b)=>b[1]-a[1]),cmax=sorted[0]?.[1]||1;
-  document.getElementById('cat-chart').innerHTML=sorted.length?sorted.map(([em,v])=>'<div class="cbar-row"><div class="cbar-label">'+em+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+(v/cmax*100).toFixed(1)+'%;background:var(--lime)"></div></div><div class="cbar-val">'+fmt(v)+'</div></div>').join(''):'<div class="empty">No data yet</div>';
+  document.getElementById('cat-chart').innerHTML=sorted.length?sorted.map(([em,v])=>'<div class="cbar-row"><div class="cbar-label">'+esc(em)+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+(v/cmax*100).toFixed(1)+'%;background:var(--lime)"></div></div><div class="cbar-val">'+fmt(v)+'</div></div>').join(''):'<div class="empty">No data yet</div>';
   const daily={};list.forEach(e=>{const d=new Date(e.date).getDate();daily[d]=(daily[d]||0)+e.amount;});const dkeys=Object.keys(daily).sort((a,b)=>a-b),dmax=Math.max(...Object.values(daily),1);
   document.getElementById('daily-chart').innerHTML=dkeys.length?dkeys.map(d=>'<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t3);font-family:var(--mono)">'+d+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+(daily[d]/dmax*100).toFixed(1)+'%;background:var(--blue)"></div></div><div class="cbar-val">'+fmt(daily[d])+'</div></div>').join(''):'<div class="empty">No data</div>';
 }
 
 // SINKING FUND
-(function seedContrib(){
-  const{m,y}=nowDate(),exists=sfLog.some(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';});
-  if(!exists){const e={id:Date.now(),name:'Monthly contribution',amount:BUDGET.sinking,type:'contribution',from:'cash',date:new Date(y,m,1).toISOString()};sfLog.push(e);saveState();}
-})();
+// Monthly sinking-fund contribution: previously this silently created a full
+// BUDGET.sinking contribution on first load each month with no confirmation,
+// and — since the "already exists?" check only looked at this device's local
+// (possibly stale) sfLog — two devices opening the app before either had
+// pulled the other's contribution could both create one, double-debiting the
+// fund on the next sync. Now it only ever *suggests*; the user must tap
+// "Add contribution", and a per-month dismissal is remembered locally.
+function contribAlreadyLogged(){
+  const{m,y}=nowDate();
+  return sfLog.some(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';});
+}
+function updateContribBanner(){
+  const banner=document.getElementById('sf-contrib-banner');if(!banner)return;
+  const{m,y}=nowDate(),dismissKey='ms_contrib_dismissed_'+y+'_'+m;
+  const userSetTarget=!!localStorage.getItem('ms_sinking_target_set');
+  const show=userSetTarget&&!contribAlreadyLogged()&&!localStorage.getItem(dismissKey)&&BUDGET.sinking>0;
+  banner.style.display=show?'':'none';
+  if(show)document.getElementById('sf-contrib-banner-amt').textContent=fmt(BUDGET.sinking);
+}
+function logMonthlyContribution(){
+  const{m,y}=nowDate();
+  const e={id:nid(),name:'Monthly contribution',amount:BUDGET.sinking,type:'contribution',from:'cash',date:parseLocalDate(y+'-'+String(m+1).padStart(2,'0')+'-01').toISOString()};
+  sfLog.push(e);saveState();supaUpsertSfLog(e);
+  flash('Logged '+fmt(BUDGET.sinking)+' EGP contribution','var(--purple)');
+  renderSinking();renderHome();
+}
+function dismissContribPrompt(){
+  const{m,y}=nowDate();localStorage.setItem('ms_contrib_dismissed_'+y+'_'+m,'1');
+  updateContribBanner();
+}
+
+// ===== Recurring transactions =====
+function periodStr(y,m){return y+'-'+String(m+1).padStart(2,'0');}
+function ruleAlreadyPosted(ruleId,period){
+  return expenses.some(e=>e.recurringRuleId===ruleId&&e.period===period)||incomes.some(e=>e.recurringRuleId===ruleId&&e.period===period);
+}
+function dueRecurringRules(){
+  const{m,y}=nowDate(),period=periodStr(y,m),today=new Date().getDate();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  return recurringRules.filter(r=>{
+    const effDay=Math.min(r.dayOfMonth,daysInMonth);
+    return r.active&&today>=effDay&&!ruleAlreadyPosted(r.id,period)&&!localStorage.getItem('ms_recurring_dismissed_'+r.id+'_'+period);
+  });
+}
+function addRecurringInstance(ruleId){
+  const rule=recurringRules.find(r=>r.id===ruleId);if(!rule)return;
+  const{m,y}=nowDate(),period=periodStr(y,m);
+  if(ruleAlreadyPosted(ruleId,period))return; // already added this month (e.g. double-tap, or the other device beat us to it)
+  const daysInMonth=new Date(y,m+1,0).getDate(),day=Math.min(rule.dayOfMonth,daysInMonth),date=parseLocalDate(y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0')).toISOString();
+  if(rule.kind==='expense'){
+    const e={id:nid(),name:rule.name,amount:rule.amount,cat:rule.cat,catLabel:rule.catLabel,nw:rule.nw,type:rule.payMethod,date,recurringRuleId:rule.id,period};
+    expenses.push(e);saveState();rebuildNameIndex();
+    supaPostRecurringInstance('expenses',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date,recurring_rule_id:rule.id,period});
+  } else {
+    const e={id:nid(),name:rule.name,amount:rule.amount,payType:rule.payMethod,date,recurringRuleId:rule.id,period};
+    incomes.push(e);saveState();
+    supaPostRecurringInstance('incomes',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,pay_type:e.payType,date:e.date,recurring_rule_id:rule.id,period});
+  }
+}
+function addAllDueRecurring(){
+  const due=dueRecurringRules();if(!due.length)return;
+  const total=due.reduce((s,r)=>s+r.amount,0);
+  due.forEach(r=>addRecurringInstance(r.id));
+  flash('Added '+due.length+' recurring transaction'+(due.length>1?'s':'')+' ('+fmt(total)+' EGP)','var(--blue)');
+  renderHome();
+}
+function skipRecurringThisMonth(ruleId){
+  const{m,y}=nowDate();localStorage.setItem('ms_recurring_dismissed_'+ruleId+'_'+periodStr(y,m),'1');
+  updateRecurringBanner();
+}
+function updateRecurringBanner(){
+  const banner=document.getElementById('recurring-banner');if(!banner)return;
+  const due=dueRecurringRules();
+  banner.style.display=due.length?'':'none';
+  if(!due.length)return;
+  document.getElementById('recurring-banner-title').textContent=due.length+' recurring transaction'+(due.length>1?'s':'')+' due this month';
+  document.getElementById('recurring-banner-list').innerHTML=due.map(r=>
+    '<div class="rec-due-row"><span>'+(r.kind==='income'?'💰':'💸')+' '+esc(r.name)+' · '+fmt(r.amount)+' EGP</span>'+
+    '<span style="display:flex;gap:8px"><a onclick="addRecurringInstance('+r.id+');renderHome();" style="color:var(--blue);cursor:pointer;font-weight:600">Add</a>'+
+    '<a onclick="skipRecurringThisMonth('+r.id+')" style="color:var(--t3);cursor:pointer">Skip</a></span></div>'
+  ).join('');
+}
+
+let recKind='expense',recPayVal='cash';
+function recTab(kind){
+  recKind=kind;
+  document.getElementById('rec-tab-expense').className='tbtn'+(kind==='expense'?' ac':'');
+  document.getElementById('rec-tab-income').className='tbtn'+(kind==='income'?' ac':'');
+  document.getElementById('rec-cat-row').style.display=kind==='expense'?'':'none';
+  document.getElementById('rec-pay-b').textContent=kind==='expense'?'Digital':'Visa';
+  recPay('a');
+}
+function recPay(which){
+  recPayVal=which==='a'?'cash':(recKind==='expense'?'digital':'visa');
+  document.getElementById('rec-pay-a').className='tbtn'+(which==='a'?' ac':'');
+  document.getElementById('rec-pay-b').className='tbtn'+(which==='b'?' ac':'');
+}
+function openRecurringModal(){
+  document.getElementById('rec-name').value='';document.getElementById('rec-amount').value='';document.getElementById('rec-day').value='1';
+  document.getElementById('rec-cat').innerHTML=CATS.map(c=>'<option value="'+esc(c.e)+'">'+esc(c.e)+' '+esc(c.l)+'</option>').join('');
+  recTab('expense');
+  document.getElementById('recurring-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('rec-name').focus(),200);
+}
+function closeRecurringModal(e){if(e&&e.target!==document.getElementById('recurring-modal'))return;document.getElementById('recurring-modal').classList.remove('open');}
+function saveRecurringRule(){
+  const name=canonicalName(document.getElementById('rec-name').value),amount=parseFloat(document.getElementById('rec-amount').value);
+  const day=Math.min(31,Math.max(1,parseInt(document.getElementById('rec-day').value)||1));
+  if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter valid name and amount');return;}
+  const rule={id:nid(),kind:recKind,name,amount,dayOfMonth:day,active:true,payMethod:recPayVal};
+  if(recKind==='expense'){
+    const catE=document.getElementById('rec-cat').value,c=CATS.find(x=>x.e===catE)||CATS[0];
+    rule.cat=c.e;rule.catLabel=c.l;rule.nw=catNW(c.e);
+  }
+  recurringRules.push(rule);saveState();supaUpsertRecurringRule(rule);
+  document.getElementById('recurring-modal').classList.remove('open');
+  flash('Recurring '+recKind+' added','var(--lime)');
+  renderRecurringList();renderHome();
+}
+function toggleRecurringRule(id){
+  const r=recurringRules.find(x=>x.id===id);if(!r)return;
+  r.active=!r.active;saveState();supaUpsertRecurringRule(r);
+  renderRecurringList();
+}
+function deleteRecurringRule(id){
+  if(!confirm('Delete this recurring rule? Transactions already added from it stay untouched.'))return;
+  recurringRules=recurringRules.filter(r=>r.id!==id);saveState();supaDeleteRecurringRule(id);
+  renderRecurringList();
+}
+function renderRecurringList(){
+  const el=document.getElementById('recurring-list');if(!el)return;
+  if(!recurringRules.length){el.innerHTML='<div class="empty" style="padding:14px 0">No recurring transactions yet.</div>';return;}
+  el.innerHTML=recurringRules.map(r=>
+    '<div class="srow"><div class="srow-left"><div class="srow-label">'+(r.kind==='income'?'💰':'💸')+' '+esc(r.name)+'</div><div class="srow-sub">'+fmt(r.amount)+' EGP · day '+r.dayOfMonth+' of month</div></div>'+
+    '<div class="rec-actions"><div class="rec-toggle'+(r.active?' on':'')+'" onclick="toggleRecurringRule('+r.id+')"></div><span class="rec-del" onclick="deleteRecurringRule('+r.id+')">×</span></div></div>'
+  ).join('');
+}
+
+// Candidates found by analyzing this user's own transaction history (bills
+// that repeat monthly). Not created automatically — this only pre-fills the
+// review screen; the user edits/confirms each one before anything is added.
+const RECURRING_SUGGESTIONS=[
+  {name:'Internet',kind:'expense',amount:270,day:14,cat:'🌍',checked:true,note:'5 occurrences, 180–400 EGP (3 spellings merged) — amount rose over time, may be a plan change'},
+  {name:'Electricity',kind:'expense',amount:150,day:13,cat:'❓',checked:true,note:'2 occurrences, 100–200 EGP — usage-based, varies by month'},
+  {name:'Gas',kind:'expense',amount:15,day:15,cat:'❓',checked:false,note:'3 occurrences, small irregular amounts (6–26 EGP) — may be canister refills, not a fixed bill'},
+  {name:'Metro subscription',kind:'expense',amount:37,day:7,cat:'🚦',checked:true,note:'2 occurrences, 33–41 EGP'},
+  {name:'Course / كورس',kind:'expense',amount:3968,day:17,cat:'❓',checked:false,note:'Same day both times, but amounts vary wildly (520 vs 7416) — likely separate purchases, not one subscription'},
+  {name:'Water (مياه)',kind:'expense',amount:12,day:13,cat:'🧊',checked:false,note:'9 occurrences at 6–20 EGP — looks like bottled water purchases, not a utility bill'},
+  {name:'Salary',kind:'income',amount:13270,day:1,cat:null,checked:true,note:'5 occurrences — sometimes split into "Early salary" + "Remaining salary" around the 1st and 28th; this adds one rule for the 1st'},
+  {name:'Rent',kind:'expense',amount:0,day:1,cat:'❓',checked:false,note:'No history found — currently untracked. Enter an amount if you want to start tracking it.'},
+  {name:'Mobile / phone bill',kind:'expense',amount:0,day:1,cat:'📱',checked:false,note:'No dedicated bill found (رصيد top-ups look like informal credit reloads, not a fixed plan). Enter an amount if you have a fixed plan.'},
+];
+function openRecurringImportModal(){
+  renderRecurringImportRows();
+  document.getElementById('recurring-import-modal').classList.add('open');
+}
+function closeRecurringImportModal(e){if(e&&e.target!==document.getElementById('recurring-import-modal'))return;document.getElementById('recurring-import-modal').classList.remove('open');}
+function renderRecurringImportRows(){
+  const catOptions=CATS.map(c=>'<option value="'+esc(c.e)+'">'+esc(c.e)+' '+esc(c.l)+'</option>').join('');
+  document.getElementById('recurring-import-rows').innerHTML=RECURRING_SUGGESTIONS.map((s,i)=>
+    '<div class="rimp-row">'+
+      '<div class="rimp-head"><input type="checkbox" id="rimp-check-'+i+'"'+(s.checked?' checked':'')+'><input type="text" id="rimp-name-'+i+'" value="'+esc(s.name)+'" style="flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 8px;font-size:13px;color:var(--t1);font-weight:600"></div>'+
+      '<div class="rimp-grid">'+
+        '<div style="font-size:11px;color:var(--t3);align-self:center">'+(s.kind==='income'?'💰 Income':'💸 Expense')+'</div>'+
+        '<input type="number" id="rimp-amount-'+i+'" value="'+(s.amount||'')+'" placeholder="Amount">'+
+        '<input type="number" id="rimp-day-'+i+'" value="'+s.day+'" min="1" max="31" placeholder="Day">'+
+      '</div>'+
+      (s.kind==='expense'?'<div class="rimp-cat-row"><select id="rimp-cat-'+i+'">'+catOptions+'</select></div>':'')+
+      '<div class="rimp-note">'+esc(s.note)+'</div>'+
+    '</div>'
+  ).join('');
+  // set category selects to the suggested default after the <select> elements exist
+  RECURRING_SUGGESTIONS.forEach((s,i)=>{if(s.kind==='expense'){const sel=document.getElementById('rimp-cat-'+i);if(sel&&s.cat)sel.value=s.cat;}});
+}
+function confirmRecurringImport(){
+  let added=0,skippedInvalid=0;
+  RECURRING_SUGGESTIONS.forEach((s,i)=>{
+    if(!document.getElementById('rimp-check-'+i).checked)return;
+    const name=document.getElementById('rimp-name-'+i).value.trim();
+    const amount=parseFloat(document.getElementById('rimp-amount-'+i).value);
+    const day=Math.min(31,Math.max(1,parseInt(document.getElementById('rimp-day-'+i).value)||1));
+    if(!name||!amount||isNaN(amount)||amount<=0){skippedInvalid++;return;}
+    const rule={id:nid(),kind:s.kind,name,amount,dayOfMonth:day,active:true,payMethod:'cash'};
+    if(s.kind==='expense'){
+      const catE=document.getElementById('rimp-cat-'+i).value,c=CATS.find(x=>x.e===catE)||CATS[0];
+      rule.cat=c.e;rule.catLabel=c.l;rule.nw=catNW(c.e);
+    }
+    recurringRules.push(rule);supaUpsertRecurringRule(rule);added++;
+  });
+  if(added)saveState();
+  document.getElementById('recurring-import-modal').classList.remove('open');
+  if(added)flash('Added '+added+' recurring rule'+(added>1?'s':'')+(skippedInvalid?' ('+skippedInvalid+' skipped — missing amount)':''),'var(--green)');
+  else flash(skippedInvalid?'Nothing added — check amounts on the boxes you checked':'Nothing checked','var(--amber)');
+  renderRecurringList();renderHome();
+}
+
 function renderSinking(){
+  updateContribBanner();
   const{m,y}=nowDate();
   const contrib=sfLog.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&e.type==='contribution';}).reduce((s,e)=>s+e.amount,0);
-  const allW=sfLog.filter(e=>e.type==='withdrawal').reduce((s,e)=>s+e.amount,0),allC=sfLog.filter(e=>e.type==='contribution').reduce((s,e)=>s+e.amount,0),bal=Math.max(0,allC-allW),pct=Math.min(100,(contrib/BUDGET.sinking)*100);
-  document.getElementById('sf-bal').textContent=fmt(bal);document.getElementById('sf-contrib').textContent=fmt(allC);document.getElementById('sf-with').textContent=fmt(allW);
+  const allW=sfLog.filter(e=>e.type==='withdrawal').reduce((s,e)=>s+e.amount,0),allC=sfLog.filter(e=>e.type==='contribution').reduce((s,e)=>s+e.amount,0),bal=allC-allW,pct=Math.min(100,(contrib/BUDGET.sinking)*100);
+  document.getElementById('sf-bal').textContent=fmt(bal);document.getElementById('sf-bal').style.color=bal<0?'var(--red)':'';document.getElementById('sf-contrib').textContent=fmt(allC);document.getElementById('sf-with').textContent=fmt(allW);
   document.getElementById('sf-target-lbl').textContent=fmt(BUDGET.sinking);document.getElementById('sf-prog-lbl').textContent=fmt(contrib)+' / '+fmt(BUDGET.sinking);document.getElementById('sf-prog-fill').style.width=pct.toFixed(1)+'%';
-  document.getElementById('wish-list').innerHTML=wishlist.length?wishlist.map(w=>'<div class="exp-item" style="opacity:'+(w.done?0.4:1)+'"><div class="exp-em" style="font-size:14px;cursor:pointer" onclick="toggleWish('+w.id+')">'+(w.done?'✅':'⬜')+'</div><div class="exp-info"><div class="exp-name" style="'+(w.done?'text-decoration:line-through':'')+'">'+w.name+'</div><div class="exp-meta">'+(w.cost?fmt(w.cost)+' EGP est.':'')+'</div></div><div class="exp-del" onclick="delWish('+w.id+')">×</div></div>').join(''):'<div class="empty">No wishlist items</div>';
-  document.getElementById('sf-list').innerHTML=[...sfLog].reverse().slice(0,30).map(e=>{const d=new Date(e.date),isW=e.type==='withdrawal',fromLabel=e.from?' · from '+e.from:'';return'<div class="exp-item" style="cursor:pointer" onclick="openSfEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--green)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';}).join('')||'<div class="empty">No transactions yet</div>';
+  document.getElementById('wish-list').innerHTML=wishlist.length?wishlist.map(w=>'<div class="exp-item" style="opacity:'+(w.done?0.4:1)+'"><div class="exp-em" style="font-size:14px;cursor:pointer" onclick="toggleWish('+w.id+')">'+(w.done?'✅':'⬜')+'</div><div class="exp-info"><div class="exp-name" style="'+(w.done?'text-decoration:line-through':'')+'">'+esc(w.name)+'</div><div class="exp-meta">'+(w.cost?fmt(w.cost)+' EGP est.':'')+'</div></div><div class="exp-del" onclick="delWish('+w.id+')">×</div></div>').join(''):'<div class="empty">No wishlist items</div>';
+  document.getElementById('sf-list').innerHTML=[...sfLog].reverse().slice(0,30).map(e=>{const d=new Date(e.date),isW=e.type==='withdrawal',fromLabel=e.from?' · from '+e.from:'';return'<div class="exp-item" style="cursor:pointer" onclick="openSfEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+esc(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--green)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';}).join('')||'<div class="empty">No transactions yet</div>';
 }
-function toggleWish(id){const w=wishlist.find(x=>x.id===id);if(!w)return;w.done=!w.done;if(w.done&&w.cost>0){const entry={id:Date.now(),name:w.name,amount:w.cost,type:'withdrawal',date:new Date().toISOString()};sfLog.push(entry);supaUpsertSfLog(entry);flash('✓ Logged withdrawal: '+w.name+' '+fmt(w.cost)+' EGP','var(--purple)');}if(!w.done){const now=Date.now();sfLog=sfLog.filter(e=>!(e.name===w.name&&e.type==='withdrawal'&&(now-new Date(e.date).getTime())<15000));}saveState();supaUpsertWishlist();renderSinking();}
-function delWish(id){wishlist=wishlist.filter(x=>x.id!==id);saveState();supaUpsertWishlist();renderSinking();}
+function toggleWish(id){
+  const w=wishlist.find(x=>x.id===id);if(!w)return;
+  w.done=!w.done;
+  if(w.done&&w.cost>0){
+    const entry={id:nid(),name:w.name,amount:w.cost,type:'withdrawal',date:new Date().toISOString()};
+    sfLog.push(entry);supaUpsertSfLog(entry);w.sfLogId=entry.id;
+    flash('✓ Logged withdrawal: '+w.name+' '+fmt(w.cost)+' EGP','var(--purple)');
+  } else if(!w.done&&w.sfLogId){
+    sfLog=sfLog.filter(e=>e.id!==w.sfLogId);supaDeleteSfLog(w.sfLogId);w.sfLogId=null;
+  }
+  saveState();supaUpsertWishlist();renderSinking();
+}
+function delWish(id){
+  const w=wishlist.find(x=>x.id===id);
+  if(w&&w.sfLogId){sfLog=sfLog.filter(e=>e.id!==w.sfLogId);supaDeleteSfLog(w.sfLogId);}
+  wishlist=wishlist.filter(x=>x.id!==id);saveState();supaUpsertWishlist();renderSinking();
+}
 document.getElementById('add-wish-btn').onclick=()=>{const el=document.getElementById('wish-add');el.style.display=el.style.display==='none'?'block':'none';};
-function addWishItem(){const name=document.getElementById('wish-inp').value.trim(),cost=parseFloat(document.getElementById('wish-cost').value)||0;if(!name){flash('Enter item name');return;}wishlist.push({id:Date.now(),name,cost,done:false});saveState();supaUpsertWishlist();document.getElementById('wish-inp').value='';document.getElementById('wish-cost').value='';document.getElementById('wish-add').style.display='none';renderSinking();}
+function addWishItem(){const name=document.getElementById('wish-inp').value.trim(),cost=parseFloat(document.getElementById('wish-cost').value)||0;if(!name){flash('Enter item name');return;}wishlist.push({id:nid(),name,cost,done:false,sfLogId:null});saveState();supaUpsertWishlist();document.getElementById('wish-inp').value='';document.getElementById('wish-cost').value='';document.getElementById('wish-add').style.display='none';renderSinking();}
 function openSfBalModal(defaultTab){sfModalTab(defaultTab||'contribution');document.getElementById('sfm-name').value='';document.getElementById('sfm-amount').value='';sfSetFrom('cash');document.getElementById('sf-bal-modal').classList.add('open');}
 function closeSfBalModal(e){if(e&&e.target!==document.getElementById('sf-bal-modal'))return;document.getElementById('sf-bal-modal').classList.remove('open');}
 function sfSetFrom(type){sfFrom=type;document.getElementById('sfm-from-cash').className='tbtn'+(type==='cash'?' ac':'');document.getElementById('sfm-from-visa').className='tbtn'+(type==='visa'?' ad':'');}
@@ -1050,24 +1599,25 @@ function sfModalTab(t){
   document.getElementById('sfm-from-row').style.display=t==='contribution'?'block':'none';sfSetFrom('cash');
 }
 function saveSfBalEntry(){
-  const name=document.getElementById('sfm-name').value.trim()||(sfBalModalType==='contribution'?'Contribution':'Withdrawal'),amount=parseFloat(document.getElementById('sfm-amount').value);
+  const name=canonicalName(document.getElementById('sfm-name').value)||(sfBalModalType==='contribution'?'Contribution':'Withdrawal'),amount=parseFloat(document.getElementById('sfm-amount').value);
   if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
-  const entry={id:Date.now(),name,amount,type:sfBalModalType,from:sfBalModalType==='contribution'?sfFrom:null,date:new Date().toISOString()};
+  const entry={id:nid(),name,amount,type:sfBalModalType,from:sfBalModalType==='contribution'?sfFrom:null,date:new Date().toISOString()};
   sfLog.push(entry);saveState();supaUpsertSfLog(entry);
   flash((sfBalModalType==='contribution'?'Contribution':'Withdrawal')+' added!',sfBalModalType==='contribution'?'var(--green)':'var(--purple)');
   document.getElementById('sf-bal-modal').classList.remove('open');renderSinking();renderHome();
 }
 function openSfEditModal(id){const entry=sfLog.find(e=>e.id===id);if(!entry)return;sfEditingId=id;const isW=entry.type==='withdrawal';document.getElementById('sf-edit-title').innerHTML=(isW?'Edit withdrawal':'Edit contribution')+' <span class="modal-close" onclick="closeSfEditModal()">×</span>';document.getElementById('sf-edit-name').value=entry.name||'';document.getElementById('sf-edit-amount').value=entry.amount||'';document.getElementById('sf-edit-date').value=entry.date?entry.date.slice(0,10):'';document.getElementById('sf-edit-modal').classList.add('open');}
 function closeSfEditModal(e){if(e&&e.target!==document.getElementById('sf-edit-modal'))return;document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;}
-function saveSfEdit(){if(!sfEditingId)return;const idx=sfLog.findIndex(e=>e.id===sfEditingId);if(idx<0)return;const name=document.getElementById('sf-edit-name').value.trim(),amount=parseFloat(document.getElementById('sf-edit-amount').value),date=document.getElementById('sf-edit-date').value;if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}sfLog[idx].name=name||sfLog[idx].name;sfLog[idx].amount=amount;if(date)sfLog[idx].date=new Date(date).toISOString();saveState();supaUpsertSfLog(sfLog[idx]);document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction updated!','var(--green)');renderSinking();}
+function saveSfEdit(){if(!sfEditingId)return;const idx=sfLog.findIndex(e=>e.id===sfEditingId);if(idx<0)return;const name=document.getElementById('sf-edit-name').value.trim(),amount=parseFloat(document.getElementById('sf-edit-amount').value),date=document.getElementById('sf-edit-date').value;if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}sfLog[idx].name=name||sfLog[idx].name;sfLog[idx].amount=amount;if(date)sfLog[idx].date=parseLocalDate(date).toISOString();saveState();supaUpsertSfLog(sfLog[idx]);document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction updated!','var(--green)');renderSinking();}
 function deleteSfEntry(){if(!sfEditingId)return;if(!confirm('Delete this transaction?'))return;supaDeleteSfLog(sfEditingId);sfLog=sfLog.filter(e=>e.id!==sfEditingId);saveState();document.getElementById('sf-edit-modal').classList.remove('open');sfEditingId=null;flash('Transaction deleted','var(--red)');renderSinking();}
 
 // SAVINGS
 function renderSavings(){
   const allW=savingsLog.filter(e=>e.type==='withdrawal').reduce((s,e)=>s+e.amount,0);
   const allC=savingsLog.filter(e=>e.type==='contribution').reduce((s,e)=>s+e.amount,0);
-  const bal=Math.max(0,allC-allW);
+  const bal=allC-allW;
   document.getElementById('save-bal').textContent=fmt(bal);
+  document.getElementById('save-bal').style.color=bal<0?'var(--red)':'var(--blue)';
   document.getElementById('save-contrib').textContent=fmt(allC);
   document.getElementById('save-with').textContent=fmt(allW);
   const labelTotals={};
@@ -1077,11 +1627,11 @@ function renderSavings(){
   const colors=['var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--lime)'];
   document.getElementById('alloc-chart').innerHTML=sorted.length?sorted.map(([label,amount],i)=>{
     const pct=(amount/total*100).toFixed(1);
-    return'<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t2);width:auto;text-align:right;min-width:60px">'+label+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div><div class="cbar-val">'+fmt(amount)+'</div></div>';
+    return'<div class="cbar-row"><div class="cbar-label" style="font-size:11px;color:var(--t2);width:auto;text-align:right;min-width:60px">'+esc(label)+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div><div class="cbar-val">'+fmt(amount)+'</div></div>';
   }).join(''):'<div class="empty">No savings yet</div>';
   document.getElementById('save-list').innerHTML=[...savingsLog].reverse().slice(0,30).map(e=>{
-    const d=new Date(e.date),isW=e.type==='withdrawal',fromLabel=e.from?' · from '+e.from:'',labelStr=e.label?' · '+e.label:'';
-    return'<div class="exp-item" style="cursor:pointer" onclick="openSaveEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+labelStr+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--blue)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';
+    const d=new Date(e.date),isW=e.type==='withdrawal',fromLabel=e.from?' · from '+e.from:'',labelStr=e.label?' · '+esc(e.label):'';
+    return'<div class="exp-item" style="cursor:pointer" onclick="openSaveEditModal('+e.id+')"><div class="exp-em">'+(isW?'📤':'📥')+'</div><div class="exp-info"><div class="exp-name">'+esc(e.name||e.type)+'</div><div class="exp-meta">'+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear()+fromLabel+labelStr+' · tap to edit</div></div><div class="exp-amt" style="color:'+(isW?'var(--red)':'var(--blue)')+'">'+(isW?'-':'+')+' '+fmt(e.amount)+'</div></div>';
   }).join('')||'<div class="empty">No savings yet</div>';
 }
 function openSaveBalModal(defaultTab){
@@ -1102,11 +1652,11 @@ function saveModalTab(t){
   saveSetFrom('cash');
 }
 function saveSaveBalEntry(){
-  const name=document.getElementById('svm-name').value.trim()||(saveBalModalType==='contribution'?'Contribution':'Withdrawal');
+  const name=canonicalName(document.getElementById('svm-name').value)||(saveBalModalType==='contribution'?'Contribution':'Withdrawal');
   const amount=parseFloat(document.getElementById('svm-amount').value);
   const label=document.getElementById('svm-label').value.trim();
   if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
-  const entry={id:Date.now(),name,amount,type:saveBalModalType,from:saveBalModalType==='contribution'?saveFrom:null,label,date:new Date().toISOString()};
+  const entry={id:nid(),name,amount,type:saveBalModalType,from:saveBalModalType==='contribution'?saveFrom:null,label,date:new Date().toISOString()};
   savingsLog.push(entry);saveState();supaUpsertSavingsLog(entry);
   flash((saveBalModalType==='contribution'?'Contribution':'Withdrawal')+' added!',saveBalModalType==='contribution'?'var(--blue)':'var(--red)');
   document.getElementById('save-bal-modal').classList.remove('open');renderSavings();renderHome();
@@ -1123,7 +1673,7 @@ function saveSaveEdit(){
   if(!saveEditingId)return;const idx=savingsLog.findIndex(e=>e.id===saveEditingId);if(idx<0)return;
   const name=document.getElementById('save-edit-name').value.trim(),amount=parseFloat(document.getElementById('save-edit-amount').value),date=document.getElementById('save-edit-date').value;
   if(!amount||isNaN(amount)||amount<=0){flash('Enter a valid amount');return;}
-  savingsLog[idx].name=name||savingsLog[idx].name;savingsLog[idx].amount=amount;if(date)savingsLog[idx].date=new Date(date).toISOString();
+  savingsLog[idx].name=name||savingsLog[idx].name;savingsLog[idx].amount=amount;if(date)savingsLog[idx].date=parseLocalDate(date).toISOString();
   saveState();supaUpsertSavingsLog(savingsLog[idx]);
   document.getElementById('save-edit-modal').classList.remove('open');saveEditingId=null;flash('Updated!','var(--green)');renderSavings();
 }
@@ -1155,6 +1705,7 @@ function saveGoal(){
 
 // SETTINGS
 function renderSettings(){
+  renderRecurringList();
   document.getElementById('supa-url').value=localStorage.getItem('ms_supa_url')||'';document.getElementById('supa-key').value=localStorage.getItem('ms_supa_key')||'';
   document.getElementById('set-needs').value=BUDGET.needs;document.getElementById('set-wants').value=BUDGET.wants;document.getElementById('set-sinking').value=BUDGET.sinking;
   document.getElementById('set-debt').value=BUDGET.debt||0;
@@ -1162,7 +1713,7 @@ function renderSettings(){
   document.getElementById('set-visa-opening').value=BUDGET.visaOpening||0;
   document.getElementById('custom-user-id').value=localStorage.getItem('ms_custom_uid')||'';document.getElementById('current-uid-display').textContent=SUPA_USER_ID||'(device)';
   const g=document.getElementById('cat-edit-grid');g.innerHTML='';
-  CATS.forEach((c,i)=>{const div=document.createElement('div');div.className='cbtn';div.style.cursor='default';div.innerHTML='<div class="cat-remove" onclick="removeCat('+i+')">×</div><div class="ce">'+c.e+'</div><div class="cl">'+c.l+'</div><div class="cl" style="color:'+(c.nw==='needs'?'var(--green)':c.nw==='debt'?'var(--red)':'var(--amber)')+'">'+c.nw+'</div>';g.appendChild(div);});
+  CATS.forEach((c,i)=>{const div=document.createElement('div');div.className='cbtn';div.style.cursor='default';div.innerHTML='<div class="cat-remove" onclick="removeCat('+i+')">×</div><div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div><div class="cl" style="color:'+(c.nw==='needs'?'var(--green)':c.nw==='debt'?'var(--red)':'var(--amber)')+'">'+c.nw+'</div>';g.appendChild(div);});
   refreshQuickItems();const qp=document.getElementById('qa-preview');qp.innerHTML='';quickItems.slice(0,6).forEach(q=>{const b=document.createElement('div');b.className='qbtn';b.textContent=q.cat+' '+q.name+' '+q.amount;qp.appendChild(b);});
 }
 function saveSettings(){
@@ -1171,7 +1722,7 @@ function saveSettings(){
   BUDGET.needs=n;BUDGET.wants=w;BUDGET.sinking=s;BUDGET.debt=debt;
   BUDGET.cashOpening=parseFloat(document.getElementById('set-cash-opening').value)||0;
   BUDGET.visaOpening=parseFloat(document.getElementById('set-visa-opening').value)||0;
-  localStorage.setItem('ms_budget',JSON.stringify(BUDGET));supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
+  localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_sinking_target_set','1');supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
 }
 function addCategory(){const emoji=document.getElementById('new-cat-emoji').value.trim(),label=document.getElementById('new-cat-label').value.trim(),nw=document.getElementById('new-cat-nw').value;if(!emoji||!label){flash('Enter emoji and label');return;}if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}CATS.push({e:emoji,l:label,nw});saveCats();supaUpsertAppState();document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';selCat=CATS[0];buildCatGrid();renderSettings();flash('Category added!','var(--green)');}
 function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;CATS.splice(idx,1);saveCats();supaUpsertAppState();if(!CATS.find(c=>c.e===selCat.e))selCat=CATS[0];buildCatGrid();renderSettings();flash('Category removed','var(--red)');}
@@ -1181,7 +1732,38 @@ function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','v
 function exportXLSX(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses for '+MONTHS[m]+' '+y);return;}const rows=[['main','cost','name','category','type','needs_wants','date']];list.forEach(e=>rows.push([e.amount+' '+e.name+' '+e.cat,e.amount,e.name,e.cat,e.type,e.nw||'',e.date.slice(0,10)]));const catT={};CATS.forEach(c=>{catT[c.e]={label:c.l,total:0};});list.forEach(e=>{if(catT[e.cat])catT[e.cat].total+=e.amount;});const catE=Object.entries(catT).filter(([,v])=>v.total>0),grand=list.reduce((s,e)=>s+e.amount,0),needsT=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0),wantsT=list.filter(e=>e.nw==='wants').reduce((s,e)=>s+e.amount,0),debtT=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0),ws=XLSX.utils.aoa_to_sheet(rows);catE.forEach(([em,{label,total}],i)=>{const r=i+2;ws['I'+r]={v:label};ws['J'+r]={v:em};ws['K'+r]={v:total};});ws['I'+(catE.length+3)]={v:'Grand Total'};ws['K'+(catE.length+3)]={v:grand};ws['I'+(catE.length+5)]={v:'Needs'};ws['K'+(catE.length+5)]={v:needsT};ws['I'+(catE.length+6)]={v:'Wants'};ws['K'+(catE.length+6)]={v:wantsT};ws['I'+(catE.length+7)]={v:'Debt'};ws['K'+(catE.length+7)]={v:debtT};ws['!cols']=[{wch:30},{wch:8},{wch:20},{wch:8},{wch:8},{wch:10},{wch:12},{wch:2},{wch:14},{wch:6},{wch:10}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'table');XLSX.writeFile(wb,MONTHS[m]+'_expenses.xlsx');}
 function exportCSV(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses found');return;}const csv='date,name,amount,category,type,needs_wants\n'+list.map(e=>e.date.slice(0,10)+','+JSON.stringify(e.name)+','+e.amount+','+e.catLabel+','+e.type+','+(e.nw||'')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=MONTHS[m]+'_expenses.csv';a.click();}
 function backupJSON(){const data={expenses,sfLog,savingsLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
-function restoreJSON(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;if(d.savingsLog)savingsLog=d.savingsLog;if(d.wishlist)wishlist=d.wishlist;if(d.goalData)goalData=d.goalData;if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;if(d.quickItems)quickItems=d.quickItems;saveState();saveCats();saveAllocs();localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));flash('Restored!','var(--green)');renderHome();}catch(err){flash('Restore failed: '+err.message);}};r.readAsText(file);}
+function restoreJSON(ev){
+  const file=ev.target.files[0];if(!file)return;ev.target.value='';
+  const label=document.getElementById('restore-label'),labelText=document.getElementById('restore-label-text');
+  const orig=labelText.textContent;
+  const r=new FileReader();
+  r.onload=async e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;if(d.savingsLog)savingsLog=d.savingsLog;if(d.wishlist)wishlist=d.wishlist;
+      if(d.goalData)goalData=d.goalData;if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;
+      if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);
+      if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;if(d.quickItems)quickItems=d.quickItems;
+      saveState();saveCats();saveAllocs();rebuildNameIndex();
+      localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));
+      // Sync before rendering: the previous version rendered the restored data
+      // immediately and let the push resolve up to ~1s later in the background,
+      // so what was on screen could briefly be ahead of what was actually saved
+      // to Supabase. Waiting keeps "what you see" and "what's confirmed synced"
+      // from diverging, at the cost of a short spinner.
+      let ok=true;
+      if(supaReady()){
+        labelText.textContent='⏳ Syncing...';label.style.opacity='0.6';label.style.pointerEvents='none';
+        ok=await syncToSupabase(true);
+      }
+      renderHome();renderStats();renderSinking();renderSavings();renderGoals();renderSettings();
+      if(supaReady())flash(ok?'Restored and synced ✓':'Restored locally — sync failed, will retry on next change',ok?'var(--green)':'var(--amber)');
+      else flash('Restored!','var(--green)');
+    }catch(err){flash('Restore failed: '+err.message);}
+    finally{labelText.textContent=orig;label.style.opacity='';label.style.pointerEvents='';}
+  };
+  r.readAsText(file);
+}
 
 // PWA
 let deferredPrompt=null;

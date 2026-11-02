@@ -107,6 +107,9 @@
     .tbtn.ac{background:var(--s3);color:var(--lime);font-weight:500}
     .tbtn.ad{background:var(--s3);color:var(--blue);font-weight:500}
     .tbtn.as{background:var(--s3);color:var(--purple);font-weight:500}
+    .cat-parent-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+    .cparent-btn{flex:0 0 auto;padding:6px 10px;border-radius:999px;border:0.5px solid var(--b2);background:var(--s2);font-size:12px;white-space:nowrap;cursor:pointer;color:var(--t2);font-family:inherit}
+    .cparent-btn.sel{background:var(--lime);color:#0f0f0f;border-color:var(--lime)}
     .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
     .cbtn{background:var(--s2);border:0.5px solid var(--b1);border-radius:var(--rs);padding:8px 3px 6px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .12s;position:relative}
     .cbtn:active{transform:scale(.96)}.cbtn.sel{border-color:var(--lime);background:var(--lime-d)}
@@ -305,11 +308,11 @@
         </div>
         <div class="frow" style="position:relative">
           <div class="flabel">Name</div>
-          <input class="finput" type="text" id="inp-name" placeholder="e.g. باتيه, metro, فراخ…" dir="auto" autocomplete="off" oninput="renderNameSuggestions()" onfocus="renderNameSuggestions()">
+          <input class="finput" type="text" id="inp-name" placeholder="e.g. باتيه, metro, فراخ…" dir="auto" autocomplete="off" oninput="renderNameSuggestions();autoClassifyFromName()" onfocus="renderNameSuggestions()">
           <div id="name-suggestions" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--rs);max-height:220px;overflow-y:auto;margin-top:2px"></div>
         </div>
         <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="inp-amount" placeholder="0" min="0" step="1" inputmode="numeric"></div>
-        <div class="frow"><div class="flabel">Category</div><div class="cat-grid" id="cat-grid"></div></div>
+        <div class="frow"><div class="flabel">Category</div><div class="cat-parent-row" id="cat-parent-row"></div><div class="cat-grid" id="cat-grid"></div></div>
         <button class="sub-btn" id="sub-btn" style="background:var(--lime)" onclick="addExpense()">Add Expense</button>
       </div>
     </div>
@@ -434,6 +437,8 @@
         <div class="card-title">Data cleanup</div>
         <div style="font-size:12px;color:var(--t2);margin-bottom:10px">Merges known spelling variants (e.g. قهوة / قهوه) in your existing expense history into one canonical name, so Quick Add counts them as the same item. One-time, safe to run more than once.</div>
         <button class="xbtn xbtn-s" onclick="mergeItemNameVariants()">&#x1F9F9; Merge duplicate item names</button>
+        <div style="font-size:12px;color:var(--t2);margin:14px 0 10px">Re-files your existing expenses into the new two-level categories using each item's name (and its old category as a fallback). Safe to run more than once.</div>
+        <button class="xbtn xbtn-s" onclick="reclassifyCategories()">&#x1F5C2; Reclassify my expenses</button>
       </div>
     </div>
     <!-- SETTINGS -->
@@ -493,7 +498,7 @@
         <div style="display:flex;gap:7px;margin-bottom:10px">
           <input class="finput" id="new-cat-emoji" placeholder="😀" style="width:52px;flex:none;text-align:center;font-size:20px">
           <input class="finput" id="new-cat-label" placeholder="Label">
-          <select class="finput" id="new-cat-nw" style="width:80px;flex:none;font-size:12px"><option value="wants">Wants</option><option value="needs">Needs</option><option value="debt">Debt</option></select>
+          <select class="finput" id="new-cat-nw" style="width:80px;flex:none;font-size:12px"><option value="wants">Wants</option><option value="needs">Needs</option><option value="debt">Debt</option><option value="other">Other</option></select>
         </div>
         <button class="save-settings-btn" onclick="addCategory()">+ Add category</button>
       </div>
@@ -636,7 +641,7 @@
     <div class="modal-title">Edit Expense <span class="modal-close" onclick="closeExpEditModal()">&#xD7;</span></div>
     <div class="frow"><div class="flabel">Name</div><input class="finput" type="text" id="exp-edit-name" dir="auto"></div>
     <div class="frow"><div class="flabel">Amount (EGP)</div><input class="finput" type="number" id="exp-edit-amount" inputmode="numeric"></div>
-    <div class="frow"><div class="flabel">Category</div><div class="cat-grid" id="exp-edit-cat-grid"></div></div>
+    <div class="frow"><div class="flabel">Category</div><div class="cat-parent-row" id="exp-edit-cat-parent-row"></div><div class="cat-grid" id="exp-edit-cat-grid"></div></div>
     <div class="frow"><div class="flabel">Type</div><div class="ttog"><button class="tbtn" id="exp-edit-cash" onclick="expEditSetType('cash')">&#x1F4B5; Cash</button><button class="tbtn" id="exp-edit-digital" onclick="expEditSetType('digital')">&#x1F4F2; Digital</button><button class="tbtn" id="exp-edit-sinking" onclick="expEditSetType('sinking')">&#x1F437; Sinking</button></div></div>
     <div class="frow"><div class="flabel">Date</div><input class="finput" type="date" id="exp-edit-date"></div>
     <button class="modal-save-btn" onclick="saveExpEdit()">Save changes</button>
@@ -647,23 +652,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-let CATS=[
-  {e:'🚦',l:'Transport',nw:'needs'},{e:'🍗',l:'Groceries',nw:'needs'},
-  {e:'🌍',l:'Internet',nw:'needs'},{e:'📱',l:'Mobile',nw:'needs'},
-  {e:'🧴',l:'Care',nw:'needs'},{e:'☕',l:'Coffee',nw:'wants'},
-  {e:'🥔',l:'Snacks',nw:'wants'},{e:'🥐',l:'Bakery',nw:'wants'},
-  {e:'🍟',l:'FastFood',nw:'wants'},{e:'🎮',l:'Gaming',nw:'wants'},
-  {e:'🤲',l:'Sadaqah',nw:'wants'},{e:'🎁',l:'Gifts',nw:'wants'},
-  {e:'🥙',l:'Food',nw:'wants'},{e:'🧊',l:'Drinks',nw:'wants'},
-  {e:'❓',l:'Misc',nw:'wants'},{e:'🥛',l:'Dairy',nw:'wants'},
-  {e:'💳',l:'Debt',nw:'debt'},
-];
+// ─── Category taxonomy (two-level: parent + subcategory) ──────────────────
+// Built from this user's own transaction history. Each subcategory carries a
+// needs/wants/debt/other tag for the budget bars ('other' = not counted toward
+// Needs or Wants — transfers to people, savings/loan entries, uncategorized).
+const TAX_PARENTS=[{"id":"food","l":"Food & Drink","e":"🍽️"},{"id":"transport","l":"Transport","e":"🚌"},{"id":"bills","l":"Bills & Utilities","e":"💡"},{"id":"housing","l":"Housing & Home","e":"🏠"},{"id":"health","l":"Health & Fitness","e":"💊"},{"id":"care","l":"Personal Care","e":"🧴"},{"id":"clothing","l":"Clothing & Accessories","e":"👕"},{"id":"electronics","l":"Electronics & Tech","e":"💻"},{"id":"education","l":"Education & Work","e":"📚"},{"id":"leisure","l":"Leisure & Travel","e":"🏖️"},{"id":"social","l":"Social & Giving","e":"🎁"},{"id":"financial","l":"Financial & Fees","e":"🏦"},{"id":"government","l":"Government & Documents","e":"📄"},{"id":"subs","l":"Subscriptions","e":"🔁"},{"id":"pets","l":"Pets","e":"🐇"},{"id":"review","l":"Needs Review","e":"❓"},{"id":"custom","l":"Custom","e":"➕"}];
+const TAX_SUBS=[{"parent":"review","id":"needs_review","l":"Needs Review","e":"❓","nw":"other"},{"parent":"social","id":"no_reason","l":"Private / No Reason Given","e":"🤐","nw":"other"},{"parent":"financial","id":"delivery_tips","l":"Delivery & Tips","e":"🛵","nw":"wants"},{"parent":"financial","id":"bank_fees","l":"Bank & Transfer Fees","e":"🏧","nw":"needs"},{"parent":"financial","id":"price_adjust","l":"Price Adjustments","e":"±","nw":"needs"},{"parent":"financial","id":"savings_loans","l":"Savings & Loans","e":"🐷","nw":"other"},{"parent":"transport","id":"metro","l":"Metro","e":"🚇","nw":"needs"},{"parent":"bills","id":"electricity","l":"Electricity","e":"⚡","nw":"needs"},{"parent":"bills","id":"gas","l":"Gas","e":"🔥","nw":"needs"},{"parent":"bills","id":"internet","l":"Internet","e":"🌍","nw":"needs"},{"parent":"bills","id":"mobile_credit","l":"Mobile Credit","e":"📱","nw":"needs"},{"parent":"subs","id":"apps_memberships","l":"Apps & Memberships","e":"🔁","nw":"wants"},{"parent":"housing","id":"rent","l":"Rent","e":"🔑","nw":"needs"},{"parent":"education","id":"courses","l":"Courses","e":"🎓","nw":"needs"},{"parent":"education","id":"stationery","l":"Books & Stationery","e":"✏️","nw":"needs"},{"parent":"education","id":"printing","l":"Printing & Copying","e":"🖨️","nw":"needs"},{"parent":"social","id":"family_support","l":"Family Support","e":"👪","nw":"needs"},{"parent":"government","id":"documents","l":"Documents & Licenses","e":"📄","nw":"needs"},{"parent":"health","id":"body_scan","l":"Body Scans (InBody)","e":"🧍","nw":"wants"},{"parent":"health","id":"doctor","l":"Doctor & Treatment","e":"🩺","nw":"needs"},{"parent":"health","id":"supplements","l":"Supplements","e":"💊","nw":"wants"},{"parent":"health","id":"fitness_gear","l":"Fitness Gear","e":"🏋️","nw":"wants"},{"parent":"care","id":"grooming","l":"Grooming & Hygiene","e":"🧴","nw":"needs"},{"parent":"care","id":"tissues","l":"Tissues & Basics","e":"🧻","nw":"needs"},{"parent":"clothing","id":"clothes","l":"Clothes","e":"👕","nw":"wants"},{"parent":"clothing","id":"shoes","l":"Shoes & Slippers","e":"👟","nw":"wants"},{"parent":"clothing","id":"bags_acc","l":"Bags & Watches","e":"👜","nw":"wants"},{"parent":"clothing","id":"eyewear","l":"Eyewear","e":"🕶️","nw":"wants"},{"parent":"electronics","id":"devices","l":"Devices","e":"💻","nw":"wants"},{"parent":"electronics","id":"accessories","l":"Accessories & Hardware","e":"🎧","nw":"wants"},{"parent":"housing","id":"household","l":"Household & Kitchen","e":"🧺","nw":"needs"},{"parent":"transport","id":"routes","l":"Microbus & Routes","e":"🚐","nw":"needs"},{"parent":"leisure","id":"trips","l":"Beach & Trips","e":"🏖️","nw":"wants"},{"parent":"leisure","id":"games_sports","l":"Games & Sports","e":"🎮","nw":"wants"},{"parent":"social","id":"charity","l":"Charity","e":"🤲","nw":"wants"},{"parent":"social","id":"gifts","l":"Gifts","e":"🎁","nw":"wants"},{"parent":"social","id":"people_transfers","l":"Transfers to People","e":"👤","nw":"other"},{"parent":"pets","id":"pets","l":"Pets","e":"🐇","nw":"wants"},{"parent":"transport","id":"ridehail","l":"Ride-hailing & Tuk-tuk","e":"🛺","nw":"wants"},{"parent":"transport","id":"intercity","l":"Intercity & Trips","e":"🚆","nw":"wants"},{"parent":"food","id":"street_food","l":"Street Food & Quick Bites","e":"🌯","nw":"wants"},{"parent":"food","id":"dairy_eggs","l":"Dairy & Eggs","e":"🥛","nw":"needs"},{"parent":"food","id":"meat_poultry","l":"Meat & Poultry","e":"🍗","nw":"needs"},{"parent":"food","id":"bread_bakery","l":"Bread & Bakery","e":"🥐","nw":"needs"},{"parent":"food","id":"pantry","l":"Produce & Pantry","e":"🥫","nw":"needs"},{"parent":"food","id":"coffee_tea","l":"Coffee & Tea","e":"☕","nw":"wants"},{"parent":"food","id":"drinks","l":"Drinks & Water","e":"🧊","nw":"wants"},{"parent":"food","id":"sweets","l":"Sweets & Desserts","e":"🥞","nw":"wants"},{"parent":"food","id":"snacks","l":"Snacks & Chips","e":"🥔","nw":"wants"},{"parent":"food","id":"restaurants","l":"Restaurants & Takeout","e":"🍕","nw":"wants"}];
+// Regex classifier: ascending prio, first match wins. Tested against a
+// normalized form of the name (see classifyNormalize).
+const TAX_RULES=[{"parent":"review","sub":"needs_review","re":"^(error|مش عارف|صاروخ)"},{"parent":"social","sub":"no_reason","re":"بدون سبب|بلا سبب|من غير سبب"},{"parent":"financial","sub":"delivery_tips","re":"delivery|tip|توصيل|توصل|مصاريف الشحن"},{"parent":"financial","sub":"bank_fees","re":"مصاريف (تحويل|سحب)"},{"parent":"financial","sub":"price_adjust","re":"فرق سعر|تعديل سعر"},{"parent":"financial","sub":"savings_loans","re":"تحويش|سلفه|دين|قسط"},{"parent":"transport","sub":"metro","re":"مترو"},{"parent":"bills","sub":"electricity","re":"كهرب"},{"parent":"bills","sub":"gas","re":"^(ال)?غاز$"},{"parent":"bills","sub":"internet","re":"(^| )(ال)?نت( |$)|انترنت"},{"parent":"bills","sub":"mobile_credit","re":"رصيد|شحن الكرت|كرت شحن|balance"},{"parent":"subs","sub":"apps_memberships","re":"اشتراك|برو|netflix|spotify"},{"parent":"housing","sub":"rent","re":"ايجار"},{"parent":"education","sub":"courses","re":"كورس|course"},{"parent":"education","sub":"stationery","re":"كتب|كشكول|ملازم|ورق|قلم|كراس|^ملف$"},{"parent":"education","sub":"printing","re":"تصوير|مطبعه|طباعه|برنت|print"},{"parent":"social","sub":"family_support","re":"رخصه|driver license"},{"parent":"government","sub":"documents","re":"فيش|استماره|اثبات قيد|دمغه"},{"parent":"health","sub":"body_scan","re":"انبدي|inbody"},{"parent":"health","sub":"doctor","re":"كشف|علاج|دكتور|تحليل|اشعه|صيدليه|دوا"},{"parent":"health","sub":"supplements","re":"omega|creatine|crea|بروتين|فيتامين|مكمل|protein"},{"parent":"health","sub":"fitness_gear","re":"حزام مقاومه|دمبل|جيم"},{"parent":"care","sub":"grooming","re":"حلاق|مزيل عرق|خله اسنان|معجون|شامبو|صابون|سجاير|كونديشنر|derma|beard|fogg|فوج|سنون|فا رول|shampoo|conditioner"},{"parent":"care","sub":"tissues","re":"مناديل"},{"parent":"clothing","sub":"clothes","re":"تيشرت|بنطلون|جاكيت|قميص|clothes|شراب|بكسرات"},{"parent":"clothing","sub":"shoes","re":"شبشب|حذاء|جزمه|كوتش"},{"parent":"clothing","sub":"bags_acc","re":"شنطه|ساعه"},{"parent":"clothing","sub":"eyewear","re":"نظار|تظار|نطار"},{"parent":"electronics","sub":"devices","re":"لاب توب|لابتوب|موبايل|ايفون|تابلت"},{"parent":"electronics","sub":"accessories","re":"ماوس|سماعه|شاحن|وصله|كابل|كيبورد|فيشر|مسامير"},{"parent":"housing","sub":"household","re":"شماع|الومنيوم|(^| )فويل|كيس|صينيه|منظف|اكياس"},{"parent":"transport","sub":"routes","re":"^(لل|ل|ال)?شاطي( باقي)?$"},{"parent":"leisure","sub":"trips","re":"يخت|سفاري|مطروح|شاطي|شمسيه|شقه|شروت|رحله"},{"parent":"leisure","sub":"games_sports","re":"بلياردو|ملاكمه|كوره|بلايستيشن|gaming|سيبر|cyber"},{"parent":"social","sub":"charity","re":"فاعل خير|صدقه|تبرع"},{"parent":"social","sub":"gifts","re":"مصحف|هديه|gift|ورد|عشان ذكي"},{"parent":"social","sub":"people_transfers","re":"^omar$"},{"parent":"pets","sub":"pets","re":"رابيت|rabbit|كلب|قطه"},{"parent":"transport","sub":"ridehail","re":"توك ?توك|اوبر|uber|تاكسي|اندريفر|indriver|ديدي|didi"},{"parent":"transport","sub":"intercity","re":"اسكندريه|محطه الرمل|قطر|monorail"},{"parent":"transport","sub":"routes","re":"مكروباص|صقر|عرب|فايده|فيده|نايل|تحرير|محكمه|جيزه|منيب|معادي|حلوان|حلون|جامعه|تجمع|عاشر|دايري|صرف|اخر الشارع|احمد زكي|كوبري|مظلات|شارع العشرين|رمسيس|رنسيس|موصلات|السيده|باب اللوق|اول عباي|الشارع|موقف|جراش|قريه|جزاير|زهراء|البساتين|نفق|كارفور|مستشفي|^c2$|ملف"},{"parent":"food","sub":"street_food","re":"ساندوتش|سندوتش"},{"parent":"food","sub":"dairy_eggs","re":"(?<!ب)لبن(?! بلبن)|زبادي|جبن|بيض|رايب|تشيزا|لبنه|greek|yog|رومي|^رمي"},{"parent":"food","sub":"meat_poultry","re":"فراخ|لحمه|كبده|صدور|سجق|دجاج|سمك|كفته"},{"parent":"food","sub":"bread_bakery","re":"خبز|عيش|توست|تورتيلا|فرن|مخباز|بوت جدي|ريتش|بيكي|ديلي صن|cinnabon|سينابون|brioche|مولتو"},{"parent":"food","sub":"pantry","re":"فاصوليا|فول سوداني|بطاطس(?! جبنه| شبس)|رز(?! بلبن)|مكرونه|زيت|سكر|طماطم|خضار|فاكهه|عدس|هريسه|هاينز|حدائق|شعير|زبده|مايونيز|ذره|بسله|فلفل|hot sauce|شمام|مربي|^mama$|^طلبات$"},{"parent":"food","sub":"coffee_tea","re":"قهوه|اسبريسو|espresso|شاي|لمون|نعناع|كابتشينو|نسكافي"},{"parent":"food","sub":"drinks","re":"^(ال)?(مياه|ميه)|عصير|سموثي|cola|حاجه سقعه|سبيرو|سبرتو|سيبرو|اويسيس|ميلك شيك|smoothie|بلو بيري|دبل ديير|ريدبول|بوريو|لزوز|سيفن"},{"parent":"food","sub":"sweets","re":"ايس ?كريم|ايسكيرم|حاجه حلوه|حاجات حلوه|كيك|cake|جاتوه|كنافه|بسكريم|رز بلبن|mochi|شوكولاته|شكولاته|فانيلا|زابادو|باتيه|بسبوسه|حلويات|رتيش بيك|معمول|بليزو|اولكر|وافل|مزابيز|شاتو|ماندولين|تيتو|اوريو"},{"parent":"food","sub":"snacks","re":"شبس|شبسي|شيتوس|بسكوت|لبان|هوهوز|بريك|اندومي|ارابيلا|بست|سن بايتس|سن بايتش|سناك|مقرمشات|جاكور|جاجور|puffs|فلامنكوا"},{"parent":"food","sub":"street_food","re":"طعميه|فول|فطير|فطار|سحور|كشري|شاورما|كريب|مزارع|منقوش|دومتي"},{"parent":"food","sub":"restaurants","re":"بيتزا|وجبه|اكل|مطعم|برجر|ماك|كنتاكي|مندي|pizza|طاجن|ملفوف|willy|وجيه|ماريا|كرم الشام|ابو طالب|تفويله|bbq"}];
+// Maps this app's pre-taxonomy flat category labels (Transport, Groceries, …)
+// to a parent/sub pair — used only by the one-time history reclassification.
+const TAX_LEGACY_FALLBACK={"Misc":"review/needs_review","Transport":"transport/routes","Snacks":"food/snacks","Groceries":"food/pantry","Sweets":"food/sweets","FastFood":"food/restaurants","Mobile":"bills/mobile_credit","Coffee":"food/coffee_tea","Drinks":"food/drinks","Care":"care/grooming","Bakery":"food/bread_bakery","Bread":"food/bread_bakery","Dairy":"food/dairy_eggs","Food":"food/restaurants","Gifts":"social/gifts","Docs":"government/documents","Document":"government/documents","Internet":"bills/internet","Transfer":"financial/savings_loans","Debt":"social/family_support","Education":"education/stationery","Gaming":"leisure/games_sports","Clothing":"clothing/clothes","Clothes":"clothing/clothes","Fees":"government/documents","Other":"review/needs_review"};
+// CATS is the flat, editable, syncable picker list that the rest of the app
+// already expects ({e,l,nw}), now initialized from the two-level taxonomy
+// above with parent/sub ids carried along for grouping and classification.
+// A user-added custom category (Settings → Categories) gets parent:'custom'.
+let CATS=TAX_SUBS.map(s=>({e:s.e,l:s.l,nw:s.nw,parent:s.parent,sub:s.id}));
 let BUDGET={needs:3500,wants:2000,sinking:3000,debt:0,cashOpening:0,visaOpening:0};
 let GOAL_TARGET=608000,GOAL_NAME='Marriage & house goal';
 let ALLOC=[{emoji:'🪙',label:'Gold',amount:3000},{emoji:'📈',label:'Stocks',amount:1200},{emoji:'🏦',label:'Bank',amount:1800}];
 let expenses=[],sfLog=[],savingsLog=[],wishlist=[],goalData={saved:0,monthly:6000},incomes=[],transfers=[],recurringRules=[];
 let homeAllTx=[];
-let selCat=CATS[0],selType='cash',sfBalModalType='contribution',sfEditingId=null,incModalType='cash',incEditingId=null;
+let selCat=CATS[0],selCatParent=CATS[0].parent,catManuallySet=false,expEditCatParent=null,selType='cash',sfBalModalType='contribution',sfEditingId=null,incModalType='cash',incEditingId=null;
 let tfFrom='cash',tfTo='visa',sfFrom='cash',saveFrom='cash',saveBalModalType='contribution',saveEditingId=null;
 let expEditingId=null,expEditCat=null,expEditType='cash';
 let statsMonthOffset=0;
@@ -698,6 +709,77 @@ function canonicalName(raw){
   t=t.replace(/[أإآا]/g,'ا').replace(/ى/g,'ي').replace(/ـ/g,'');
   return ITEM_NAME_MERGE_MAP[t]||t;
 }
+// ─── Category classifier ───────────────────────────────────────────────────
+// Exact-name overrides (learned from the user tapping a category themselves)
+// are checked before the regex cascade, so a manual correction sticks for
+// that name going forward without needing a new rule. Keyed by
+// classifyNormalize(name) → {parent,sub}. Persisted in ms_cat_overrides and
+// synced via app_state.cat_overrides_json, same pattern as CATS/ALLOC.
+let catOverrides={};
+function saveCatOverrides(){localStorage.setItem('ms_cat_overrides',JSON.stringify(catOverrides));}
+// Normalization used ONLY for classification matching (name storage/display
+// is untouched). Lowercases, folds Arabic letter variants more aggressively
+// than canonicalName() (also ة→ه and ئ→ي, since the classifier's regex rules
+// were written against that folded form), and collapses hyphens/whitespace.
+function classifyNormalize(raw){
+  let t=String(raw||'').toLowerCase();
+  t=t.replace(/[أإآا]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ئ/g,'ي');
+  t=t.replace(/-/g,' ').replace(/\s+/g,' ').trim();
+  return t;
+}
+let TAX_RULES_COMPILED=null;
+function compileTaxRules(){
+  TAX_RULES_COMPILED=TAX_RULES.map(r=>({parent:r.parent,sub:r.sub,re:new RegExp(r.re,'u')}));
+}
+// Returns {parent,sub} or null if nothing matches (caller leaves the category
+// as-is; it's never forced to "Needs Review").
+function classifyName(raw){
+  const norm=classifyNormalize(raw);
+  if(!norm)return null;
+  if(catOverrides[norm])return catOverrides[norm];
+  if(!TAX_RULES_COMPILED)compileTaxRules();
+  for(const r of TAX_RULES_COMPILED){if(r.re.test(norm))return{parent:r.parent,sub:r.sub};}
+  return null;
+}
+// One-time bulk reclassification of existing history: re-derives cat/catLabel/
+// nw for every expense from its name (via the classifier) or, failing that,
+// from its current (pre-taxonomy) category label via TAX_LEGACY_FALLBACK.
+// Non-destructive to anything that already matches; safe to run more than once.
+function reclassifyCategories(){
+  let count=0;
+  expenses.forEach(e=>{
+    let hit=classifyName(e.name);
+    if(!hit){
+      const fb=TAX_LEGACY_FALLBACK[e.catLabel];
+      if(fb){const[p,s]=fb.split('/');hit={parent:p,sub:s};}
+    }
+    if(!hit)return;
+    const c=CATS.find(x=>x.parent===hit.parent&&x.sub===hit.sub);
+    if(!c)return;
+    if(e.cat!==c.e||e.catLabel!==c.l||e.nw!==c.nw){
+      e.cat=c.e;e.catLabel=c.l;e.nw=c.nw;e.catParent=c.parent;e.catSub=c.sub;count++;
+    }
+  });
+  if(count){saveState();renderHome();flash('Reclassified '+count+' expense'+(count>1?'s':'')+' into the new categories','var(--green)');}
+  else flash('Nothing to reclassify — everything already matches','var(--t3)');
+}
+// Pre-taxonomy installs have a flat ms_cats / cats_json list with no parent/sub
+// ids. Replace the old built-in defaults with the new taxonomy, but keep any
+// category the user added themselves (as parent:'custom') plus 💳 Debt, which
+// the taxonomy has no equivalent of and the Debt budget bar depends on.
+const OLD_DEFAULT_CAT_EMOJI=['🚦','🍗','🌍','📱','🧴','☕','🥔','🥐','🍟','🎮','🤲','🎁','🥙','🧊','❓','🥛'];
+function migrateCats(list){
+  if(!Array.isArray(list)||!list.length)return CATS;
+  if(list.every(c=>c&&c.sub))return list;
+  const base=TAX_SUBS.map(s=>({e:s.e,l:s.l,nw:s.nw,parent:s.parent,sub:s.id}));
+  list.forEach((c,i)=>{
+    if(!c||!c.e||c.sub)return;
+    if(OLD_DEFAULT_CAT_EMOJI.includes(c.e))return;
+    if(base.some(b=>b.e===c.e))return;
+    base.push({e:c.e,l:c.l,nw:c.nw||'wants',parent:'custom',sub:'custom_'+i});
+  });
+  return base;
+}
 function mergeItemNameVariants(){
   let count=0;
   expenses.forEach(e=>{
@@ -725,11 +807,11 @@ function rebuildNameIndex(){
     if(!canon)continue;
     const prev=byName[canon];
     if(!prev){
-      byName[canon]={canon,last:{amount:e.amount,cat:e.cat,catLabel:e.catLabel,nw:e.nw,type:e.type,date:e.date},count:1};
+      byName[canon]={canon,last:{amount:e.amount,cat:e.cat,catLabel:e.catLabel,catParent:e.catParent,catSub:e.catSub,nw:e.nw,type:e.type,date:e.date},count:1};
     } else {
       prev.count++;
       if(new Date(e.date)>new Date(prev.last.date))
-        prev.last={amount:e.amount,cat:e.cat,catLabel:e.catLabel,nw:e.nw,type:e.type,date:e.date};
+        prev.last={amount:e.amount,cat:e.cat,catLabel:e.catLabel,catParent:e.catParent,catSub:e.catSub,nw:e.nw,type:e.type,date:e.date};
     }
   }
   NAME_INDEX=Object.values(byName).sort((a,b)=>b.count-a.count);
@@ -770,10 +852,11 @@ function pickSuggestedName(canon){
   document.getElementById('inp-name').value=canon;
   document.getElementById('inp-amount').value=it.last.amount;
   if(it.last.cat){
-    const c=CATS.find(x=>x.e===it.last.cat);
-    if(c){selCat=c;buildCatGrid();}
+    const c=(it.last.catSub&&CATS.find(x=>x.parent===it.last.catParent&&x.sub===it.last.catSub))||CATS.find(x=>x.e===it.last.cat);
+    if(c){selCat=c;selCatParent=c.parent;buildCatGrid();}
   }
   if(it.last.type)setType(it.last.type);
+  catManuallySet=false;
   const el=document.getElementById('name-suggestions');
   if(el)el.style.display='none';
 }
@@ -810,8 +893,9 @@ function loadState(){
   try{const b=JSON.parse(localStorage.getItem('ms_budget')||'null');if(b)Object.assign(BUDGET,b);}catch(e){}
   if(typeof BUDGET.cashOpening!=='number')BUDGET.cashOpening=0;
   if(typeof BUDGET.visaOpening!=='number')BUDGET.visaOpening=0;
-  try{const c=JSON.parse(localStorage.getItem('ms_cats')||'null');if(c&&c.length)CATS=c;}catch(e){}
+  try{const c=JSON.parse(localStorage.getItem('ms_cats')||'null');if(c&&c.length)CATS=migrateCats(c);}catch(e){}
   try{const a=JSON.parse(localStorage.getItem('ms_alloc')||'null');if(a&&a.length)ALLOC=a;}catch(e){}
+  try{const o=JSON.parse(localStorage.getItem('ms_cat_overrides')||'null');if(o&&typeof o==='object')catOverrides=o;}catch(e){}
   try{const g=JSON.parse(localStorage.getItem('ms_goal_meta')||'null');if(g){GOAL_TARGET=g.target||608000;GOAL_NAME=g.name||'Marriage & house goal';}}catch(e){}
   try{quickItems=JSON.parse(localStorage.getItem('ms_quick')||'[]');}catch(e){}
   rebuildNameIndex();
@@ -830,7 +914,7 @@ function saveState(){
 }
 function saveCats(){localStorage.setItem('ms_cats',JSON.stringify(CATS));}
 function saveAllocs(){localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));}
-loadState();refreshQuickItems();
+loadState();refreshQuickItems();selCat=CATS[0];
 
 // SUPABASE
 let SUPA_URL='',SUPA_KEY='',SUPA_USER_ID='';
@@ -877,7 +961,7 @@ async function supaFetchAppState(){
 }
 async function supaUpsertAppState(){
   if(!supaReady())return false;
-  try{await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,goal_target:GOAL_TARGET,goal_name:GOAL_NAME,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,budget_debt:BUDGET.debt||0,budget_cash_opening:BUDGET.cashOpening||0,budget_visa_opening:BUDGET.visaOpening||0,cats_json:CATS,alloc_json:ALLOC,quick_items:quickItems,updated_at:new Date().toISOString()});return true;}
+  try{await supaFetch('app_state','POST',{user_id:SUPA_USER_ID,goal_saved:goalData.saved,goal_monthly:goalData.monthly,goal_target:GOAL_TARGET,goal_name:GOAL_NAME,budget_needs:BUDGET.needs,budget_wants:BUDGET.wants,budget_sinking:BUDGET.sinking,budget_debt:BUDGET.debt||0,budget_cash_opening:BUDGET.cashOpening||0,budget_visa_opening:BUDGET.visaOpening||0,cats_json:CATS,alloc_json:ALLOC,cat_overrides_json:catOverrides,quick_items:quickItems,updated_at:new Date().toISOString()});return true;}
   catch(e){return false;/* logged by supaFetch; this is a background sync, not a user-facing action */}
 }
 async function supaUpsertExpense(e){if(!supaReady())return;try{await supaFetch('expenses','POST',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date,recurring_rule_id:e.recurringRuleId||null,period:e.period||null});}catch(err){}}
@@ -958,8 +1042,9 @@ async function pullFromSupabase(silent=false){
       GOAL_TARGET=s.goal_target!=null?Number(s.goal_target):608000;GOAL_NAME=s.goal_name??'Marriage & house goal';
       BUDGET.needs=s.budget_needs??3500;BUDGET.wants=s.budget_wants??2000;BUDGET.sinking=s.budget_sinking??3000;BUDGET.debt=s.budget_debt??0;
       BUDGET.cashOpening=s.budget_cash_opening!=null?Number(s.budget_cash_opening):0;BUDGET.visaOpening=s.budget_visa_opening!=null?Number(s.budget_visa_opening):0;
-      if(s.cats_json&&Array.isArray(s.cats_json)&&s.cats_json.length)CATS=s.cats_json;
+      if(s.cats_json&&Array.isArray(s.cats_json)&&s.cats_json.length)CATS=migrateCats(s.cats_json);
       if(s.alloc_json&&Array.isArray(s.alloc_json)&&s.alloc_json.length)ALLOC=s.alloc_json;
+      if(s.cat_overrides_json&&typeof s.cat_overrides_json==='object'&&!Array.isArray(s.cat_overrides_json))catOverrides=s.cat_overrides_json;
       if(s.quick_items&&Array.isArray(s.quick_items))quickItems=s.quick_items;
     }
     saveState();saveCats();saveAllocs();rebuildNameIndex();
@@ -967,7 +1052,7 @@ async function pullFromSupabase(silent=false){
     // (which no-ops while _pulling is true) doesn't get followed by an immediate
     // re-push of the data we just pulled.
     _pulling=false;
-    localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));
+    localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_alloc',JSON.stringify(ALLOC));saveCatOverrides();
     localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));localStorage.setItem('ms_quick',JSON.stringify(quickItems));
     const t=new Date().toLocaleTimeString('en-EG',{hour:'2-digit',minute:'2-digit'});
     localStorage.setItem('ms_last_sync',new Date().toISOString());setSyncStatus('ok','Synced '+t);
@@ -1033,12 +1118,59 @@ function goPage(p){
   document.getElementById('page-'+p).classList.add('active');document.getElementById('nav-'+p).classList.add('active');
   if(p==='home')renderHome();if(p==='stats')renderStats();if(p==='sinking')renderSinking();
   if(p==='savings')renderSavings();if(p==='goals')renderGoals();if(p==='settings')renderSettings();
+  if(p==='add')catManuallySet=false;
   if(p==='add')setTimeout(()=>document.getElementById('inp-name').focus(),150);
 }
 
+// Two-tap category picker: a row of parent chips, then the subcategories of
+// the chosen parent. Shared by the Add screen and the expense edit modal.
+// <option>s grouped by parent, for the native <select>s in the recurring modals.
+function catOptionsHTML(){
+  return TAX_PARENTS.map(p=>{
+    const items=CATS.filter(c=>c.parent===p.id);if(!items.length)return'';
+    return'<optgroup label="'+esc(p.e+' '+p.l)+'">'+items.map(c=>'<option value="'+esc(c.e)+'">'+esc(c.e)+' '+esc(c.l)+'</option>').join('')+'</optgroup>';
+  }).join('');
+}
+function buildParentRow(rowId,activeParent,onPick){
+  const row=document.getElementById(rowId);row.innerHTML='';
+  TAX_PARENTS.forEach(p=>{
+    if(!CATS.some(c=>c.parent===p.id))return;
+    const b=document.createElement('button');
+    b.className='cparent-btn'+(p.id===activeParent?' sel':'');
+    b.textContent=p.e+' '+p.l;
+    b.onclick=()=>onPick(p.id);
+    row.appendChild(b);
+  });
+}
 function buildCatGrid(){
   const g=document.getElementById('cat-grid');g.innerHTML='';const isSink=selType==='sinking';
-  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===selCat.e?(isSink?' sels':' sel'):'');b.innerHTML='<div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div>';b.onclick=()=>{selCat=c;buildCatGrid();};g.appendChild(b);});
+  buildParentRow('cat-parent-row',selCatParent,id=>{selCatParent=id;buildCatGrid();});
+  CATS.filter(c=>c.parent===selCatParent).forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cbtn'+(c.sub===selCat.sub&&c.parent===selCat.parent?(isSink?' sels':' sel'):'');
+    b.innerHTML='<div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div>';
+    b.onclick=()=>{selCat=c;catManuallySet=true;rememberCategoryFor(document.getElementById('inp-name').value,c);buildCatGrid();};
+    g.appendChild(b);
+  });
+}
+// A manual category tap becomes an exact-name override, so the same name
+// pre-selects that category next time instead of whatever the rules say.
+function rememberCategoryFor(rawName,c){
+  const key=classifyNormalize(rawName);
+  if(!key||!c.parent||!c.sub)return;
+  catOverrides[key]={parent:c.parent,sub:c.sub};
+  saveCatOverrides();supaUpsertAppState();
+}
+// Live suggestion while typing a name; stops once the user has tapped a
+// category themselves for this entry.
+function autoClassifyFromName(){
+  const name=document.getElementById('inp-name').value;
+  if(!name.trim()){catManuallySet=false;return;}
+  if(catManuallySet)return;
+  const hit=classifyName(name);if(!hit)return;
+  const c=CATS.find(x=>x.parent===hit.parent&&x.sub===hit.sub);
+  if(!c||(c.sub===selCat.sub&&c.parent===selCat.parent))return;
+  selCat=c;selCatParent=c.parent;buildCatGrid();
 }
 buildCatGrid();
 function setType(t){
@@ -1070,12 +1202,12 @@ function addExpense(){
     const{m,y}=nowDate(),wTotal=monthExp(m,y).filter(e=>e.nw==='wants'&&e.type!=='sinking').reduce((s,e)=>s+e.amount,0);
     if(wTotal+amount>BUDGET.wants)flash('⚠️ Over Wants budget! '+fmt(wTotal+amount)+' / '+fmt(BUDGET.wants),'var(--amber)');
   }
-  const id=nid(),entry={id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:catNW(selCat.e),type:selType,date:new Date().toISOString()};
+  const id=nid(),entry={id,name,amount,cat:selCat.e,catLabel:selCat.l,nw:selCat.nw||catNW(selCat.e),catParent:selCat.parent||null,catSub:selCat.sub||null,type:selType,date:new Date().toISOString()};
   expenses.push(entry);
   if(selType==='sinking')sfLog.push({id:nid(),expenseId:id,name,amount,type:'withdrawal',date:new Date().toISOString()});
   saveState();supaUpsertExpense(entry);refreshQuickItems();rebuildNameIndex();
   document.getElementById('inp-name').value='';document.getElementById('inp-amount').value='';
-  document.getElementById('name-suggestions').style.display='none';
+  document.getElementById('name-suggestions').style.display='none';catManuallySet=false;
   const btn=document.getElementById('sub-btn'),orig=btn.textContent;btn.textContent='✓ Added!';setTimeout(()=>btn.textContent=orig,1200);goPage('home');
 }
 
@@ -1261,6 +1393,7 @@ document.getElementById('clear-btn').onclick=()=>{
 function openExpEditModal(id){
   const e=expenses.find(e=>e.id===id);if(!e)return;
   expEditingId=id;expEditCat=e.cat;expEditType=e.type;
+  expEditCatParent=(CATS.find(c=>c.e===e.cat)||CATS[0]).parent;
   document.getElementById('exp-edit-name').value=e.name;
   document.getElementById('exp-edit-amount').value=e.amount;
   document.getElementById('exp-edit-date').value=e.date.slice(0,10);
@@ -1276,7 +1409,13 @@ function expEditUpdateTypeUI(){
 }
 function buildExpEditCatGrid(){
   const g=document.getElementById('exp-edit-cat-grid');g.innerHTML='';
-  CATS.forEach(c=>{const b=document.createElement('button');b.className='cbtn'+(c.e===expEditCat?' sel':'');b.innerHTML='<div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div>';b.onclick=()=>{expEditCat=c.e;buildExpEditCatGrid();};g.appendChild(b);});
+  buildParentRow('exp-edit-cat-parent-row',expEditCatParent,id=>{expEditCatParent=id;buildExpEditCatGrid();});
+  CATS.filter(c=>c.parent===expEditCatParent).forEach(c=>{
+    const b=document.createElement('button');b.className='cbtn'+(c.e===expEditCat?' sel':'');
+    b.innerHTML='<div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div>';
+    b.onclick=()=>{expEditCat=c.e;rememberCategoryFor(document.getElementById('exp-edit-name').value,c);buildExpEditCatGrid();};
+    g.appendChild(b);
+  });
 }
 function saveExpEdit(){
   if(!expEditingId)return;const idx=expenses.findIndex(e=>e.id===expEditingId);if(idx<0)return;
@@ -1284,8 +1423,10 @@ function saveExpEdit(){
   if(!name||!amount||isNaN(amount)||amount<=0){flash('Enter valid name and amount');return;}
   const wasSinking=expenses[idx].type==='sinking';
   expenses[idx].name=name;expenses[idx].amount=amount;expenses[idx].cat=expEditCat;
-  expenses[idx].catLabel=CATS.find(c=>c.e===expEditCat)?.l||expEditCat;
-  expenses[idx].nw=catNW(expEditCat);expenses[idx].type=expEditType;
+  const editCatObj=CATS.find(c=>c.e===expEditCat);
+  expenses[idx].catLabel=editCatObj?.l||expenses[idx].catLabel||expEditCat;
+  expenses[idx].nw=editCatObj?editCatObj.nw:(expenses[idx].nw||'wants');
+  expenses[idx].catParent=editCatObj?.parent||null;expenses[idx].catSub=editCatObj?.sub||null;expenses[idx].type=expEditType;
   if(date)expenses[idx].date=parseLocalDate(date).toISOString();
   const linked=sfLog.find(s=>s.expenseId===expEditingId);
   if(expEditType==='sinking'&&linked){
@@ -1413,7 +1554,7 @@ function addRecurringInstance(ruleId){
   if(ruleAlreadyPosted(ruleId,period))return; // already added this month (e.g. double-tap, or the other device beat us to it)
   const daysInMonth=new Date(y,m+1,0).getDate(),day=Math.min(rule.dayOfMonth,daysInMonth),date=parseLocalDate(y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0')).toISOString();
   if(rule.kind==='expense'){
-    const e={id:nid(),name:rule.name,amount:rule.amount,cat:rule.cat,catLabel:rule.catLabel,nw:rule.nw,type:rule.payMethod,date,recurringRuleId:rule.id,period};
+    const e={id:nid(),name:rule.name,amount:rule.amount,cat:rule.cat,catLabel:rule.catLabel,nw:rule.nw,catParent:(CATS.find(c=>c.e===rule.cat)||{}).parent||null,catSub:(CATS.find(c=>c.e===rule.cat)||{}).sub||null,type:rule.payMethod,date,recurringRuleId:rule.id,period};
     expenses.push(e);saveState();rebuildNameIndex();
     supaPostRecurringInstance('expenses',{id:e.id,user_id:SUPA_USER_ID,name:e.name,amount:e.amount,cat:e.cat,cat_label:e.catLabel,nw:e.nw,type:e.type,date:e.date,recurring_rule_id:rule.id,period});
   } else {
@@ -1462,7 +1603,7 @@ function recPay(which){
 }
 function openRecurringModal(){
   document.getElementById('rec-name').value='';document.getElementById('rec-amount').value='';document.getElementById('rec-day').value='1';
-  document.getElementById('rec-cat').innerHTML=CATS.map(c=>'<option value="'+esc(c.e)+'">'+esc(c.e)+' '+esc(c.l)+'</option>').join('');
+  document.getElementById('rec-cat').innerHTML=catOptionsHTML();
   recTab('expense');
   document.getElementById('recurring-modal').classList.add('open');
   setTimeout(()=>document.getElementById('rec-name').focus(),200);
@@ -1521,7 +1662,7 @@ function openRecurringImportModal(){
 }
 function closeRecurringImportModal(e){if(e&&e.target!==document.getElementById('recurring-import-modal'))return;document.getElementById('recurring-import-modal').classList.remove('open');}
 function renderRecurringImportRows(){
-  const catOptions=CATS.map(c=>'<option value="'+esc(c.e)+'">'+esc(c.e)+' '+esc(c.l)+'</option>').join('');
+  const catOptions=catOptionsHTML();
   document.getElementById('recurring-import-rows').innerHTML=RECURRING_SUGGESTIONS.map((s,i)=>
     '<div class="rimp-row">'+
       '<div class="rimp-head"><input type="checkbox" id="rimp-check-'+i+'"'+(s.checked?' checked':'')+'><input type="text" id="rimp-name-'+i+'" value="'+esc(s.name)+'" style="flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:6px;padding:7px 8px;font-size:13px;color:var(--t1);font-weight:600"></div>'+
@@ -1713,7 +1854,10 @@ function renderSettings(){
   document.getElementById('set-visa-opening').value=BUDGET.visaOpening||0;
   document.getElementById('custom-user-id').value=localStorage.getItem('ms_custom_uid')||'';document.getElementById('current-uid-display').textContent=SUPA_USER_ID||'(device)';
   const g=document.getElementById('cat-edit-grid');g.innerHTML='';
-  CATS.forEach((c,i)=>{const div=document.createElement('div');div.className='cbtn';div.style.cursor='default';div.innerHTML='<div class="cat-remove" onclick="removeCat('+i+')">×</div><div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div><div class="cl" style="color:'+(c.nw==='needs'?'var(--green)':c.nw==='debt'?'var(--red)':'var(--amber)')+'">'+c.nw+'</div>';g.appendChild(div);});
+  let lastParent=null;
+  CATS.forEach((c,i)=>{
+    if(c.parent!==lastParent){lastParent=c.parent;const pp=TAX_PARENTS.find(x=>x.id===c.parent);const h=document.createElement('div');h.style.cssText='grid-column:1/-1;font-size:11px;color:var(--t3);margin-top:6px';h.textContent=pp?pp.e+' '+pp.l:(c.parent||'');g.appendChild(h);}
+    const div=document.createElement('div');div.className='cbtn';div.style.cursor='default';div.innerHTML='<div class="cat-remove" onclick="removeCat('+i+')">×</div><div class="ce">'+esc(c.e)+'</div><div class="cl">'+esc(c.l)+'</div><div class="cl" style="color:'+(c.nw==='needs'?'var(--green)':c.nw==='debt'?'var(--red)':'var(--amber)')+'">'+c.nw+'</div>';g.appendChild(div);});
   refreshQuickItems();const qp=document.getElementById('qa-preview');qp.innerHTML='';quickItems.slice(0,6).forEach(q=>{const b=document.createElement('div');b.className='qbtn';b.textContent=q.cat+' '+q.name+' '+q.amount;qp.appendChild(b);});
 }
 function saveSettings(){
@@ -1724,14 +1868,14 @@ function saveSettings(){
   BUDGET.visaOpening=parseFloat(document.getElementById('set-visa-opening').value)||0;
   localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_sinking_target_set','1');supaUpsertAppState();flash('Budget caps saved!','var(--green)');renderSettings();
 }
-function addCategory(){const emoji=document.getElementById('new-cat-emoji').value.trim(),label=document.getElementById('new-cat-label').value.trim(),nw=document.getElementById('new-cat-nw').value;if(!emoji||!label){flash('Enter emoji and label');return;}if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}CATS.push({e:emoji,l:label,nw});saveCats();supaUpsertAppState();document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';selCat=CATS[0];buildCatGrid();renderSettings();flash('Category added!','var(--green)');}
-function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;CATS.splice(idx,1);saveCats();supaUpsertAppState();if(!CATS.find(c=>c.e===selCat.e))selCat=CATS[0];buildCatGrid();renderSettings();flash('Category removed','var(--red)');}
+function addCategory(){const emoji=document.getElementById('new-cat-emoji').value.trim(),label=document.getElementById('new-cat-label').value.trim(),nw=document.getElementById('new-cat-nw').value;if(!emoji||!label){flash('Enter emoji and label');return;}if(CATS.find(c=>c.e===emoji)){flash('Category already exists','var(--amber)');return;}CATS.push({e:emoji,l:label,nw,parent:'custom',sub:'custom_'+nid()});saveCats();supaUpsertAppState();document.getElementById('new-cat-emoji').value='';document.getElementById('new-cat-label').value='';selCat=CATS[0];selCatParent=selCat.parent;buildCatGrid();renderSettings();flash('Category added!','var(--green)');}
+function removeCat(idx){if(CATS.length<=1){flash('Keep at least one category','var(--amber)');return;}if(!confirm('Remove '+CATS[idx].e+' '+CATS[idx].l+'?'))return;CATS.splice(idx,1);saveCats();supaUpsertAppState();if(!CATS.find(c=>c.e===selCat.e)){selCat=CATS[0];selCatParent=selCat.parent;}buildCatGrid();renderSettings();flash('Category removed','var(--red)');}
 
 // EXPORT
 (function(){const{m,y}=nowDate();document.getElementById('exp-month').value=m;document.getElementById('exp-year').value=y;})();
 function exportXLSX(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses for '+MONTHS[m]+' '+y);return;}const rows=[['main','cost','name','category','type','needs_wants','date']];list.forEach(e=>rows.push([e.amount+' '+e.name+' '+e.cat,e.amount,e.name,e.cat,e.type,e.nw||'',e.date.slice(0,10)]));const catT={};CATS.forEach(c=>{catT[c.e]={label:c.l,total:0};});list.forEach(e=>{if(catT[e.cat])catT[e.cat].total+=e.amount;});const catE=Object.entries(catT).filter(([,v])=>v.total>0),grand=list.reduce((s,e)=>s+e.amount,0),needsT=list.filter(e=>e.nw==='needs').reduce((s,e)=>s+e.amount,0),wantsT=list.filter(e=>e.nw==='wants').reduce((s,e)=>s+e.amount,0),debtT=list.filter(e=>e.nw==='debt').reduce((s,e)=>s+e.amount,0),ws=XLSX.utils.aoa_to_sheet(rows);catE.forEach(([em,{label,total}],i)=>{const r=i+2;ws['I'+r]={v:label};ws['J'+r]={v:em};ws['K'+r]={v:total};});ws['I'+(catE.length+3)]={v:'Grand Total'};ws['K'+(catE.length+3)]={v:grand};ws['I'+(catE.length+5)]={v:'Needs'};ws['K'+(catE.length+5)]={v:needsT};ws['I'+(catE.length+6)]={v:'Wants'};ws['K'+(catE.length+6)]={v:wantsT};ws['I'+(catE.length+7)]={v:'Debt'};ws['K'+(catE.length+7)]={v:debtT};ws['!cols']=[{wch:30},{wch:8},{wch:20},{wch:8},{wch:8},{wch:10},{wch:12},{wch:2},{wch:14},{wch:6},{wch:10}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'table');XLSX.writeFile(wb,MONTHS[m]+'_expenses.xlsx');}
 function exportCSV(){const m=parseInt(document.getElementById('exp-month').value),y=parseInt(document.getElementById('exp-year').value),list=monthExp(m,y);if(!list.length){flash('No expenses found');return;}const csv='date,name,amount,category,type,needs_wants\n'+list.map(e=>e.date.slice(0,10)+','+JSON.stringify(e.name)+','+e.amount+','+e.catLabel+','+e.type+','+(e.nw||'')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=MONTHS[m]+'_expenses.csv';a.click();}
-function backupJSON(){const data={expenses,sfLog,savingsLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
+function backupJSON(){const data={expenses,sfLog,savingsLog,wishlist,goalData,incomes,transfers,quickItems,CATS,ALLOC,catOverrides,BUDGET,GOAL_TARGET,GOAL_NAME,exportedAt:new Date().toISOString()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='masroof_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
 function restoreJSON(ev){
   const file=ev.target.files[0];if(!file)return;ev.target.value='';
   const label=document.getElementById('restore-label'),labelText=document.getElementById('restore-label-text');
@@ -1742,7 +1886,7 @@ function restoreJSON(ev){
       const d=JSON.parse(e.target.result);
       if(d.expenses)expenses=d.expenses;if(d.sfLog)sfLog=d.sfLog;if(d.savingsLog)savingsLog=d.savingsLog;if(d.wishlist)wishlist=d.wishlist;
       if(d.goalData)goalData=d.goalData;if(d.incomes)incomes=d.incomes;if(d.transfers)transfers=d.transfers;
-      if(d.CATS&&d.CATS.length)CATS=d.CATS;if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);
+      if(d.CATS&&d.CATS.length)CATS=migrateCats(d.CATS);if(d.ALLOC&&d.ALLOC.length)ALLOC=d.ALLOC;if(d.catOverrides&&typeof d.catOverrides==='object'){catOverrides=d.catOverrides;saveCatOverrides();}if(d.BUDGET)Object.assign(BUDGET,d.BUDGET);
       if(d.GOAL_TARGET)GOAL_TARGET=d.GOAL_TARGET;if(d.GOAL_NAME)GOAL_NAME=d.GOAL_NAME;if(d.quickItems)quickItems=d.quickItems;
       saveState();saveCats();saveAllocs();rebuildNameIndex();
       localStorage.setItem('ms_budget',JSON.stringify(BUDGET));localStorage.setItem('ms_goal_meta',JSON.stringify({target:GOAL_TARGET,name:GOAL_NAME}));

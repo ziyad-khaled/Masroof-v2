@@ -945,14 +945,32 @@ function setSyncStatus(state,text){
 const SUPA_NO_DATE=['wishlist','app_state','recurring_rules'];
 async function supaFetch(table,method,body,matchId,onConflict){
   if(!supaReady())return null;
-  let url=SUPA_URL+'/rest/v1/'+table;
-  if(matchId!==undefined){url+='?id=eq.'+matchId+'&user_id=eq.'+encodeURIComponent(SUPA_USER_ID);}
-  else if(method==='GET'){url+='?user_id=eq.'+encodeURIComponent(SUPA_USER_ID)+(!SUPA_NO_DATE.includes(table)?'&order=date.asc':'')+'&limit=5000';}
-  else if(method==='POST'&&onConflict){url+='?on_conflict='+onConflict;}
-  const opts={method,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'resolution=merge-duplicates':''}};
-  if(body)opts.body=JSON.stringify(body);
-  try{const r=await fetch(url,opts);if(!r.ok){const t=await r.text();throw new Error(r.status+': '+t.slice(0,120));}if(method==='GET')return await r.json();return true;}
-  catch(e){console.error('Supa',method,table,e.message);setSyncStatus('err','Sync error'+syncErrorSuffix(e));throw e;}
+  const base=SUPA_URL+'/rest/v1/'+table;
+  const hdr={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'resolution=merge-duplicates':''};
+  const fail=async r=>{const t=await r.text();if(t.includes('PGRST205'))throw new Error(r.status+': table "'+table+'" is missing in Supabase — run the setup SQL from the README for it');throw new Error(r.status+': ['+table+'] '+t.slice(0,120));};
+  try{
+    if(method==='GET'&&matchId===undefined){
+      // Supabase caps every response at its max-rows setting (1000 by default),
+      // silently, regardless of ?limit=. Fetch in pages until a short page, with
+      // a stable order (date, then id) so rows can't repeat or skip across pages.
+      const PAGE=1000,order=!SUPA_NO_DATE.includes(table)?'&order=date.asc,id.asc':'&order=id.asc';
+      let all=[];
+      for(let off=0;;off+=PAGE){
+        const r=await fetch(base+'?user_id=eq.'+encodeURIComponent(SUPA_USER_ID)+order+'&limit='+PAGE+'&offset='+off,{method,headers:hdr});
+        if(!r.ok)await fail(r);
+        const rows=await r.json();all=all.concat(rows);
+        if(rows.length<PAGE)break;
+      }
+      return all;
+    }
+    let url=base;
+    if(matchId!==undefined){url+='?id=eq.'+matchId+'&user_id=eq.'+encodeURIComponent(SUPA_USER_ID);}
+    else if(method==='POST'&&onConflict){url+='?on_conflict='+onConflict;}
+    const opts={method,headers:hdr};
+    if(body)opts.body=JSON.stringify(body);
+    const r=await fetch(url,opts);if(!r.ok)await fail(r);
+    if(method==='GET')return await r.json();return true;
+  }catch(e){console.error('Supa',method,table,e.message);setSyncStatus('err','Sync error'+syncErrorSuffix(e));throw e;}
 }
 async function supaFetchAppState(){
   if(!supaReady())return null;
